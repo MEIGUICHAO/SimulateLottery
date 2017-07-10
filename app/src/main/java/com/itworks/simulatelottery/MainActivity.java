@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     private int BLANK_INT = 110;
     private int BEGIN_INT = 200;
     private EditText et_blank;
+    private int LAST_SIZE = -1;
+    private int BLANK_COUNT = -1;
 
 
     private void initBaseData() {
@@ -65,7 +67,12 @@ public class MainActivity extends AppCompatActivity {
         tvResult.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getLotteryResult();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getLotteryResult();
+                    }
+                }).start();
             }
         });
 
@@ -73,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getLotteryResult() {
         allcount = 0;
+        LAST_SIZE = -1;
         String blank = et_blank.getText().toString();
         if (!TextUtils.isEmpty(blank)) {
             BLANK_INT = Integer.parseInt(blank);
@@ -84,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
         for (int m = 0; m < 1; m++) {
             for (int j = 0; j < 20000; j++) {
+                getProgress(j);
                 ArrayList<Integer> integers = new ArrayList<>();
                 Set<Integer> resultSet = generateRandomArray(10);
                 Iterator<Integer> it = resultSet.iterator();
@@ -91,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (j > BEGIN_INT) {
                     initBaseData();
-                    caculateBlankData();
+                    caculateBlankData(j);
                 }
 
 
@@ -111,11 +120,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void caculateBlankData() {
-        getBlankDate(BLANK_INT);
+    private void getProgress(final int j) {
+
+        this. runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tvResult.setText(j + "");
+            }
+        });
     }
 
-    private void getBlankDate(int blank) {
+    private void caculateBlankData(int size) {
+        getBlankDate(BLANK_INT, size);
+    }
+
+    private void getBlankDate(int blank, int size) {
         for (int i = 0; i < allLists.size(); i++) {
             for (int j = 0; j < 10; j++) {
                 getPositionData(allLists.get(i).get(j), j);
@@ -129,9 +148,15 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < positionList.size(); i++) {
             for (int j = 0; j < 10; j++) {
                 if (positionList.get(i)[j] == templepositionList.get(i)[j]) {
+                    //begin
                     allcount++;
-                    Log.e("allcount", "getBlankDateAllcount: " + allcount);
-                    tvResult.setText("" + allcount);
+                    if ((-1 != LAST_SIZE && (size - LAST_SIZE) > 1) || -1 == LAST_SIZE) {
+                        BLANK_COUNT = allcount;
+                        Log.e("LAST_SIZE", "size:" + size + ",getBlankDateAllcount: " + allcount + ",blank:" + (blank) + ",位置：" + (i + 1) + ",数字：" + (j + 1));
+                    }
+
+                    Log.e("allcount", "size:" + size + ",getBlankDateAllcount: " + allcount + ",blank:" + (BLANK_INT + allcount - BLANK_COUNT));
+                    LAST_SIZE = size;
                 }
             }
         }
