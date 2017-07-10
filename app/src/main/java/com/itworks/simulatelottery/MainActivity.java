@@ -2,8 +2,11 @@ package com.itworks.simulatelottery;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -14,15 +17,16 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView tvResult;
+    private Button tvResult;
     private int allcount;
     private ArrayList<int[]> positionList;
     private ArrayList<int[]> numList;
     private ArrayList<int[]> templepositionList;
     private ArrayList<int[]> templenumList;
     private ArrayList<ArrayList<Integer>> allLists;
-    private int BLANK_INT = 95;
+    private int BLANK_INT = 110;
     private int BEGIN_INT = 200;
+    private EditText et_blank;
 
 
     private void initBaseData() {
@@ -55,7 +59,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tvResult = (TextView) findViewById(R.id.tvResult);
+        tvResult = (Button) findViewById(R.id.tvResult);
+        et_blank = (EditText) findViewById(R.id.et_blank);
 
         tvResult.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +73,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void getLotteryResult() {
         allcount = 0;
+        String blank = et_blank.getText().toString();
+        if (!TextUtils.isEmpty(blank)) {
+            BLANK_INT = Integer.parseInt(blank);
+        }
+
+        Log.e("BLANK_INT", "BLANK_INT: " + BLANK_INT);
 
         initBaseData();
 
