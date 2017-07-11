@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,12 +23,19 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<int[]> templepositionList;
     private ArrayList<int[]> templenumList;
     private ArrayList<ArrayList<Integer>> allLists;
-    private int BLANK_INT = 110;
+    private int BLANK_INT = 20;
     private EditText et_blank;
     private int BLANK_COUNT = 0;
     private ArrayList<int[]> allcountList;
     private ArrayList<int[]> lastSizeList;
     private ArrayList<int[]> blankCountList;
+    private ArrayList<int[]> bugPositonList;
+    private int CURRENT_BLANK;
+    private int END_BLANK = 28;
+    private int BUY_AMOUNT = 0;
+    private EditText et_endBlank;
+    private EditText et_length;
+    private int LENGTH = 20000;
 
 
     private void initBaseData() {
@@ -39,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
             lastSizeList = initList(-1);
             allcountList = initList(0);
             blankCountList = initList(0);
+            bugPositonList = initList(-1);
         }
 
         positionList = initList(0);
@@ -67,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
 
         tvResult = (Button) findViewById(R.id.tvResult);
         et_blank = (EditText) findViewById(R.id.et_blank);
+        et_endBlank = (EditText) findViewById(R.id.et_endBlank);
+        et_length = (EditText) findViewById(R.id.et_length);
 
         tvResult.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,17 +93,30 @@ public class MainActivity extends AppCompatActivity {
 
     private void getLotteryResult() {
 //        allcount = 0;
+        BUY_AMOUNT = 0;
+        bugPositonList = initList(-1);
         String blank = et_blank.getText().toString();
+        String endBlank = et_endBlank.getText().toString();
+        String length = et_length.getText().toString();
         if (!TextUtils.isEmpty(blank)) {
             BLANK_INT = Integer.parseInt(blank);
         }
+        if (!TextUtils.isEmpty(endBlank)) {
+            END_BLANK = Integer.parseInt(endBlank);
+        }
+        if (!TextUtils.isEmpty(length)) {
+            LENGTH = Integer.parseInt(length);
+        }
 
         Log.e("BLANK_INT", "BLANK_INT: " + BLANK_INT);
+        Log.e("BLANK_INT", "END_BLANK: " + END_BLANK);
+        Log.e("BLANK_INT", "LENGTH: " + LENGTH);
+        Log.e("BLANK_INT", "BUY_AMOUNT: " + BUY_AMOUNT);
 
         initBaseData();
 
         for (int m = 0; m < 1; m++) {
-            for (int j = 0; j < 20000; j++) {
+            for (int j = 0; j < LENGTH; j++) {
                 getProgress(j);
                 ArrayList<Integer> integers = new ArrayList<>();
                 Set<Integer> resultSet = generateRandomArray(10);
@@ -150,17 +172,42 @@ public class MainActivity extends AppCompatActivity {
         }
         for (int i = 0; i < positionList.size(); i++) {
             for (int j = 0; j < 10; j++) {
+                //blank in
                 if (positionList.get(i)[j] == templepositionList.get(i)[j]) {
+
+
                     //begin
                     allcount++;
                     allcountList.get(i)[j]++;
                     if ((-1 != lastSizeList.get(i)[j] && (size - lastSizeList.get(i)[j]) > 1) || -1 == lastSizeList.get(i)[j]) {
                         blankCountList.get(i)[j] = allcountList.get(i)[j];
-                        Log.e("NEW_LAST_SIZE", "size:" + size + ",getBlankDateAllcount: " + allcountList.get(i)[j] + ",blank:" + (blank) + ",位置：" + (i + 1) + ",数字：" + (j + 1));
+//                        Log.e("NEW_LAST_SIZE", "size:" + size + ",getBlankDateAllcount: " + allcountList.get(i)[j] + ",blank:" + (blank) + ",位置：" + (i + 1) + ",数字：" + (j + 1));
                     }
 
-                    Log.e("NEW_allcount", "size:" + size + ",getBlankDateAllcount: " + allcountList.get(i)[j] + ",blank:" + (BLANK_INT + allcountList.get(i)[j] - blankCountList.get(i)[j]));
+                    CURRENT_BLANK = BLANK_INT + allcountList.get(i)[j] - blankCountList.get(i)[j];
+//                    Log.e("NEW_allcount", "size:" + size + ",getBlankDateAllcount: " + allcountList.get(i)[j] + ",blank:" + (BLANK_INT + allcountList.get(i)[j] - blankCountList.get(i)[j]));
+
+
+                    //buy
+                    if (((CURRENT_BLANK - bugPositonList.get(i)[j]) == 1 && CURRENT_BLANK < END_BLANK) || (bugPositonList.get(i)[j] == -1 && CURRENT_BLANK < END_BLANK)) {
+                        bugPositonList.get(i)[j] = CURRENT_BLANK;
+                        BUY_AMOUNT = BUY_AMOUNT - 10;
+//                        Log.e("BUY_AMOUNT", "BUY_AMOUNT-: " + BUY_AMOUNT);
+                        Log.e("size：" + size + "!!!!", "BUY_POSITION-位置：" + (i + 1) + ",数字：" + (j + 1) + ",CURRENT_BLANK:" + CURRENT_BLANK + ",BUY_AMOUNT-: " + BUY_AMOUNT);
+                    }
                     lastSizeList.get(i)[j] = size;
+                }
+            }
+        }
+
+        for (int i = 0; i < positionList.size(); i++) {
+            for (int j = 0; j < 10; j++) {
+                if (positionList.get(i)[j] != templepositionList.get(i)[j] && bugPositonList.get(i)[j] != -1) {
+                    //profit
+                    BUY_AMOUNT = BUY_AMOUNT + 89;
+                    bugPositonList.get(i)[j] = -1;
+//                    Log.e("BUY_AMOUNT", "BUY_AMOUNT+: " + BUY_AMOUNT);
+                    Log.e("size：" + size + "!!!!", "BUY_POSITION+位置：" + (i + 1) + ",数字：" + (j + 1) + ",BUY_AMOUNT-: " + BUY_AMOUNT);
                 }
             }
         }
