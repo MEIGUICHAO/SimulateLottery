@@ -25,31 +25,35 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<int[]> templenumList;
     private ArrayList<ArrayList<Integer>> allLists;
     private int BLANK_INT = 110;
-    private int BEGIN_INT = 200;
     private EditText et_blank;
-    private int LAST_SIZE = -1;
-    private int BLANK_COUNT = -1;
+    private int BLANK_COUNT = 0;
+    private ArrayList<int[]> allcountList;
+    private ArrayList<int[]> lastSizeList;
+    private ArrayList<int[]> blankCountList;
 
 
     private void initBaseData() {
 
         if (null == allLists) {
             allLists = new ArrayList<>();
+            lastSizeList = initList(-1);
+            allcountList = initList(0);
+            blankCountList = initList(0);
         }
 
-        positionList = initList();
-        numList = initList();
-        templepositionList = initList();
-        templenumList = initList();
+        positionList = initList(0);
+        numList = initList(0);
+        templepositionList = initList(0);
+        templenumList = initList(0);
 
     }
 
-    private ArrayList<int[]> initList() {
+    private ArrayList<int[]> initList(int val) {
         ArrayList<int[]> list = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             int[] ints = new int[10];
             for (int j = 0; j < 10; j++) {
-                ints[j] = 0;
+                ints[j] = val;
             }
             list.add(ints);
         }
@@ -79,8 +83,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getLotteryResult() {
-        allcount = 0;
-        LAST_SIZE = -1;
+//        allcount = 0;
         String blank = et_blank.getText().toString();
         if (!TextUtils.isEmpty(blank)) {
             BLANK_INT = Integer.parseInt(blank);
@@ -98,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 Iterator<Integer> it = resultSet.iterator();
 
 
-                if (j > BEGIN_INT) {
+                if (j > BLANK_INT) {
                     initBaseData();
                     caculateBlankData(j);
                 }
@@ -150,13 +153,14 @@ public class MainActivity extends AppCompatActivity {
                 if (positionList.get(i)[j] == templepositionList.get(i)[j]) {
                     //begin
                     allcount++;
-                    if ((-1 != LAST_SIZE && (size - LAST_SIZE) > 1) || -1 == LAST_SIZE) {
-                        BLANK_COUNT = allcount;
-                        Log.e("LAST_SIZE", "size:" + size + ",getBlankDateAllcount: " + allcount + ",blank:" + (blank) + ",位置：" + (i + 1) + ",数字：" + (j + 1));
+                    allcountList.get(i)[j]++;
+                    if ((-1 != lastSizeList.get(i)[j] && (size - lastSizeList.get(i)[j]) > 1) || -1 == lastSizeList.get(i)[j]) {
+                        blankCountList.get(i)[j] = allcountList.get(i)[j];
+                        Log.e("NEW_LAST_SIZE", "size:" + size + ",getBlankDateAllcount: " + allcountList.get(i)[j] + ",blank:" + (blank) + ",位置：" + (i + 1) + ",数字：" + (j + 1));
                     }
 
-                    Log.e("allcount", "size:" + size + ",getBlankDateAllcount: " + allcount + ",blank:" + (BLANK_INT + allcount - BLANK_COUNT));
-                    LAST_SIZE = size;
+                    Log.e("NEW_allcount", "size:" + size + ",getBlankDateAllcount: " + allcountList.get(i)[j] + ",blank:" + (BLANK_INT + allcountList.get(i)[j] - blankCountList.get(i)[j]));
+                    lastSizeList.get(i)[j] = size;
                 }
             }
         }
