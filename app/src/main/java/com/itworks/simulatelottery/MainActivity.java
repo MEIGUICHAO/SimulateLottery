@@ -31,11 +31,14 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<int[]> blankCountList;
     private ArrayList<int[]> bugPositonList;
     private int CURRENT_BLANK;
-    private int END_BLANK = 28;
-    private int BUY_AMOUNT = 0;
+    private int END_BLANK = 20;
+    private int BUY_AMOUNT = 15;
     private EditText et_endBlank;
     private EditText et_length;
     private int LENGTH = 20000;
+
+    private int LESS_AMOUNT = 0;
+    private int MORE_AMOUNT = 0;
 
 
     private void initBaseData() {
@@ -94,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
     private void getLotteryResult() {
 //        allcount = 0;
         BUY_AMOUNT = 0;
+        LESS_AMOUNT = 0;
         bugPositonList = initList(-1);
         String blank = et_blank.getText().toString();
         String endBlank = et_endBlank.getText().toString();
@@ -139,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        Log.e("", "getLotteryResult: " + allcount);
+        Log.e("", "LESS_AMOUNT: " + LESS_AMOUNT);
 
 
 
@@ -192,6 +196,9 @@ public class MainActivity extends AppCompatActivity {
                     if (((CURRENT_BLANK - bugPositonList.get(i)[j]) == 1 && CURRENT_BLANK < END_BLANK) || (bugPositonList.get(i)[j] == -1 && CURRENT_BLANK < END_BLANK)) {
                         bugPositonList.get(i)[j] = CURRENT_BLANK;
                         BUY_AMOUNT = BUY_AMOUNT - 10;
+                        if (LESS_AMOUNT > BUY_AMOUNT) {
+                            LESS_AMOUNT = BUY_AMOUNT;
+                        }
 //                        Log.e("BUY_AMOUNT", "BUY_AMOUNT-: " + BUY_AMOUNT);
                         Log.e("size：" + size + "!!!!", "BUY_POSITION-位置：" + (i + 1) + ",数字：" + (j + 1) + ",CURRENT_BLANK:" + CURRENT_BLANK + ",BUY_AMOUNT-: " + BUY_AMOUNT);
                     }
