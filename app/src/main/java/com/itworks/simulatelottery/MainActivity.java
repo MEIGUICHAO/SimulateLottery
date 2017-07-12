@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<int[]> templepositionList;
     private ArrayList<int[]> templenumList;
     private ArrayList<ArrayList<Integer>> allLists;
-    private int BLANK_INT = 15;
+    private int BLANK_INT = 16;
     private EditText et_blank;
     private int BLANK_COUNT = 0;
     private ArrayList<int[]> allcountList;
@@ -31,12 +31,12 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<int[]> blankCountList;
     private ArrayList<int[]> bugPositonList;
     private int CURRENT_BLANK;
-    private int END_BLANK = 20;
+    private int END_BLANK = 17;
     private int BUY_AMOUNT = 15;
     private EditText et_endBlank;
     private EditText et_length;
-    private int LENGTH = 50;
-    private int SIZE = 1;
+    private int LENGTH = 200;
+    private int SIZE = 20;
 
     private int LESS_AMOUNT = 0;
     private int ALI_LESS_AMOUNT = 0;
