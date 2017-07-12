@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<int[]> templepositionList;
     private ArrayList<int[]> templenumList;
     private ArrayList<ArrayList<Integer>> allLists;
-    private int BLANK_INT = 20;
+    private int BLANK_INT = 15;
     private EditText et_blank;
     private int BLANK_COUNT = 0;
     private ArrayList<int[]> allcountList;
@@ -35,10 +35,14 @@ public class MainActivity extends AppCompatActivity {
     private int BUY_AMOUNT = 15;
     private EditText et_endBlank;
     private EditText et_length;
-    private int LENGTH = 20000;
+    private int LENGTH = 50;
+    private int SIZE = 1;
 
     private int LESS_AMOUNT = 0;
-    private int MORE_AMOUNT = 0;
+    private int ALI_LESS_AMOUNT = 0;
+    private int ALI_MORE_AMOUNT = 0;
+    private int ALL_AMOUNT = 0;
+    private EditText et_size;
 
 
     private void initBaseData() {
@@ -79,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         et_blank = (EditText) findViewById(R.id.et_blank);
         et_endBlank = (EditText) findViewById(R.id.et_endBlank);
         et_length = (EditText) findViewById(R.id.et_length);
+        et_size = (EditText) findViewById(R.id.et_size);
 
         tvResult.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,12 +101,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void getLotteryResult() {
 //        allcount = 0;
-        BUY_AMOUNT = 0;
-        LESS_AMOUNT = 0;
+        ALL_AMOUNT = 0;
         bugPositonList = initList(-1);
         String blank = et_blank.getText().toString();
         String endBlank = et_endBlank.getText().toString();
         String length = et_length.getText().toString();
+        String size = et_size.getText().toString();
         if (!TextUtils.isEmpty(blank)) {
             BLANK_INT = Integer.parseInt(blank);
         }
@@ -111,15 +116,22 @@ public class MainActivity extends AppCompatActivity {
         if (!TextUtils.isEmpty(length)) {
             LENGTH = Integer.parseInt(length);
         }
+        if (!TextUtils.isEmpty(size)) {
+            SIZE = Integer.parseInt(size);
+        }
 
         Log.e("BLANK_INT", "BLANK_INT: " + BLANK_INT);
         Log.e("BLANK_INT", "END_BLANK: " + END_BLANK);
         Log.e("BLANK_INT", "LENGTH: " + LENGTH);
         Log.e("BLANK_INT", "BUY_AMOUNT: " + BUY_AMOUNT);
+        Log.e("BLANK_INT", "SIZE: " + SIZE);
 
         initBaseData();
 
-        for (int m = 0; m < 1; m++) {
+        for (int m = 0; m < SIZE; m++) {
+
+            BUY_AMOUNT = 0;
+            LESS_AMOUNT = 0;
             for (int j = 0; j < LENGTH; j++) {
                 getProgress(j);
                 ArrayList<Integer> integers = new ArrayList<>();
@@ -141,9 +153,18 @@ public class MainActivity extends AppCompatActivity {
                 allLists.add(integers);
             }
 
+
+            if (ALI_LESS_AMOUNT > LESS_AMOUNT) {
+                ALI_LESS_AMOUNT = LESS_AMOUNT;
+            }
+            if (ALI_MORE_AMOUNT < BUY_AMOUNT) {
+                ALI_MORE_AMOUNT = BUY_AMOUNT;
+            }
+            ALL_AMOUNT = ALL_AMOUNT + BUY_AMOUNT;
+            Log.e("", "LESS_AMOUNT: " + LESS_AMOUNT + ",ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + ",ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + ",ALL_AMOUNT:" + ALL_AMOUNT);
+
         }
 
-        Log.e("", "LESS_AMOUNT: " + LESS_AMOUNT);
 
 
 
@@ -214,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
                     BUY_AMOUNT = BUY_AMOUNT + 89;
                     bugPositonList.get(i)[j] = -1;
 //                    Log.e("BUY_AMOUNT", "BUY_AMOUNT+: " + BUY_AMOUNT);
-                    Log.e("size：" + size + "!!!!", "BUY_POSITION+位置：" + (i + 1) + ",数字：" + (j + 1) + ",BUY_AMOUNT-: " + BUY_AMOUNT);
+                    Log.e("size：" + size + "!!!!", "EARN+位置：" + (i + 1) + ",数字：" + (j + 1) + ",BUY_AMOUNT-: " + BUY_AMOUNT);
                 }
             }
         }
