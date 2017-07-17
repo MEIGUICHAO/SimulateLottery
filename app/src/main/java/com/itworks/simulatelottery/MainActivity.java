@@ -1,5 +1,6 @@
 package com.itworks.simulatelottery;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -9,8 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -44,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
     private int ALI_MORE_AMOUNT = 0;
     private int ALL_AMOUNT = 0;
     private EditText et_size;
+    private HashMap<Integer, Integer> buyMap;
+    private HashMap<Integer, Integer> LastMap;
+    private int LAST_TREM = -1;
 
 
     private void initBaseData() {
@@ -54,6 +60,17 @@ public class MainActivity extends AppCompatActivity {
 //            allcountList = initList(0);
             blankCountList = initList(0);
             bugPositonList = initList(-1);
+        }
+
+
+        if (null == buyMap) {
+            buyMap = new HashMap<>();
+            for (int i = 0; i <10; i++) {
+                for (int j = 0; j < 10; j++) {
+                    buyMap.put(i * 10 + j, -1);
+                }
+
+            }
         }
 
         if (null == positionList) {
@@ -171,14 +188,13 @@ public class MainActivity extends AppCompatActivity {
             BUY_AMOUNT = 0;
             LESS_AMOUNT = 0;
             allLists.clear();
-
             if (null == allcountList) {
                 allcountList = initList(0);
             } else {
                 allcountList.clear();
                 allcountList = initList(0);
             }
-            for (int j = 0; j < 200; j++) {
+            for (int j = 0; j < 200 + LENGTH; j++) {
                 getProgress(j);
                 ArrayList<Integer> integers = new ArrayList<>();
                 Set<Integer> resultSet = generateRandomArray(10);
@@ -192,12 +208,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
-            for (int i = allLists.size(); i > BLANK_INT; i--) {
-
+            for (int i = allLists.size() - 200; i > BLANK_INT; i--) {
                 if (i <= (allLists.size() - BLANK_INT)) {
                     for (int j = BLANK_INT; j < END_BLANK; j++) {
                         getNumBlankData(i, j);
                     }
+                    LAST_TREM = i;
                 }
             }
 
@@ -230,6 +246,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getNumBlankData(int term, int blank) {
 
+
         positionList.clear();
         positionList = initList(0);
         templepositionList.clear();
@@ -253,15 +270,38 @@ public class MainActivity extends AppCompatActivity {
                 getTempleMorePositionData(allLists.get(i).get(j), j);
             }
         }
-//        int count = 0;
+
         for (int i = 0; i < positionList.size(); i++) {
+
             for (int j = 0; j < 10; j++) {
+
                 if ((positionList.get(i)[j] == templepositionList.get(i)[j]) && (templepositionMoreList.get(i)[j] != templepositionList.get(i)[j])) {
+
+                    BUY_AMOUNT = BUY_AMOUNT - 10;
+                    if (LESS_AMOUNT > BUY_AMOUNT) {
+                        LESS_AMOUNT = BUY_AMOUNT;
+                    }
                     Log.e("********size~~~" + term, ",位置：" + (i + 1) + ",数字：" + (j + 1) + "---" + positionList.get(i)[j] + ",blank:" + blank);
+
+                    buyMap.put(i * 10 + j, blank);
+                    if ()
 //                    count++;
+                } else {
+                    if (buyMap.get(i * 10 + j) != -1 && (LAST_TREM - term == 1)&&null!=LastMap&&LastMap.get(i * 10 + j)!=LastMap.get(i * 10 + j)) {
+                        BUY_AMOUNT = BUY_AMOUNT + 89;
+                        Log.e("$$$$$$size：" + term + "!!!!", "EARN+位置：" + (i + 1) + ",数字：" + (j + 1) + ",BUY_AMOUNT-: " + BUY_AMOUNT);
+                    }
+                    buyMap.put(i * 10 + j, -1);
                 }
             }
 
+        }
+        if (null == LastMap) {
+            LastMap = new HashMap<>();
+        }
+        Iterator<Map.Entry<Integer, Integer>> iterator = buyMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            LastMap.put(iterator.next().getKey(), iterator.next().getValue());
         }
 //        Log.e("!!!" + term, "sizeCount: " + count);
 
