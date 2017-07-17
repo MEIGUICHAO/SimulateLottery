@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<int[]> positionList;
     private ArrayList<int[]> numList;
     private ArrayList<int[]> templepositionList;
+    private ArrayList<int[]> templepositionMoreList;
     private ArrayList<int[]> templenumList;
     private ArrayList<ArrayList<Integer>> allLists;
     private int BLANK_INT = 16;
@@ -50,16 +51,41 @@ public class MainActivity extends AppCompatActivity {
         if (null == allLists) {
             allLists = new ArrayList<>();
             lastSizeList = initList(-1);
-            allcountList = initList(0);
+//            allcountList = initList(0);
             blankCountList = initList(0);
             bugPositonList = initList(-1);
         }
 
-        positionList = initList(0);
-        numList = initList(0);
-        templepositionList = initList(0);
-        templenumList = initList(0);
-
+        if (null == positionList) {
+            positionList = initList(0);
+        } else {
+            positionList.clear();
+            positionList = initList(0);
+        }
+        if (null == numList) {
+            numList = initList(0);
+        } else {
+            numList.clear();
+            numList = initList(0);
+        }
+        if (null == templepositionList) {
+            templepositionList = initList(0);
+        } else {
+            templepositionList.clear();
+            templepositionList = initList(0);
+        }
+        if (null == templepositionMoreList) {
+            templepositionMoreList = initList(0);
+        } else {
+            templepositionMoreList.clear();
+            templepositionMoreList = initList(0);
+        }
+        if (null == templenumList) {
+            templenumList = initList(0);
+        } else {
+            templenumList.clear();
+            templenumList = initList(0);
+        }
     }
 
     private ArrayList<int[]> initList(int val) {
@@ -99,6 +125,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
     private void getLotteryResult() {
 //        allcount = 0;
         ALL_AMOUNT = 0;
@@ -132,26 +170,46 @@ public class MainActivity extends AppCompatActivity {
 
             BUY_AMOUNT = 0;
             LESS_AMOUNT = 0;
-            for (int j = 0; j < LENGTH; j++) {
+            allLists.clear();
+
+            if (null == allcountList) {
+                allcountList = initList(0);
+            } else {
+                allcountList.clear();
+                allcountList = initList(0);
+            }
+            for (int j = 0; j < 200; j++) {
                 getProgress(j);
                 ArrayList<Integer> integers = new ArrayList<>();
                 Set<Integer> resultSet = generateRandomArray(10);
                 Iterator<Integer> it = resultSet.iterator();
 
-
-                if (j > BLANK_INT) {
-                    initBaseData();
-                    caculateBlankData(j);
-                }
-
-
-
                 //result
                 while (it.hasNext()) {
                     integers.add(it.next());
                 }
-                allLists.add(integers);
+                allLists.add(0, integers);
             }
+
+
+            for (int i = allLists.size(); i > BLANK_INT; i--) {
+
+                if (i <= (allLists.size() - BLANK_INT)) {
+                    for (int j = BLANK_INT; j < END_BLANK; j++) {
+                        getNumBlankData(i, j);
+                    }
+                }
+            }
+
+
+
+
+//            for (int i = BLANK_INT + 1; i < allLists.size(); i++) {
+//
+//                initBaseData();
+//                getResultData(BLANK_INT + 1, i);
+//
+//            }
 
 
             if (ALI_LESS_AMOUNT > LESS_AMOUNT) {
@@ -170,6 +228,84 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void getNumBlankData(int term, int blank) {
+
+        positionList.clear();
+        positionList = initList(0);
+        templepositionList.clear();
+        templepositionList = initList(0);
+        templepositionMoreList.clear();
+        templepositionMoreList = initList(0);
+        for (int i = term; i < allLists.size(); i++) {
+            for (int j = 0; j < 10; j++) {
+                getPositionData(allLists.get(i).get(j), j);
+            }
+        }
+        for (int i = blank + term; i < allLists.size(); i++) {
+
+            for (int j = 0; j < 10; j++) {
+                getTemplePositionData(allLists.get(i).get(j), j);
+            }
+        }
+
+        for (int i = blank + term + 1; i < allLists.size(); i++) {
+            for (int j = 0; j < 10; j++) {
+                getTempleMorePositionData(allLists.get(i).get(j), j);
+            }
+        }
+//        int count = 0;
+        for (int i = 0; i < positionList.size(); i++) {
+            for (int j = 0; j < 10; j++) {
+                if ((positionList.get(i)[j] == templepositionList.get(i)[j]) && (templepositionMoreList.get(i)[j] != templepositionList.get(i)[j])) {
+                    Log.e("********size~~~" + term, ",位置：" + (i + 1) + ",数字：" + (j + 1) + "---" + positionList.get(i)[j] + ",blank:" + blank);
+//                    count++;
+                }
+            }
+
+        }
+//        Log.e("!!!" + term, "sizeCount: " + count);
+
+
+    }
+
+    private void getResultData(int blank, int size) {
+
+        for (int i = 0; i < size-1; i++) {
+            for (int j = 0; j < 10; j++) {
+                getPositionData(allLists.get(i).get(j), j);
+            }
+        }
+        for (int i = 0; i < size-blank-1; i++) {
+            for (int j = 0; j < 10; j++) {
+                getTemplePositionData(allLists.get(i).get(j),j);
+            }
+        }
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < 10; j++) {
+                getTempleMorePositionData(allLists.get(i).get(j), j);
+            }
+        }
+
+
+        for (int i = 0; i < positionList.size(); i++) {
+            for (int j = 0; j < 10; j++) {
+                if (positionList.get(i)[j] == templepositionList.get(i)[j] && templepositionList.get(i)[j] != templepositionMoreList.get(i)[j]) {
+                    //profit
+                    BUY_AMOUNT = BUY_AMOUNT + 89;
+                    bugPositonList.get(i)[j] = -1;
+//                    Log.e("BUY_AMOUNT", "BUY_AMOUNT+: " + BUY_AMOUNT);
+                    Log.e("size：" + size + "!!!!", "EARN+位置：" + (i + 1) + ",数字：" + (j + 1) + ",BUY_AMOUNT-: " + BUY_AMOUNT);
+                }
+            }
+        }
+
+    }
+
+    private void getTempleMorePositionData(Integer integer, int i) {
+        templepositionMoreList.get(i)[integer]++;
+    }
+
     private void getProgress(final int j) {
 
         this. runOnUiThread(new Runnable() {
@@ -180,65 +316,37 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void caculateBlankData(int size) {
-        getBlankDate(BLANK_INT, size);
-    }
 
     private void getBlankDate(int blank, int size) {
-        for (int i = 0; i < allLists.size(); i++) {
+        for (int i = size; i < allLists.size(); i++) {
             for (int j = 0; j < 10; j++) {
                 getPositionData(allLists.get(i).get(j), j);
             }
         }
-        for (int i = 0; i < allLists.size()-blank; i++) {
+        for (int i = size + blank; i < allLists.size(); i++) {
             for (int j = 0; j < 10; j++) {
-                getTemplePositionData(allLists.get(i).get(j),j);
+                getTemplePositionData(allLists.get(i).get(j), j);
             }
         }
+        for (int i = size + blank + 1; i < allLists.size(); i++) {
+            for (int j = 0; j < 10; j++) {
+                getTempleMorePositionData(allLists.get(i).get(j), j);
+            }
+        }
+        int count = 0;
         for (int i = 0; i < positionList.size(); i++) {
             for (int j = 0; j < 10; j++) {
-                //blank in
-                if (positionList.get(i)[j] == templepositionList.get(i)[j]) {
-
-
-                    //begin
-                    allcount++;
-                    allcountList.get(i)[j]++;
-                    if ((-1 != lastSizeList.get(i)[j] && (size - lastSizeList.get(i)[j]) > 1) || -1 == lastSizeList.get(i)[j]) {
-                        blankCountList.get(i)[j] = allcountList.get(i)[j];
-//                        Log.e("NEW_LAST_SIZE", "size:" + size + ",getBlankDateAllcount: " + allcountList.get(i)[j] + ",blank:" + (blank) + ",位置：" + (i + 1) + ",数字：" + (j + 1));
-                    }
-
-                    CURRENT_BLANK = BLANK_INT + allcountList.get(i)[j] - blankCountList.get(i)[j];
-//                    Log.e("NEW_allcount", "size:" + size + ",getBlankDateAllcount: " + allcountList.get(i)[j] + ",blank:" + (BLANK_INT + allcountList.get(i)[j] - blankCountList.get(i)[j]));
-
-
-                    //buy
-                    if (((CURRENT_BLANK - bugPositonList.get(i)[j]) == 1 && CURRENT_BLANK < END_BLANK) || (bugPositonList.get(i)[j] == -1 && CURRENT_BLANK < END_BLANK)) {
-                        bugPositonList.get(i)[j] = CURRENT_BLANK;
-                        BUY_AMOUNT = BUY_AMOUNT - 10;
-                        if (LESS_AMOUNT > BUY_AMOUNT) {
-                            LESS_AMOUNT = BUY_AMOUNT;
-                        }
-//                        Log.e("BUY_AMOUNT", "BUY_AMOUNT-: " + BUY_AMOUNT);
-                        Log.e("size：" + size + "!!!!", "BUY_POSITION-位置：" + (i + 1) + ",数字：" + (j + 1) + ",CURRENT_BLANK:" + CURRENT_BLANK + ",BUY_AMOUNT-: " + BUY_AMOUNT);
-                    }
-                    lastSizeList.get(i)[j] = size;
+                if ((positionList.get(i)[j] == templepositionList.get(i)[j])) {
+                    count++;
+                    Log.e("********size~~~" + size, ",位置：" + (i + 1) + ",数字：" + (j + 1) + "---" + positionList.get(i)[j] + ",blank:" + blank);
+                    Log.e("!!!!!!!!!size~~~" + size, ",位置：" + (i + 1) + ",数字：" + (j + 1) + "---" + templepositionList.get(i)[j]);
                 }
             }
-        }
 
-        for (int i = 0; i < positionList.size(); i++) {
-            for (int j = 0; j < 10; j++) {
-                if (positionList.get(i)[j] != templepositionList.get(i)[j] && bugPositonList.get(i)[j] != -1) {
-                    //profit
-                    BUY_AMOUNT = BUY_AMOUNT + 89;
-                    bugPositonList.get(i)[j] = -1;
-//                    Log.e("BUY_AMOUNT", "BUY_AMOUNT+: " + BUY_AMOUNT);
-                    Log.e("size：" + size + "!!!!", "EARN+位置：" + (i + 1) + ",数字：" + (j + 1) + ",BUY_AMOUNT-: " + BUY_AMOUNT);
-                }
-            }
+
         }
+        Log.e("!!!" + size, "sizeCount: " + count);
+
 
     }
 
