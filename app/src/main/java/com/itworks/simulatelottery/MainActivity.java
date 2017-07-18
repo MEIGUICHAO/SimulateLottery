@@ -332,7 +332,7 @@ public class MainActivity extends AppCompatActivity {
                 if (buyMap.get(next.getKey()) == -1 && trueMap.get(next.getKey()) == -1 && trueLastMap.get(next.getKey()) <= END_BUY) {
                     Log.e("@@@@", "buyMap: " + next.getKey() + "---------" + next.getValue());
                     BUY_AMOUNT = BUY_AMOUNT + 89;
-                    Log.e("$$$trem" + trem, "BUY_AMOUNT: " + BUY_AMOUNT);
+                    Log.e("$$$trem" + trem, "BUY_AMOUNT_EARN: " + BUY_AMOUNT);
                 }
             }
         }
