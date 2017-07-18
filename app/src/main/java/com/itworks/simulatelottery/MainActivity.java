@@ -1,6 +1,5 @@
 package com.itworks.simulatelottery;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -27,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<int[]> templepositionMoreList;
     private ArrayList<int[]> templenumList;
     private ArrayList<ArrayList<Integer>> allLists;
-    private int BLANK_INT = 16;
+    private int BLANK_INT = 35;
     private EditText et_blank;
     private int BLANK_COUNT = 0;
     private ArrayList<int[]> allcountList;
@@ -35,12 +34,12 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<int[]> blankCountList;
     private ArrayList<int[]> bugPositonList;
     private int CURRENT_BLANK;
-    private int END_BLANK = 17;
+    private int END_BLANK = 200;
     private int BUY_AMOUNT = 15;
     private EditText et_endBlank;
     private EditText et_length;
-    private int LENGTH = 200;
-    private int SIZE = 20;
+    private int LENGTH = 50;
+    private int SIZE = 1;
 
     private int LESS_AMOUNT = 0;
     private int ALI_LESS_AMOUNT = 0;
@@ -65,12 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (null == buyMap) {
             buyMap = new HashMap<>();
-            for (int i = 0; i <10; i++) {
-                for (int j = 0; j < 10; j++) {
-                    buyMap.put(i * 10 + j, -1);
-                }
-
-            }
+            resetBuyMap();
         }
 
         if (null == positionList) {
@@ -102,6 +96,15 @@ public class MainActivity extends AppCompatActivity {
         } else {
             templenumList.clear();
             templenumList = initList(0);
+        }
+    }
+
+    private void resetBuyMap() {
+        for (int i = 0; i <10; i++) {
+            for (int j = 0; j < 10; j++) {
+                buyMap.put(i * 10 + j, -1);
+            }
+
         }
     }
 
@@ -210,23 +213,15 @@ public class MainActivity extends AppCompatActivity {
 
             for (int i = allLists.size() - 200; i > BLANK_INT; i--) {
                 if (i <= (allLists.size() - BLANK_INT)) {
+                    resetBuyMap();
                     for (int j = BLANK_INT; j < END_BLANK; j++) {
                         getNumBlankData(i, j);
                     }
                     LAST_TREM = i;
+                    setLastMap();
                 }
+
             }
-
-
-
-
-//            for (int i = BLANK_INT + 1; i < allLists.size(); i++) {
-//
-//                initBaseData();
-//                getResultData(BLANK_INT + 1, i);
-//
-//            }
-
 
             if (ALI_LESS_AMOUNT > LESS_AMOUNT) {
                 ALI_LESS_AMOUNT = LESS_AMOUNT;
@@ -235,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
                 ALI_MORE_AMOUNT = BUY_AMOUNT;
             }
             ALL_AMOUNT = ALL_AMOUNT + BUY_AMOUNT;
-            Log.e("", "LESS_AMOUNT: " + LESS_AMOUNT + ",ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + ",ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + ",ALL_AMOUNT:" + ALL_AMOUNT);
+            Log.e("", "LESS_AMOUNT: " + LESS_AMOUNT + ",ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + ",ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + ",ALL_AMOUNT:" + ALL_AMOUNT + ",BUY_AMOUNT:" + BUY_AMOUNT);
 
         }
 
@@ -284,63 +279,51 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("********size~~~" + term, ",位置：" + (i + 1) + ",数字：" + (j + 1) + "---" + positionList.get(i)[j] + ",blank:" + blank);
 
                     buyMap.put(i * 10 + j, blank);
-                    if ()
 //                    count++;
-                } else {
-                    if (buyMap.get(i * 10 + j) != -1 && (LAST_TREM - term == 1)&&null!=LastMap&&LastMap.get(i * 10 + j)!=LastMap.get(i * 10 + j)) {
-                        BUY_AMOUNT = BUY_AMOUNT + 89;
-                        Log.e("$$$$$$size：" + term + "!!!!", "EARN+位置：" + (i + 1) + ",数字：" + (j + 1) + ",BUY_AMOUNT-: " + BUY_AMOUNT);
-                    }
-                    buyMap.put(i * 10 + j, -1);
                 }
+//                else if (null != LastMap) {
+//
+//                    if (null != LastMap.get(i * 10 + j) && LastMap.get(i * 10 + j) != -1) {
+//                        BUY_AMOUNT = BUY_AMOUNT + 89;
+//                        LastMap.put(i * 10 + j, -1);
+//                        Log.e("$$$$$$size：" + term + "!!!!", "EARN+位置：" + (i + 1) + ",数字：" + (j + 1) + ",BUY_AMOUNT-: " + BUY_AMOUNT);
+//                    }
+//                }
             }
 
-        }
-        if (null == LastMap) {
-            LastMap = new HashMap<>();
-        }
-        Iterator<Map.Entry<Integer, Integer>> iterator = buyMap.entrySet().iterator();
-        while (iterator.hasNext()) {
-            LastMap.put(iterator.next().getKey(), iterator.next().getValue());
         }
 //        Log.e("!!!" + term, "sizeCount: " + count);
 
 
     }
 
-    private void getResultData(int blank, int size) {
-
-        for (int i = 0; i < size-1; i++) {
-            for (int j = 0; j < 10; j++) {
-                getPositionData(allLists.get(i).get(j), j);
-            }
-        }
-        for (int i = 0; i < size-blank-1; i++) {
-            for (int j = 0; j < 10; j++) {
-                getTemplePositionData(allLists.get(i).get(j),j);
-            }
-        }
-
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < 10; j++) {
-                getTempleMorePositionData(allLists.get(i).get(j), j);
-            }
+    private void setLastMap() {
+        if (null == LastMap) {
+            LastMap = new HashMap<>();
         }
 
 
-        for (int i = 0; i < positionList.size(); i++) {
-            for (int j = 0; j < 10; j++) {
-                if (positionList.get(i)[j] == templepositionList.get(i)[j] && templepositionList.get(i)[j] != templepositionMoreList.get(i)[j]) {
-                    //profit
+        Iterator<Map.Entry<Integer, Integer>> lastIt = LastMap.entrySet().iterator();
+        while (lastIt.hasNext()) {
+            Map.Entry<Integer, Integer> next = lastIt.next();
+            if (next.getValue() != -1) {
+//                Log.e("@@@@", "lastMap: " + next.getKey() +"---------"+ next.getValue());
+                if (buyMap.get(next.getKey()) == -1) {
+                    Log.e("@@@@", "buyMap: " + next.getKey() +"---------"+ next.getValue());
                     BUY_AMOUNT = BUY_AMOUNT + 89;
-                    bugPositonList.get(i)[j] = -1;
-//                    Log.e("BUY_AMOUNT", "BUY_AMOUNT+: " + BUY_AMOUNT);
-                    Log.e("size：" + size + "!!!!", "EARN+位置：" + (i + 1) + ",数字：" + (j + 1) + ",BUY_AMOUNT-: " + BUY_AMOUNT);
+                    Log.e("$$$", "setLastMap: " + BUY_AMOUNT);
                 }
             }
         }
 
+        LastMap.clear();
+        Iterator<Map.Entry<Integer, Integer>> iterator = buyMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Integer, Integer> next = iterator.next();
+            LastMap.put(next.getKey(), next.getValue());
+        }
     }
+
 
     private void getTempleMorePositionData(Integer integer, int i) {
         templepositionMoreList.get(i)[integer]++;
@@ -356,39 +339,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-    private void getBlankDate(int blank, int size) {
-        for (int i = size; i < allLists.size(); i++) {
-            for (int j = 0; j < 10; j++) {
-                getPositionData(allLists.get(i).get(j), j);
-            }
-        }
-        for (int i = size + blank; i < allLists.size(); i++) {
-            for (int j = 0; j < 10; j++) {
-                getTemplePositionData(allLists.get(i).get(j), j);
-            }
-        }
-        for (int i = size + blank + 1; i < allLists.size(); i++) {
-            for (int j = 0; j < 10; j++) {
-                getTempleMorePositionData(allLists.get(i).get(j), j);
-            }
-        }
-        int count = 0;
-        for (int i = 0; i < positionList.size(); i++) {
-            for (int j = 0; j < 10; j++) {
-                if ((positionList.get(i)[j] == templepositionList.get(i)[j])) {
-                    count++;
-                    Log.e("********size~~~" + size, ",位置：" + (i + 1) + ",数字：" + (j + 1) + "---" + positionList.get(i)[j] + ",blank:" + blank);
-                    Log.e("!!!!!!!!!size~~~" + size, ",位置：" + (i + 1) + ",数字：" + (j + 1) + "---" + templepositionList.get(i)[j]);
-                }
-            }
-
-
-        }
-        Log.e("!!!" + size, "sizeCount: " + count);
-
-
-    }
 
     private void getTemplePositionData(int integer, int i) {
         templepositionList.get(i)[integer]++;
