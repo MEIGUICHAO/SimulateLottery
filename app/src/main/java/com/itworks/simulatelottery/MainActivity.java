@@ -18,6 +18,7 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
+
     private Button tvResult;
     private int allcount;
     private ArrayList<int[]> positionList;
@@ -38,17 +39,21 @@ public class MainActivity extends AppCompatActivity {
     private int BUY_AMOUNT = 15;
     private EditText et_endBlank;
     private EditText et_length;
-    private int LENGTH = 50;
+    private int LENGTH = 2000;
     private int SIZE = 1;
 
     private int LESS_AMOUNT = 0;
     private int ALI_LESS_AMOUNT = 0;
     private int ALI_MORE_AMOUNT = 0;
     private int ALL_AMOUNT = 0;
+    private int END_BUY = 0;
     private EditText et_size;
     private HashMap<Integer, Integer> buyMap;
+    private HashMap<Integer, Integer> trueMap;
     private HashMap<Integer, Integer> LastMap;
+    private HashMap<Integer, Integer> trueLastMap;
     private int LAST_TREM = -1;
+    private EditText et_endBuy;
 
 
     private void initBaseData() {
@@ -64,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (null == buyMap) {
             buyMap = new HashMap<>();
+            trueMap = new HashMap<>();
             resetBuyMap();
         }
 
@@ -106,6 +112,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
+        for (int i = 0; i <10; i++) {
+            for (int j = 0; j < 10; j++) {
+                trueMap.put(i * 10 + j, -1);
+            }
+
+        }
     }
 
     private ArrayList<int[]> initList(int val) {
@@ -130,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
         et_endBlank = (EditText) findViewById(R.id.et_endBlank);
         et_length = (EditText) findViewById(R.id.et_length);
         et_size = (EditText) findViewById(R.id.et_size);
+        et_endBuy = (EditText) findViewById(R.id.et_endBuy);
 
         tvResult.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,6 +178,10 @@ public class MainActivity extends AppCompatActivity {
         String endBlank = et_endBlank.getText().toString();
         String length = et_length.getText().toString();
         String size = et_size.getText().toString();
+        String endbuy = et_endBuy.getText().toString();
+        if (!TextUtils.isEmpty(endbuy)) {
+            END_BUY = Integer.parseInt(endbuy);
+        }
         if (!TextUtils.isEmpty(blank)) {
             BLANK_INT = Integer.parseInt(blank);
         }
@@ -218,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
                         getNumBlankData(i, j);
                     }
                     LAST_TREM = i;
-                    setLastMap();
+                    setLastMap(i);
                 }
 
             }
@@ -272,13 +289,16 @@ public class MainActivity extends AppCompatActivity {
 
                 if ((positionList.get(i)[j] == templepositionList.get(i)[j]) && (templepositionMoreList.get(i)[j] != templepositionList.get(i)[j])) {
 
-                    BUY_AMOUNT = BUY_AMOUNT - 10;
-                    if (LESS_AMOUNT > BUY_AMOUNT) {
-                        LESS_AMOUNT = BUY_AMOUNT;
+                    if (blank <= END_BUY) {
+                        BUY_AMOUNT = BUY_AMOUNT - 10;
+                        if (LESS_AMOUNT > BUY_AMOUNT) {
+                            LESS_AMOUNT = BUY_AMOUNT;
+                        }
+                        buyMap.put(i * 10 + j, blank);
                     }
                     Log.e("********size~~~" + term, ",位置：" + (i + 1) + ",数字：" + (j + 1) + "---" + positionList.get(i)[j] + ",blank:" + blank);
 
-                    buyMap.put(i * 10 + j, blank);
+                    trueMap.put(i * 10 + j, blank);
 //                    count++;
                 }
 //                else if (null != LastMap) {
@@ -297,9 +317,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void setLastMap() {
-        if (null == LastMap) {
+    private void setLastMap(int trem) {
+        if (null == LastMap || null == trueLastMap) {
             LastMap = new HashMap<>();
+            trueLastMap = new HashMap<>();
         }
 
 
@@ -307,20 +328,27 @@ public class MainActivity extends AppCompatActivity {
         while (lastIt.hasNext()) {
             Map.Entry<Integer, Integer> next = lastIt.next();
             if (next.getValue() != -1) {
-//                Log.e("@@@@", "lastMap: " + next.getKey() +"---------"+ next.getValue());
-                if (buyMap.get(next.getKey()) == -1) {
-                    Log.e("@@@@", "buyMap: " + next.getKey() +"---------"+ next.getValue());
+                Log.e("@@@@", "lastMap: " + next.getKey() +"---------"+ next.getValue());
+                if (buyMap.get(next.getKey()) == -1 && trueMap.get(next.getKey()) == -1 && trueLastMap.get(next.getKey()) <= END_BUY) {
+                    Log.e("@@@@", "buyMap: " + next.getKey() + "---------" + next.getValue());
                     BUY_AMOUNT = BUY_AMOUNT + 89;
-                    Log.e("$$$", "setLastMap: " + BUY_AMOUNT);
+                    Log.e("$$$trem" + trem, "BUY_AMOUNT: " + BUY_AMOUNT);
                 }
             }
         }
 
         LastMap.clear();
+        trueLastMap.clear();
         Iterator<Map.Entry<Integer, Integer>> iterator = buyMap.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<Integer, Integer> next = iterator.next();
             LastMap.put(next.getKey(), next.getValue());
+        }
+
+        Iterator<Map.Entry<Integer, Integer>> iterator2 = trueMap.entrySet().iterator();
+        while (iterator2.hasNext()) {
+            Map.Entry<Integer, Integer> next = iterator2.next();
+            trueLastMap.put(next.getKey(), next.getValue());
         }
     }
 
