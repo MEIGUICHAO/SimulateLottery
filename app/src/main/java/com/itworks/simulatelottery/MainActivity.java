@@ -52,8 +52,12 @@ public class MainActivity extends AppCompatActivity {
     private HashMap<Integer, Integer> trueMap;
     private HashMap<Integer, Integer> LastMap;
     private HashMap<Integer, Integer> trueLastMap;
+    private HashMap<Integer, Integer> positionMap;
+    private HashMap<Integer, Integer> numMap;
     private int LAST_TREM = -1;
+    private int count = 0;
     private EditText et_endBuy;
+    private Button btn_two;
 
 
     private void initBaseData() {
@@ -70,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
         if (null == buyMap) {
             buyMap = new HashMap<>();
             trueMap = new HashMap<>();
+            positionMap = new HashMap<>();
+            numMap = new HashMap<>();
             resetBuyMap();
         }
 
@@ -143,8 +149,20 @@ public class MainActivity extends AppCompatActivity {
         et_length = (EditText) findViewById(R.id.et_length);
         et_size = (EditText) findViewById(R.id.et_size);
         et_endBuy = (EditText) findViewById(R.id.et_endBuy);
+        btn_two = (Button) findViewById(R.id.btn_two);
 
         tvResult.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getLotteryResult();
+                    }
+                }).start();
+            }
+        });
+        btn_two.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new Thread(new Runnable() {
@@ -207,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
 
             BUY_AMOUNT = 0;
             LESS_AMOUNT = 0;
+            count = 0;
             allLists.clear();
             if (null == allcountList) {
                 allcountList = initList(0);
@@ -247,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
                 ALI_MORE_AMOUNT = BUY_AMOUNT;
             }
             ALL_AMOUNT = ALL_AMOUNT + BUY_AMOUNT;
-            Log.e("", "LESS_AMOUNT: " + LESS_AMOUNT + ",ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + ",ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + ",ALL_AMOUNT:" + ALL_AMOUNT + ",BUY_AMOUNT:" + BUY_AMOUNT);
+            Log.e("", "LESS_AMOUNT: " + LESS_AMOUNT + ",ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + ",ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + ",ALL_AMOUNT:" + ALL_AMOUNT + ",BUY_AMOUNT:" + BUY_AMOUNT + ",count:" + count);
 
         }
 
@@ -286,6 +305,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < positionList.size(); i++) {
 
             for (int j = 0; j < 10; j++) {
+                positionMap.clear();
 
                 if ((positionList.get(i)[j] == templepositionList.get(i)[j]) && (templepositionMoreList.get(i)[j] != templepositionList.get(i)[j])) {
 
@@ -333,6 +353,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("@@@@", "buyMap: " + next.getKey() + "---------" + next.getValue());
                     BUY_AMOUNT = BUY_AMOUNT + 89;
                     Log.e("$$$trem" + trem, "BUY_AMOUNT_EARN: " + BUY_AMOUNT);
+                    count++;
                 }
             }
         }
