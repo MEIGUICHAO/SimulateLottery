@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -27,13 +29,14 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<int[]> templepositionMoreList;
     private ArrayList<int[]> templenumList;
     private ArrayList<ArrayList<Integer>> allLists;
-    private int BLANK_INT = 35;
+    private ArrayList<Integer> numLists;
+    private int BLANK_INT = 15;
     private EditText et_blank;
     private int BLANK_COUNT = 0;
     private ArrayList<int[]> allcountList;
     private ArrayList<int[]> lastSizeList;
     private ArrayList<int[]> blankCountList;
-    private ArrayList<int[]> bugPositonList;
+    private ArrayList<int[]> buyPositonList;
     private int CURRENT_BLANK;
     private int END_BLANK = 200;
     private int BUY_AMOUNT = 15;
@@ -48,34 +51,44 @@ public class MainActivity extends AppCompatActivity {
     private int ALL_AMOUNT = 0;
     private int END_BUY = 0;
     private EditText et_size;
-    private HashMap<Integer, Integer> buyMap;
+    private HashMap<Integer, Integer> buyPositionMap;
+    private HashMap<Integer, Integer> buyNumMap;
     private HashMap<Integer, Integer> trueMap;
-    private HashMap<Integer, Integer> LastMap;
-    private HashMap<Integer, Integer> trueLastMap;
-    private HashMap<Integer, Integer> positionMap;
-    private HashMap<Integer, Integer> numMap;
+    private HashMap<Integer, Integer> lastPositionMap;
+    private HashMap<Integer, Integer> lastNumMap;
     private int LAST_TREM = -1;
+
+    private int MAX_2 = 50;
+    private int BLANK_2 = 25;
+
     private int count = 0;
     private EditText et_endBuy;
     private Button btn_two;
+    private EditText et_max2Int;
+    private EditText et_less_blank;
+    private int buyCount;
+    private int lastCount;
 
 
     private void initBaseData() {
 
         if (null == allLists) {
             allLists = new ArrayList<>();
+
             lastSizeList = initList(-1);
 //            allcountList = initList(0);
             blankCountList = initList(0);
-            bugPositonList = initList(-1);
+            buyPositonList = initList(-1);
         }
 
 
-        if (null == buyMap) {
-            buyMap = new HashMap<>();
+        if (null == buyPositionMap) {
+            buyPositionMap = new HashMap<>();
+            buyNumMap = new HashMap<>();
             trueMap = new HashMap<>();
-            positionMap = new HashMap<>();
-            numMap = new HashMap<>();
+            lastPositionMap = new HashMap<>();
+            lastNumMap = new HashMap<>();
+            numLists = new ArrayList<>();
             resetBuyMap();
         }
 
@@ -112,9 +125,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void resetBuyMap() {
+
         for (int i = 0; i <10; i++) {
             for (int j = 0; j < 10; j++) {
-                buyMap.put(i * 10 + j, -1);
+                buyPositionMap.put(i * 10 + j, -1);
+                buyNumMap.put(i * 10 + j, -1);
             }
 
         }
@@ -149,6 +164,8 @@ public class MainActivity extends AppCompatActivity {
         et_length = (EditText) findViewById(R.id.et_length);
         et_size = (EditText) findViewById(R.id.et_size);
         et_endBuy = (EditText) findViewById(R.id.et_endBuy);
+        et_max2Int = (EditText) findViewById(R.id.et_max2Int);
+        et_less_blank = (EditText) findViewById(R.id.et_less_blank);
         btn_two = (Button) findViewById(R.id.btn_two);
 
         tvResult.setOnClickListener(new View.OnClickListener() {
@@ -191,12 +208,20 @@ public class MainActivity extends AppCompatActivity {
     private void getLotteryResult() {
 //        allcount = 0;
         ALL_AMOUNT = 0;
-        bugPositonList = initList(-1);
+        buyPositonList = initList(-1);
         String blank = et_blank.getText().toString();
         String endBlank = et_endBlank.getText().toString();
         String length = et_length.getText().toString();
         String size = et_size.getText().toString();
         String endbuy = et_endBuy.getText().toString();
+        String max2int = et_max2Int.getText().toString();
+        String lessBlank = et_less_blank.getText().toString();
+        if (!TextUtils.isEmpty(max2int)) {
+            MAX_2 = Integer.parseInt(max2int);
+        }
+        if (!TextUtils.isEmpty(lessBlank)) {
+            BLANK_2 = Integer.parseInt(lessBlank);
+        }
         if (!TextUtils.isEmpty(endbuy)) {
             END_BUY = Integer.parseInt(endbuy);
         }
@@ -247,16 +272,16 @@ public class MainActivity extends AppCompatActivity {
 
 
             for (int i = allLists.size() - 200; i >= 0; i--) {
-                getProgress(i);
                 if (i <= (allLists.size() - BLANK_INT)) {
                     resetBuyMap();
                     for (int j = BLANK_INT; j < END_BLANK; j++) {
                         getNumBlankData(i, j);
                     }
+                    get2PostionBuyMap(i);
                     LAST_TREM = i;
-                    setLastMap(i);
+//                    setLastMap(i);
                 }
-
+                getProgress(i);
             }
 
             if (ALI_LESS_AMOUNT > LESS_AMOUNT) {
@@ -272,6 +297,116 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+    }
+
+    private void get2PostionBuyMap(int trem) {
+        lastCount = buyCount;
+        buyCount = 0;
+        ArrayList<String> sortPositionList = new ArrayList<>();
+        ArrayList<String> sortNumList = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            sortPositionList.clear();
+            sortNumList.clear();
+            for (int j = 0; j < 10; j++) {
+
+                if (lastPositionMap.size() > 0 && -1 != lastPositionMap.get(i * 10 + j) && -1 == trueMap.get(i * 10 + j)) {
+                    BUY_AMOUNT = BUY_AMOUNT + 99;
+                    Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~: " + BUY_AMOUNT + "-trem:" + trem + "-buyCount:" + lastCount);
+                }
+
+                if (lastNumMap.size() > 0 && -1 != lastNumMap.get(i + j * 10) && -1 == trueMap.get(i + j * 10)) {
+                    BUY_AMOUNT = BUY_AMOUNT + 99;
+                    Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~: " + BUY_AMOUNT + "-trem:" + trem + "-buyCount:" + lastCount);
+                }
+
+
+                if (-1 != trueMap.get(i * 10 + j)) {
+                    sortPositionList.add((i * 10 + j) + "-" + trueMap.get(i * 10 + j));
+                }
+                if (-1 != trueMap.get(i + j * 10)) {
+                    sortNumList.add((i + j * 10) + "-" + trueMap.get(i + j * 10));
+
+                }
+            }
+            if (sortPositionList.size() > 1) {
+                sortList(sortPositionList, true, trem);
+            }
+            if (sortNumList.size() > 1) {
+                sortList(sortNumList, false, trem);
+            }
+
+            if (i == 9) {
+                if (buyCount > 0) {
+                    Log.e("BUY_AMOUNT", "BUY_AMOUNT-: " + BUY_AMOUNT + "-trem:" + trem + "-buyCount:" + buyCount);
+                }
+                setLastMap();
+            }
+
+        }
+    }
+
+    private void setLastMap() {
+
+        Iterator<Map.Entry<Integer, Integer>> iterator = buyPositionMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Integer, Integer> next = iterator.next();
+            lastPositionMap.put(next.getKey(), next.getValue());
+            if (next.getValue() > 0) {
+                Log.e("!!!!!!!!!!!!", "setLastMap: ");
+            }
+        }
+
+        Iterator<Map.Entry<Integer, Integer>> iterator2 = buyNumMap.entrySet().iterator();
+        while (iterator2.hasNext()) {
+            Map.Entry<Integer, Integer> next = iterator2.next();
+            lastNumMap.put(next.getKey(), next.getValue());
+            if (next.getValue() > 0) {
+                Log.e("!!!!!!!!!!", "setLastMap: ");
+            }
+        }
+
+    }
+
+    private void sortList(ArrayList<String> sortPositionList, boolean isPosition, int trem) {
+        Collections.sort(sortPositionList, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                //降序序排列
+                int int1 = Integer.parseInt(o1.split("-")[1]);
+                int int2 = Integer.parseInt(o2.split("-")[1]);
+                if (int1 < int2) {
+                    return 1;
+                }
+                if (int1 == int2) {
+                    return 0;
+                }
+                return -1;
+            }
+        });
+        if (Integer.parseInt(sortPositionList.get(0).split("-")[1]) > MAX_2 && ((Integer.parseInt(sortPositionList.get(0).split("-")[1]) - Integer.parseInt(sortPositionList.get(1).split("-")[1])) >= BLANK_2)) {
+
+            buyCount++;
+            Log.e("BUY_AMOUNT", "sortPositionList: " + sortPositionList.size() + "-trem:" + trem);
+            if (isPosition) {
+                buyPositionMap.put(Integer.parseInt(sortPositionList.get(0).split("-")[0]), Integer.parseInt(sortPositionList.get(0).split("-")[1]));
+                buyPositionMap.put(Integer.parseInt(sortPositionList.get(1).split("-")[0]), Integer.parseInt(sortPositionList.get(1).split("-")[1]));
+
+                BUY_AMOUNT = BUY_AMOUNT - 20;
+                Log.e("buyMap", "buyPositionMap: " + sortPositionList.get(0) + "+" + sortPositionList.get(1) + "-trem:" + trem);
+            } else {
+                BUY_AMOUNT = BUY_AMOUNT - 20;
+                buyNumMap.put(Integer.parseInt(sortPositionList.get(0).split("-")[0]), Integer.parseInt(sortPositionList.get(0).split("-")[1]));
+                buyNumMap.put(Integer.parseInt(sortPositionList.get(1).split("-")[0]), Integer.parseInt(sortPositionList.get(1).split("-")[1]));
+                Log.e("buyMap", "buyNumMap: " + sortPositionList.get(0) + "+" + sortPositionList.get(1) + "-trem:" + trem);
+            }
+
+//            Log.e("BUY_AMOUNT", "BUY_AMOUNT-: " + BUY_AMOUNT + "-trem:" + trem);
+
+            if (LESS_AMOUNT > BUY_AMOUNT) {
+                LESS_AMOUNT = BUY_AMOUNT;
+            }
+        }
 
     }
 
@@ -305,71 +440,15 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < positionList.size(); i++) {
 
             for (int j = 0; j < 10; j++) {
-                positionMap.clear();
 
                 if ((positionList.get(i)[j] == templepositionList.get(i)[j]) && (templepositionMoreList.get(i)[j] != templepositionList.get(i)[j])) {
 
-                    if (blank <= END_BUY) {
-                        BUY_AMOUNT = BUY_AMOUNT - 10;
-                        if (LESS_AMOUNT > BUY_AMOUNT) {
-                            LESS_AMOUNT = BUY_AMOUNT;
-                        }
-                        buyMap.put(i * 10 + j, blank);
-                    }
-                    Log.e("********size~~~" + term, ",位置：" + (i + 1) + ",数字：" + (j + 1) + "---" + positionList.get(i)[j] + ",blank:" + blank);
+//                    Log.e("********size~~~" + term, ",位置：" + (i + 1) + ",数字：" + (j + 1) + "---" + positionList.get(i)[j] + ",blank:" + blank);
 
                     trueMap.put(i * 10 + j, blank);
-//                    count++;
-                }
-//                else if (null != LastMap) {
-//
-//                    if (null != LastMap.get(i * 10 + j) && LastMap.get(i * 10 + j) != -1) {
-//                        BUY_AMOUNT = BUY_AMOUNT + 89;
-//                        LastMap.put(i * 10 + j, -1);
-//                        Log.e("$$$$$$size：" + term + "!!!!", "EARN+位置：" + (i + 1) + ",数字：" + (j + 1) + ",BUY_AMOUNT-: " + BUY_AMOUNT);
-//                    }
-//                }
-            }
-
-        }
-//        Log.e("!!!" + term, "sizeCount: " + count);
-
-
-    }
-
-    private void setLastMap(int trem) {
-        if (null == LastMap || null == trueLastMap) {
-            LastMap = new HashMap<>();
-            trueLastMap = new HashMap<>();
-        }
-
-
-        Iterator<Map.Entry<Integer, Integer>> lastIt = LastMap.entrySet().iterator();
-        while (lastIt.hasNext()) {
-            Map.Entry<Integer, Integer> next = lastIt.next();
-            if (next.getValue() != -1) {
-                Log.e("@@@@", "lastMap: " + next.getKey() +"---------"+ next.getValue());
-                if (buyMap.get(next.getKey()) == -1 && trueMap.get(next.getKey()) == -1 && trueLastMap.get(next.getKey()) <= END_BUY) {
-                    Log.e("@@@@", "buyMap: " + next.getKey() + "---------" + next.getValue());
-                    BUY_AMOUNT = BUY_AMOUNT + 99;
-                    Log.e("$$$trem" + trem, "BUY_AMOUNT_EARN: " + BUY_AMOUNT);
-                    count++;
                 }
             }
-        }
 
-        LastMap.clear();
-        trueLastMap.clear();
-        Iterator<Map.Entry<Integer, Integer>> iterator = buyMap.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<Integer, Integer> next = iterator.next();
-            LastMap.put(next.getKey(), next.getValue());
-        }
-
-        Iterator<Map.Entry<Integer, Integer>> iterator2 = trueMap.entrySet().iterator();
-        while (iterator2.hasNext()) {
-            Map.Entry<Integer, Integer> next = iterator2.next();
-            trueLastMap.put(next.getKey(), next.getValue());
         }
     }
 
