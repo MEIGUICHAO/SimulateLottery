@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<int[]> templenumList;
     private ArrayList<ArrayList<Integer>> allLists;
     private ArrayList<Integer> numLists;
-    private int BLANK_INT = 15;
+    private int BLANK_INT = 25;
     private EditText et_blank;
     private int BLANK_COUNT = 0;
     private ArrayList<int[]> allcountList;
@@ -58,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
     private HashMap<Integer, Integer> lastNumMap;
     private int LAST_TREM = -1;
 
-    private int MAX_2 = 50;
-    private int BLANK_2 = 25;
+    private int MAX_2 = 55;
+    private int BLANK_2 = 20;
 
     private int count = 0;
     private EditText et_endBuy;
@@ -326,24 +326,51 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (-1 != trueMap.get(i + j * 10)) {
                     sortNumList.add((i + j * 10) + "-" + trueMap.get(i + j * 10));
-
                 }
             }
             if (sortPositionList.size() > 1) {
+
                 sortList(sortPositionList, true, trem);
             }
             if (sortNumList.size() > 1) {
+
                 sortList(sortNumList, false, trem);
             }
 
             if (i == 9) {
-                if (buyCount > 0) {
-                    Log.e("BUY_AMOUNT", "BUY_AMOUNT-: " + BUY_AMOUNT + "-trem:" + trem + "-buyCount:" + buyCount);
-                }
                 setLastMap();
             }
 
         }
+
+//        for (int i = 0; i < 10; i++) {
+//            for (int j = 0; j < 10; j++) {
+//
+//                if (-1 != buyPositionMap.get(i * 10 + j) && -1 != buyNumMap.get(i * 10 + j)) {
+//                    for (int k = 0; k < 10; k++) {
+//                        buyPositionMap.put(i * 10 + k, -1);
+//                        buyNumMap.put(k * 10 + j, -1);
+//                    }
+//                }
+//            }
+//        }
+//        setLastMap();
+//
+//        for (int i = 0; i < 10; i++) {
+//            for (int j = 0; j < 10; j++) {
+//
+//                if (-1 != buyPositionMap.get(i * 10 + j)) {
+//                    BUY_AMOUNT = BUY_AMOUNT - 10;
+//                }
+//                if (-1 != buyNumMap.get(i * 10 + j)) {
+//                    BUY_AMOUNT = BUY_AMOUNT - 10;
+//                }
+//            }
+//
+//        }
+        Log.e("BUY_AMOUNT", "BUY_AMOUNT-: " + BUY_AMOUNT + "-trem:" + trem);
+
+
     }
 
     private void setLastMap() {
@@ -387,7 +414,7 @@ public class MainActivity extends AppCompatActivity {
         if (Integer.parseInt(sortPositionList.get(0).split("-")[1]) > MAX_2 && ((Integer.parseInt(sortPositionList.get(0).split("-")[1]) - Integer.parseInt(sortPositionList.get(1).split("-")[1])) >= BLANK_2)) {
 
             buyCount++;
-            Log.e("BUY_AMOUNT", "sortPositionList: " + sortPositionList.size() + "-trem:" + trem);
+//            Log.e("BUY_AMOUNT", "sortPositionList: " + sortPositionList.size() + "-trem:" + trem);
             if (isPosition) {
                 buyPositionMap.put(Integer.parseInt(sortPositionList.get(0).split("-")[0]), Integer.parseInt(sortPositionList.get(0).split("-")[1]));
                 buyPositionMap.put(Integer.parseInt(sortPositionList.get(1).split("-")[0]), Integer.parseInt(sortPositionList.get(1).split("-")[1]));
