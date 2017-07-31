@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     private int LAST_TREM = -1;
 
     private int MAX_2 = 55;
-    private int BLANK_2 = 20;
+    private int BLANK_2 = 15;
 
     private int count = 0;
     private EditText et_endBuy;
@@ -68,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
     private EditText et_less_blank;
     private int buyCount;
     private int lastCount;
+
+    private int position1 = 1;
+    private int position2 = 2;
+    private int sameSize = 3;
 
 
     private void initBaseData() {
@@ -328,11 +332,11 @@ public class MainActivity extends AppCompatActivity {
                     sortNumList.add((i + j * 10) + "-" + trueMap.get(i + j * 10));
                 }
             }
-            if (sortPositionList.size() > 1) {
+            if (sortPositionList.size() > sameSize) {
 
                 sortList(sortPositionList, true, trem);
             }
-            if (sortNumList.size() > 1) {
+            if (sortNumList.size() > sameSize) {
 
                 sortList(sortNumList, false, trem);
             }
@@ -368,7 +372,7 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //
 //        }
-        Log.e("BUY_AMOUNT", "BUY_AMOUNT-: " + BUY_AMOUNT + "-trem:" + trem);
+//        Log.e("BUY_AMOUNT", "BUY_AMOUNT-: " + BUY_AMOUNT + "-trem:" + trem);
 
 
     }
@@ -379,18 +383,18 @@ public class MainActivity extends AppCompatActivity {
         while (iterator.hasNext()) {
             Map.Entry<Integer, Integer> next = iterator.next();
             lastPositionMap.put(next.getKey(), next.getValue());
-            if (next.getValue() > 0) {
-                Log.e("!!!!!!!!!!!!", "setLastMap: ");
-            }
+//            if (next.getValue() > 0) {
+//                Log.e("!!!!!!!!!!!!", "setLastMap: ");
+//            }
         }
 
         Iterator<Map.Entry<Integer, Integer>> iterator2 = buyNumMap.entrySet().iterator();
         while (iterator2.hasNext()) {
             Map.Entry<Integer, Integer> next = iterator2.next();
             lastNumMap.put(next.getKey(), next.getValue());
-            if (next.getValue() > 0) {
-                Log.e("!!!!!!!!!!", "setLastMap: ");
-            }
+//            if (next.getValue() > 0) {
+//                Log.e("!!!!!!!!!!", "setLastMap: ");
+//            }
         }
 
     }
@@ -411,24 +415,34 @@ public class MainActivity extends AppCompatActivity {
                 return -1;
             }
         });
-        if (Integer.parseInt(sortPositionList.get(0).split("-")[1]) > MAX_2 && ((Integer.parseInt(sortPositionList.get(0).split("-")[1]) - Integer.parseInt(sortPositionList.get(1).split("-")[1])) >= BLANK_2)) {
+        if (Integer.parseInt(sortPositionList.get(position1).split("-")[1]) > MAX_2
+//                && ((Integer.parseInt(sortPositionList.get(0).split("-")[1]) - Integer.parseInt(sortPositionList.get(1).split("-")[1])) >= BLANK_2)
+                ) {
 
             buyCount++;
 //            Log.e("BUY_AMOUNT", "sortPositionList: " + sortPositionList.size() + "-trem:" + trem);
             if (isPosition) {
-                buyPositionMap.put(Integer.parseInt(sortPositionList.get(0).split("-")[0]), Integer.parseInt(sortPositionList.get(0).split("-")[1]));
-                buyPositionMap.put(Integer.parseInt(sortPositionList.get(1).split("-")[0]), Integer.parseInt(sortPositionList.get(1).split("-")[1]));
+                buyPositionMap.put(Integer.parseInt(sortPositionList.get(position1).split("-")[0]), Integer.parseInt(sortPositionList.get(position1).split("-")[1]));
+                buyPositionMap.put(Integer.parseInt(sortPositionList.get(position2).split("-")[0]), Integer.parseInt(sortPositionList.get(position2).split("-")[1]));
 
                 BUY_AMOUNT = BUY_AMOUNT - 20;
-                Log.e("buyMap", "buyPositionMap: " + sortPositionList.get(0) + "+" + sortPositionList.get(1) + "-trem:" + trem);
+                if (BUY_AMOUNT < 0) {
+                    Log.e("buyMap", "buyPositionMap " + "------------------:" + sortPositionList.get(position1) + "+" + sortPositionList.get(position2) + "-trem:" + trem);
+                } else {
+                    Log.e("buyMap", "buyPositionMap " + "+++++++++++++++++++:" + sortPositionList.get(position1) + "+" + sortPositionList.get(position2) + "-trem:" + trem);
+                }
             } else {
                 BUY_AMOUNT = BUY_AMOUNT - 20;
-                buyNumMap.put(Integer.parseInt(sortPositionList.get(0).split("-")[0]), Integer.parseInt(sortPositionList.get(0).split("-")[1]));
-                buyNumMap.put(Integer.parseInt(sortPositionList.get(1).split("-")[0]), Integer.parseInt(sortPositionList.get(1).split("-")[1]));
-                Log.e("buyMap", "buyNumMap: " + sortPositionList.get(0) + "+" + sortPositionList.get(1) + "-trem:" + trem);
+                buyNumMap.put(Integer.parseInt(sortPositionList.get(position1).split("-")[0]), Integer.parseInt(sortPositionList.get(position1).split("-")[1]));
+                buyNumMap.put(Integer.parseInt(sortPositionList.get(position2).split("-")[0]), Integer.parseInt(sortPositionList.get(position2).split("-")[1]));
+                if (BUY_AMOUNT < 0) {
+                    Log.e("buyMap", "buyNumMap " + "------------------:" + sortPositionList.get(position1) + "+" + sortPositionList.get(position2) + "-trem:" + trem);
+                } else {
+                    Log.e("buyMap", "buyNumMap " + "+++++++++++++++++++:" + sortPositionList.get(position1) + "+" + sortPositionList.get(position2) + "-trem:" + trem);
+                }
             }
 
-//            Log.e("BUY_AMOUNT", "BUY_AMOUNT-: " + BUY_AMOUNT + "-trem:" + trem);
+            Log.e("BUY_AMOUNT", "BUY_AMOUNT-: " + BUY_AMOUNT + "-trem:" + trem);
 
             if (LESS_AMOUNT > BUY_AMOUNT) {
                 LESS_AMOUNT = BUY_AMOUNT;
