@@ -67,11 +67,15 @@ public class MainActivity extends AppCompatActivity {
     private EditText et_max2Int;
     private EditText et_less_blank;
     private int buyCount;
+    private int difbuyCount;
     private int lastCount;
 
     private int position1 = 1;
     private int position2 = 2;
     private int sameSize = 3;
+    private double difNUm = 5;
+    private String difBuyStr;
+    private String difLastBuyEarnStr;
 
 
     private void initBaseData() {
@@ -276,15 +280,17 @@ public class MainActivity extends AppCompatActivity {
 
 
             for (int i = allLists.size() - 200; i >= 0; i--) {
+                difbuyCount = 0;
                 if (i <= (allLists.size() - BLANK_INT)) {
                     resetBuyMap();
                     for (int j = BLANK_INT; j < END_BLANK; j++) {
                         getNumBlankData(i, j);
                     }
-                    get2PostionBuyMap(i);
+//                    get2PostionBuyMap(i);
                     LAST_TREM = i;
 //                    setLastMap(i);
                 }
+                getDifPositionBuyMap(i);
                 getProgress(i);
             }
 
@@ -302,6 +308,14 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    }
+
+    private void getDifPositionBuyMap(int term) {
+        if (difbuyCount > difNUm) {
+            BUY_AMOUNT = BUY_AMOUNT - 10 * difbuyCount;
+            Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + term + "-difbuyCount:" + difbuyCount);
+            setDifLastMap(term);
+        }
     }
 
     private void get2PostionBuyMap(int trem) {
@@ -453,7 +467,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void getNumBlankData(int term, int blank) {
 
-
         positionList.clear();
         positionList = initList(0);
         templepositionList.clear();
@@ -484,12 +497,52 @@ public class MainActivity extends AppCompatActivity {
 
                 if ((positionList.get(i)[j] == templepositionList.get(i)[j]) && (templepositionMoreList.get(i)[j] != templepositionList.get(i)[j])) {
 
-//                    Log.e("********size~~~" + term, ",位置：" + (i + 1) + ",数字：" + (j + 1) + "---" + positionList.get(i)[j] + ",blank:" + blank);
+                    Log.e("********size~~~" + term, ",位置：" + (i + 1) + ",数字：" + (j + 1) + "---" + positionList.get(i)[j] + ",blank:" + blank);
 
+                    if (trueMap.get(i * 10 + j) == -1) {
+                        difbuyCount++;
+                    }
                     trueMap.put(i * 10 + j, blank);
                 }
             }
 
+        }
+    }
+
+    private void setDifLastMap(int term) {
+
+        difLastBuyEarnStr = "";
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+
+                if (lastPositionMap.size() > 0 && -1 != lastPositionMap.get(i * 10 + j) && -1 == trueMap.get(i * 10 + j)) {
+                    BUY_AMOUNT = BUY_AMOUNT + 99;
+                    difLastBuyEarnStr = difLastBuyEarnStr + "\n" + "位置:" + (i * 10 + j) + "blank:" + lastPositionMap.get(i * 10 + j);
+                    Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~: " + BUY_AMOUNT + "-trem:" + term + "-buyCount:" + lastCount);
+                }
+
+            }
+
+        }
+
+        if (!TextUtils.isEmpty(difLastBuyEarnStr)) {
+            Log.e("difBuyStr", "difLastBuyEarnStr: " + difLastBuyEarnStr + "----term:" + term);
+        }
+
+        Iterator<Map.Entry<Integer, Integer>> iterator = trueMap.entrySet().iterator();
+        difBuyStr = "";
+        while (iterator.hasNext()) {
+            Map.Entry<Integer, Integer> next = iterator.next();
+            lastPositionMap.put(next.getKey(), next.getValue());
+            if (next.getValue() != -1) {
+                difBuyStr = difBuyStr + "\n" + "位置:" + next.getKey() + "blank:" + next.getValue();
+            }
+//            if (next.getValue() > 0) {
+//                Log.e("!!!!!!!!!!!!", "setLastMap: ");
+//            }
+        }
+        if (!TextUtils.isEmpty(difBuyStr)) {
+            Log.e("difBuyStr", "difBuyStr: " + difBuyStr + "----term:" + term);
         }
     }
 
