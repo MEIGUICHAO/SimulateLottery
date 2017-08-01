@@ -32,7 +32,7 @@
 
     <EditText
         android:id="@+id/et_endBlank"
-        android:hint="end"
+        android:hint="beginCount"
         android:inputType="number"
         android:layout_width="200dp"
         android:layout_height="50dp"
@@ -40,7 +40,7 @@
         android:layout_alignParentStart="true" />
     <EditText
         android:id="@+id/et_max2Int"
-        android:hint="maxInt"
+        android:hint="difMaxNum"
         android:inputType="number"
         android:layout_width="200dp"
         android:layout_height="50dp"

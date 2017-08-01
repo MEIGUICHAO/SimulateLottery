@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private HashMap<Integer, Integer> lastNumMap;
     private int LAST_TREM = -1;
 
-    private int MAX_2 = 55;
+    private int MAX_2 = 50;
     private int BLANK_2 = 15;
 
     private int count = 0;
@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
             BLANK_INT = Integer.parseInt(blank);
         }
         if (!TextUtils.isEmpty(endBlank)) {
-            END_BLANK = Integer.parseInt(endBlank);
+            difNUm = Integer.parseInt(endBlank);
         }
         if (!TextUtils.isEmpty(length)) {
             LENGTH = Integer.parseInt(length);
@@ -523,10 +523,12 @@ public class MainActivity extends AppCompatActivity {
 
                     Log.e("********size~~~" + term, ",位置：" + (i + 1) + ",数字：" + (j + 1) + "---" + positionList.get(i)[j] + ",blank:" + blank);
 
-                    if (trueMap.get(i * 10 + j) == -1) {
-                        difbuyCount++;
+                    if (blank <= MAX_2) {
+                        if (trueMap.get(i * 10 + j) == -1) {
+                            difbuyCount++;
+                        }
+                        trueMap.put(i * 10 + j, blank);
                     }
-                    trueMap.put(i * 10 + j, blank);
                 }
             }
 
