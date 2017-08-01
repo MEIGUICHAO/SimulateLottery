@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private int buyCount;
     private int difbuyCount;
     private int lastCount;
+    private int lastdifCount;
 
     private int position1 = 1;
     private int position2 = 2;
@@ -291,6 +292,7 @@ public class MainActivity extends AppCompatActivity {
 //                    setLastMap(i);
                 }
                 getDifPositionBuyMap(i);
+                lastdifCount = difbuyCount;
                 getProgress(i);
             }
 
@@ -311,9 +313,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getDifPositionBuyMap(int term) {
-        if (difbuyCount > difNUm) {
+        difLastBuyEarnStr = "";
+        if (lastdifCount > difNUm) {
             BUY_AMOUNT = BUY_AMOUNT - 10 * difbuyCount;
             Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + term + "-difbuyCount:" + difbuyCount);
+        }
+
+        if (lastdifCount > difNUm) {
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < 10; j++) {
+
+                    if (lastPositionMap.size() > 0 && -1 != lastPositionMap.get(i * 10 + j) && -1 == trueMap.get(i * 10 + j)) {
+                        BUY_AMOUNT = BUY_AMOUNT + 99;
+                        difLastBuyEarnStr = difLastBuyEarnStr + "\n" + "位置:" + (i * 10 + j) + "blank:" + lastPositionMap.get(i * 10 + j);
+                        Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~: " + BUY_AMOUNT + "-trem:" + term + "-buyCount:" + lastCount);
+                    }
+
+                }
+
+            }
+        }
+
+        if (!TextUtils.isEmpty(difLastBuyEarnStr)) {
+            Log.e("difBuyStr", "difLastBuyEarnStr: " + difLastBuyEarnStr + "----term:" + term);
+        }
+        if (difbuyCount > difNUm) {
             setDifLastMap(term);
         }
     }
@@ -511,23 +535,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void setDifLastMap(int term) {
 
-        difLastBuyEarnStr = "";
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-
-                if (lastPositionMap.size() > 0 && -1 != lastPositionMap.get(i * 10 + j) && -1 == trueMap.get(i * 10 + j)) {
-                    BUY_AMOUNT = BUY_AMOUNT + 99;
-                    difLastBuyEarnStr = difLastBuyEarnStr + "\n" + "位置:" + (i * 10 + j) + "blank:" + lastPositionMap.get(i * 10 + j);
-                    Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~: " + BUY_AMOUNT + "-trem:" + term + "-buyCount:" + lastCount);
-                }
-
-            }
-
-        }
-
-        if (!TextUtils.isEmpty(difLastBuyEarnStr)) {
-            Log.e("difBuyStr", "difLastBuyEarnStr: " + difLastBuyEarnStr + "----term:" + term);
-        }
 
         Iterator<Map.Entry<Integer, Integer>> iterator = trueMap.entrySet().iterator();
         difBuyStr = "";
