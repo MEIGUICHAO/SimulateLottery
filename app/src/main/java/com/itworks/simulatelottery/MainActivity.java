@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<int[]> templenumList;
     private ArrayList<ArrayList<Integer>> allLists;
     private ArrayList<Integer> numLists;
-    private int BLANK_INT = 25;
+    private int BLANK_INT = 30;
     private EditText et_blank;
     private int BLANK_COUNT = 0;
     private ArrayList<int[]> allcountList;
