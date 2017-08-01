@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<int[]> templenumList;
     private ArrayList<ArrayList<Integer>> allLists;
     private ArrayList<Integer> numLists;
-    private int BLANK_INT = 30;
+    private int BLANK_INT = 28;
     private EditText et_blank;
     private int BLANK_COUNT = 0;
     private ArrayList<int[]> allcountList;
@@ -325,8 +325,8 @@ public class MainActivity extends AppCompatActivity {
 
                     if (lastPositionMap.size() > 0 && -1 != lastPositionMap.get(i * 10 + j) && -1 == trueMap.get(i * 10 + j)) {
                         BUY_AMOUNT = BUY_AMOUNT + 99;
-                        difLastBuyEarnStr = difLastBuyEarnStr + "\n" + "位置:" + (i * 10 + j) + "blank:" + lastPositionMap.get(i * 10 + j);
-                        Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~: " + BUY_AMOUNT + "-trem:" + term + "-buyCount:" + lastCount);
+                        difLastBuyEarnStr = difLastBuyEarnStr + "\n" + "位置:" + (i * 10 + j) + ",blank:" + lastPositionMap.get(i * 10 + j);
+                        Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~: " + BUY_AMOUNT + "-trem:" + term + "-lastdifCount:" + lastdifCount);
                     }
 
                 }
@@ -544,7 +544,7 @@ public class MainActivity extends AppCompatActivity {
             Map.Entry<Integer, Integer> next = iterator.next();
             lastPositionMap.put(next.getKey(), next.getValue());
             if (next.getValue() != -1) {
-                difBuyStr = difBuyStr + "\n" + "位置:" + next.getKey() + "blank:" + next.getValue();
+                difBuyStr = difBuyStr + "\n" + "位置:" + next.getKey() + ",blank:" + next.getValue();
             }
 //            if (next.getValue() > 0) {
 //                Log.e("!!!!!!!!!!!!", "setLastMap: ");
