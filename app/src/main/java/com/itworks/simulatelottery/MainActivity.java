@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private HashMap<Integer, Integer> buyPositionMap;
     private HashMap<Integer, Integer> buyNumMap;
     private HashMap<Integer, Integer> trueMap;
+    private HashMap<Integer, Integer> largerMap;
     private HashMap<Integer, Integer> lastPositionMap;
     private HashMap<Integer, Integer> lastNumMap;
     private int LAST_TREM = -1;
@@ -68,12 +69,10 @@ public class MainActivity extends AppCompatActivity {
     private EditText et_less_blank;
     private int buyCount;
     private int difbuyCount;
+    private int difLargerCount;
     private int lastCount;
     private int lastdifCount;
 
-    private int position1 = 1;
-    private int position2 = 2;
-    private int sameSize = 3;
     private double difNUm = 5;
     private String difBuyStr;
     private String difLastBuyEarnStr;
@@ -95,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             buyPositionMap = new HashMap<>();
             buyNumMap = new HashMap<>();
             trueMap = new HashMap<>();
+            largerMap = new HashMap<>();
             lastPositionMap = new HashMap<>();
             lastNumMap = new HashMap<>();
             numLists = new ArrayList<>();
@@ -145,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i <10; i++) {
             for (int j = 0; j < 10; j++) {
                 trueMap.put(i * 10 + j, -1);
+                largerMap.put(i * 10 + j, -1);
             }
 
         }
@@ -282,6 +283,7 @@ public class MainActivity extends AppCompatActivity {
 
             for (int i = allLists.size() - 200; i >= 0; i--) {
                 difbuyCount = 0;
+                difLargerCount = 0;
                 if (i <= (allLists.size() - BLANK_INT)) {
                     resetBuyMap();
                     for (int j = BLANK_INT; j < END_BLANK; j++) {
@@ -314,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getDifPositionBuyMap(int term) {
         difLastBuyEarnStr = "";
-        if (lastdifCount > difNUm) {
+        if (difbuyCount > difNUm) {
             BUY_AMOUNT = BUY_AMOUNT - 10 * difbuyCount;
             Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + term + "-difbuyCount:" + difbuyCount);
         }
@@ -342,153 +344,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void get2PostionBuyMap(int trem) {
-        lastCount = buyCount;
-        buyCount = 0;
-        ArrayList<String> sortPositionList = new ArrayList<>();
-        ArrayList<String> sortNumList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            sortPositionList.clear();
-            sortNumList.clear();
-            for (int j = 0; j < 10; j++) {
-
-                if (lastPositionMap.size() > 0 && -1 != lastPositionMap.get(i * 10 + j) && -1 == trueMap.get(i * 10 + j)) {
-                    BUY_AMOUNT = BUY_AMOUNT + 99;
-                    Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~: " + BUY_AMOUNT + "-trem:" + trem + "-buyCount:" + lastCount);
-                }
-
-                if (lastNumMap.size() > 0 && -1 != lastNumMap.get(i + j * 10) && -1 == trueMap.get(i + j * 10)) {
-                    BUY_AMOUNT = BUY_AMOUNT + 99;
-                    Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~: " + BUY_AMOUNT + "-trem:" + trem + "-buyCount:" + lastCount);
-                }
-
-
-                if (-1 != trueMap.get(i * 10 + j)) {
-                    sortPositionList.add((i * 10 + j) + "-" + trueMap.get(i * 10 + j));
-                }
-                if (-1 != trueMap.get(i + j * 10)) {
-                    sortNumList.add((i + j * 10) + "-" + trueMap.get(i + j * 10));
-                }
-            }
-            if (sortPositionList.size() > sameSize) {
-
-                sortList(sortPositionList, true, trem);
-            }
-            if (sortNumList.size() > sameSize) {
-
-                sortList(sortNumList, false, trem);
-            }
-
-            if (i == 9) {
-                setLastMap();
-            }
-
-        }
-
-//        for (int i = 0; i < 10; i++) {
-//            for (int j = 0; j < 10; j++) {
-//
-//                if (-1 != buyPositionMap.get(i * 10 + j) && -1 != buyNumMap.get(i * 10 + j)) {
-//                    for (int k = 0; k < 10; k++) {
-//                        buyPositionMap.put(i * 10 + k, -1);
-//                        buyNumMap.put(k * 10 + j, -1);
-//                    }
-//                }
-//            }
-//        }
-//        setLastMap();
-//
-//        for (int i = 0; i < 10; i++) {
-//            for (int j = 0; j < 10; j++) {
-//
-//                if (-1 != buyPositionMap.get(i * 10 + j)) {
-//                    BUY_AMOUNT = BUY_AMOUNT - 10;
-//                }
-//                if (-1 != buyNumMap.get(i * 10 + j)) {
-//                    BUY_AMOUNT = BUY_AMOUNT - 10;
-//                }
-//            }
-//
-//        }
-//        Log.e("BUY_AMOUNT", "BUY_AMOUNT-: " + BUY_AMOUNT + "-trem:" + trem);
-
-
-    }
-
-    private void setLastMap() {
-
-        Iterator<Map.Entry<Integer, Integer>> iterator = buyPositionMap.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<Integer, Integer> next = iterator.next();
-            lastPositionMap.put(next.getKey(), next.getValue());
-//            if (next.getValue() > 0) {
-//                Log.e("!!!!!!!!!!!!", "setLastMap: ");
-//            }
-        }
-
-        Iterator<Map.Entry<Integer, Integer>> iterator2 = buyNumMap.entrySet().iterator();
-        while (iterator2.hasNext()) {
-            Map.Entry<Integer, Integer> next = iterator2.next();
-            lastNumMap.put(next.getKey(), next.getValue());
-//            if (next.getValue() > 0) {
-//                Log.e("!!!!!!!!!!", "setLastMap: ");
-//            }
-        }
-
-    }
-
-    private void sortList(ArrayList<String> sortPositionList, boolean isPosition, int trem) {
-        Collections.sort(sortPositionList, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                //降序序排列
-                int int1 = Integer.parseInt(o1.split("-")[1]);
-                int int2 = Integer.parseInt(o2.split("-")[1]);
-                if (int1 < int2) {
-                    return 1;
-                }
-                if (int1 == int2) {
-                    return 0;
-                }
-                return -1;
-            }
-        });
-        if (Integer.parseInt(sortPositionList.get(position1).split("-")[1]) > MAX_2
-//                && ((Integer.parseInt(sortPositionList.get(0).split("-")[1]) - Integer.parseInt(sortPositionList.get(1).split("-")[1])) >= BLANK_2)
-                ) {
-
-            buyCount++;
-//            Log.e("BUY_AMOUNT", "sortPositionList: " + sortPositionList.size() + "-trem:" + trem);
-            if (isPosition) {
-                buyPositionMap.put(Integer.parseInt(sortPositionList.get(position1).split("-")[0]), Integer.parseInt(sortPositionList.get(position1).split("-")[1]));
-                buyPositionMap.put(Integer.parseInt(sortPositionList.get(position2).split("-")[0]), Integer.parseInt(sortPositionList.get(position2).split("-")[1]));
-
-                BUY_AMOUNT = BUY_AMOUNT - 20;
-                if (BUY_AMOUNT < 0) {
-                    Log.e("buyMap", "buyPositionMap " + "------------------:" + sortPositionList.get(position1) + "+" + sortPositionList.get(position2) + "-trem:" + trem);
-                } else {
-                    Log.e("buyMap", "buyPositionMap " + "+++++++++++++++++++:" + sortPositionList.get(position1) + "+" + sortPositionList.get(position2) + "-trem:" + trem);
-                }
-            } else {
-                BUY_AMOUNT = BUY_AMOUNT - 20;
-                buyNumMap.put(Integer.parseInt(sortPositionList.get(position1).split("-")[0]), Integer.parseInt(sortPositionList.get(position1).split("-")[1]));
-                buyNumMap.put(Integer.parseInt(sortPositionList.get(position2).split("-")[0]), Integer.parseInt(sortPositionList.get(position2).split("-")[1]));
-                if (BUY_AMOUNT < 0) {
-                    Log.e("buyMap", "buyNumMap " + "------------------:" + sortPositionList.get(position1) + "+" + sortPositionList.get(position2) + "-trem:" + trem);
-                } else {
-                    Log.e("buyMap", "buyNumMap " + "+++++++++++++++++++:" + sortPositionList.get(position1) + "+" + sortPositionList.get(position2) + "-trem:" + trem);
-                }
-            }
-
-            Log.e("BUY_AMOUNT", "BUY_AMOUNT-: " + BUY_AMOUNT + "-trem:" + trem);
-
-            if (LESS_AMOUNT > BUY_AMOUNT) {
-                LESS_AMOUNT = BUY_AMOUNT;
-            }
-        }
-
-    }
-
     private void getNumBlankData(int term, int blank) {
 
         positionList.clear();
@@ -497,23 +352,6 @@ public class MainActivity extends AppCompatActivity {
         templepositionList = initList(0);
         templepositionMoreList.clear();
         templepositionMoreList = initList(0);
-        for (int i = term; i < allLists.size(); i++) {
-            for (int j = 0; j < 10; j++) {
-                getPositionData(allLists.get(i).get(j), j);
-            }
-        }
-        for (int i = blank + term; i < allLists.size(); i++) {
-
-            for (int j = 0; j < 10; j++) {
-                getTemplePositionData(allLists.get(i).get(j), j);
-            }
-        }
-
-        for (int i = blank + term + 1; i < allLists.size(); i++) {
-            for (int j = 0; j < 10; j++) {
-                getTempleMorePositionData(allLists.get(i).get(j), j);
-            }
-        }
 
         for (int i = 0; i < positionList.size(); i++) {
 
@@ -529,6 +367,14 @@ public class MainActivity extends AppCompatActivity {
                         }
                         trueMap.put(i * 10 + j, blank);
                     }
+//                    else {
+//
+//                        if (largerMap.get(i * 10 + j) == -1) {
+//                            difLargerCount++;
+//                        }
+//                        largerMap.put(i * 10 + j, blank);
+//                    }
+
                 }
             }
 
@@ -556,9 +402,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void getTempleMorePositionData(Integer integer, int i) {
-        templepositionMoreList.get(i)[integer]++;
-    }
 
     private void getProgress(final int j) {
 
@@ -571,17 +414,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void getTemplePositionData(int integer, int i) {
-        templepositionList.get(i)[integer]++;
-    }
-
-    private void getNumData(Integer integer, int i) {
-        numList.get(integer)[i]++;
-    }
-
-    private void getPositionData(Integer integer, int i) {
-        positionList.get(i)[integer]++;
-    }
 
     public static Set<Integer> generateRandomArray(int size){
 
