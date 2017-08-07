@@ -83,7 +83,7 @@ public class MainActivity extends Activity {
     private double difNUm = 0;
     private String difBuyStr;
     private String difLastBuyEarnStr;
-    private boolean IS_SC;
+    private boolean IS_SC = true;
 
     private String myurlxyft = "http://api.kaijiangtong.com/lottery/?name=xyft&format=json2&uid=533810&token=8ecc79c616cc9475d246369db1165d9466df61e7&date=";
     private String myurlpk10 = "http://api.kaijiangtong.com/lottery/?name=bjpks&format=json2&uid=533810&token=8ecc79c616cc9475d246369db1165d9466df61e7&date=";
@@ -96,6 +96,9 @@ public class MainActivity extends Activity {
     private String refreshUrl;
     private int index = 0;
     int urlNum = 3;
+    private EditText et_date;
+    private EditText et_urlnum;
+    private Button btn_change;
 
 
     private void initBaseData() {
@@ -194,7 +197,23 @@ public class MainActivity extends Activity {
         et_endBuy = (EditText) findViewById(R.id.et_endBuy);
         et_max2Int = (EditText) findViewById(R.id.et_max2Int);
         et_less_blank = (EditText) findViewById(R.id.et_less_blank);
+
+        et_date = (EditText) findViewById(R.id.et_date);
+        et_urlnum = (EditText) findViewById(R.id.et_urlnum);
         btn_two = (Button) findViewById(R.id.btn_two);
+        btn_change = (Button) findViewById(R.id.btn_change);
+        btn_change.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (IS_SC) {
+                    IS_SC = false;
+                    btn_change.setText("FT");
+                } else {
+                    IS_SC = true;
+                    btn_change.setText("SC");
+                }
+            }
+        });
 
         tvResult.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -245,6 +264,17 @@ public class MainActivity extends Activity {
         String endbuy = et_endBuy.getText().toString();
         String max2int = et_max2Int.getText().toString();
         String lessBlank = et_less_blank.getText().toString();
+        String urlNums = et_urlnum.getText().toString();
+        String date = et_date.getText().toString();
+        if (!TextUtils.isEmpty(date)) {
+            String[] split = date.split("-");
+            year = Integer.parseInt(split[0]);
+            month = Integer.parseInt(split[1]);
+            day = Integer.parseInt(split[2]);
+        }
+        if (!TextUtils.isEmpty(urlNums)) {
+            urlNum = Integer.parseInt(urlNums);
+        }
         if (!TextUtils.isEmpty(max2int)) {
             MAX_2 = Integer.parseInt(max2int);
         }

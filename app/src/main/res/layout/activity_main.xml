@@ -12,14 +12,27 @@
     tools:context="com.itworks.simulatelottery.MainActivity">
 
     <EditText
+        android:id="@+id/et_date"
+        android:hint="date"
+        android:layout_width="200dp"
+        android:layout_height="50dp" />
+    <EditText
+        android:id="@+id/et_urlnum"
+        android:hint="urlnum"
+        android:inputType="number"
+        android:layout_width="200dp"
+        android:layout_height="50dp" />
+    <EditText
         android:id="@+id/et_size"
         android:hint="size"
         android:inputType="number"
+        android:visibility="gone"
         android:layout_width="200dp"
         android:layout_height="50dp" />
     <EditText
         android:id="@+id/et_length"
         android:hint="length"
+        android:visibility="gone"
         android:inputType="number"
         android:layout_width="200dp"
         android:layout_height="50dp" />
@@ -31,14 +44,6 @@
         android:layout_height="50dp" />
 
     <EditText
-        android:id="@+id/et_endBlank"
-        android:hint="beginCount"
-        android:inputType="number"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-    <EditText
         android:id="@+id/et_max2Int"
         android:hint="difMaxNum"
         android:inputType="number"
@@ -47,8 +52,17 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
     <EditText
+        android:id="@+id/et_endBlank"
+        android:hint="beginCount"
+        android:inputType="number"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+    <EditText
         android:id="@+id/et_less_blank"
         android:hint="lessBlank"
+        android:visibility="gone"
         android:inputType="number"
         android:layout_width="200dp"
         android:layout_height="50dp"
@@ -59,9 +73,15 @@
         android:text="50"
         android:hint="endBuyNum"
         android:inputType="number"
+        android:visibility="gone"
         android:layout_width="200dp"
         android:layout_height="50dp" />
 
+    <Button
+        android:id="@+id/btn_change"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sc" />
     <Button
         android:id="@+id/tvResult"
         android:layout_width="wrap_content"
