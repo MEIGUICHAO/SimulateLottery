@@ -1,16 +1,22 @@
 package com.itworks.simulatelottery;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.itworks.simulatelottery.volley.VolleyManager;
+
+import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -18,7 +24,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
 
     private Button tvResult;
@@ -28,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<int[]> templepositionList;
     private ArrayList<int[]> templepositionMoreList;
     private ArrayList<int[]> templenumList;
-    private ArrayList<ArrayList<Integer>> allLists;
+    private ArrayList<MyBean.ListBean> allLists;
     private ArrayList<Integer> numLists;
-    private int BLANK_INT = 25;
+    private int BLANK_INT = 11;
     private EditText et_blank;
     private int BLANK_COUNT = 0;
     private ArrayList<int[]> allcountList;
@@ -54,12 +60,11 @@ public class MainActivity extends AppCompatActivity {
     private HashMap<Integer, Integer> buyPositionMap;
     private HashMap<Integer, Integer> buyNumMap;
     private HashMap<Integer, Integer> trueMap;
-    private HashMap<Integer, Integer> largerMap;
     private HashMap<Integer, Integer> lastPositionMap;
     private HashMap<Integer, Integer> lastNumMap;
     private int LAST_TREM = -1;
 
-    private int MAX_2 = 50;
+    private int MAX_2 = 13;
     private int BLANK_2 = 15;
 
     private int count = 0;
@@ -69,19 +74,34 @@ public class MainActivity extends AppCompatActivity {
     private EditText et_less_blank;
     private int buyCount;
     private int difbuyCount;
-    private int difLargerCount;
     private int lastCount;
     private int lastdifCount;
 
-    private double difNUm = 3;
+    private int position1 = 1;
+    private int position2 = 2;
+    private int sameSize = 3;
+    private double difNUm = 0;
     private String difBuyStr;
     private String difLastBuyEarnStr;
+    private boolean IS_SC;
+
+    private String myurlxyft = "http://api.kaijiangtong.com/lottery/?name=xyft&format=json2&uid=533810&token=8ecc79c616cc9475d246369db1165d9466df61e7&date=";
+    private String myurlpk10 = "http://api.kaijiangtong.com/lottery/?name=bjpks&format=json2&uid=533810&token=8ecc79c616cc9475d246369db1165d9466df61e7&date=";
+    private String Url;
+    private ArrayList<String> urlsList;
+
+    private int year = 2017;
+    private int month=7;
+    private int day = 30;
+    private String refreshUrl;
+    private int index = 0;
+    int urlNum = 3;
 
 
     private void initBaseData() {
 
         if (null == allLists) {
-            allLists = new ArrayList<>();
+            allLists = new ArrayList<MyBean.ListBean>();
 
             lastSizeList = initList(-1);
 //            allcountList = initList(0);
@@ -91,13 +111,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (null == buyPositionMap) {
-            buyPositionMap = new HashMap<>();
-            buyNumMap = new HashMap<>();
-            trueMap = new HashMap<>();
-            largerMap = new HashMap<>();
-            lastPositionMap = new HashMap<>();
-            lastNumMap = new HashMap<>();
-            numLists = new ArrayList<>();
+            buyPositionMap = new HashMap<Integer, Integer>();
+            buyNumMap = new HashMap<Integer, Integer>();
+            trueMap = new HashMap<Integer, Integer>();
+            lastPositionMap = new HashMap<Integer, Integer>();
+            lastNumMap = new HashMap<Integer, Integer>();
+            numLists = new ArrayList<Integer>();
             resetBuyMap();
         }
 
@@ -145,14 +164,13 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i <10; i++) {
             for (int j = 0; j < 10; j++) {
                 trueMap.put(i * 10 + j, -1);
-                largerMap.put(i * 10 + j, -1);
             }
 
         }
     }
 
     private ArrayList<int[]> initList(int val) {
-        ArrayList<int[]> list = new ArrayList<>();
+        ArrayList<int[]> list = new ArrayList<int[]>();
         for (int i = 0; i < 10; i++) {
             int[] ints = new int[10];
             for (int j = 0; j < 10; j++) {
@@ -218,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
     private void getLotteryResult() {
 //        allcount = 0;
         ALL_AMOUNT = 0;
+        index = 0;
         buyPositonList = initList(-1);
         String blank = et_blank.getText().toString();
         String endBlank = et_endBlank.getText().toString();
@@ -262,50 +281,14 @@ public class MainActivity extends AppCompatActivity {
             LESS_AMOUNT = 0;
             count = 0;
             allLists.clear();
+            initUrls();
             if (null == allcountList) {
                 allcountList = initList(0);
             } else {
                 allcountList.clear();
                 allcountList = initList(0);
             }
-            for (int j = 0; j < 200 + LENGTH; j++) {
-                ArrayList<Integer> integers = new ArrayList<>();
-                Set<Integer> resultSet = generateRandomArray(10);
-                Iterator<Integer> it = resultSet.iterator();
-
-                //result
-                while (it.hasNext()) {
-                    integers.add(it.next());
-                }
-                allLists.add(0, integers);
-            }
-
-
-            for (int i = allLists.size() - 200; i >= 0; i--) {
-                difbuyCount = 0;
-                difLargerCount = 0;
-                if (i <= (allLists.size() - BLANK_INT)) {
-                    resetBuyMap();
-                    for (int j = BLANK_INT; j < END_BLANK; j++) {
-                        getNumBlankData(i, j);
-                    }
-//                    get2PostionBuyMap(i);
-                    LAST_TREM = i;
-//                    setLastMap(i);
-                }
-                getDifPositionBuyMap(i);
-                lastdifCount = difbuyCount;
-                getProgress(i);
-            }
-
-            if (ALI_LESS_AMOUNT > LESS_AMOUNT) {
-                ALI_LESS_AMOUNT = LESS_AMOUNT;
-            }
-            if (ALI_MORE_AMOUNT < BUY_AMOUNT) {
-                ALI_MORE_AMOUNT = BUY_AMOUNT;
-            }
-            ALL_AMOUNT = ALL_AMOUNT + BUY_AMOUNT;
-            Log.e("", "LESS_AMOUNT: " + LESS_AMOUNT + ",ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + ",ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + ",ALL_AMOUNT:" + ALL_AMOUNT + ",BUY_AMOUNT:" + BUY_AMOUNT + ",count:" + count);
+            getDataFromNet();
 
         }
 
@@ -314,21 +297,182 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    private void initUrls() {
+        urlsList = new ArrayList<String>();
+
+        for (int i = 1; i <= urlNum; i++) {
+            if ((day - i) <= 0) {
+                urlsList.add(lashMoth(day - i));
+
+            }
+            if (month < 10) {
+                if ((day - i) < 10 && (day - i) > 0) {
+                    refreshUrl = Url + year + "0" + month + "0" + (day - i) + "";
+                    urlsList.add(refreshUrl);
+                }
+                if ((day - i) >= 10) {
+
+                    refreshUrl = Url + year + "0" + month + (day - i) + "";
+                    urlsList.add(refreshUrl);
+                }
+            } else {
+                if ((day - i) < 10 && (day - i) > 0) {
+                    refreshUrl = Url + year + month + "0" + (day - i) + "";
+                    urlsList.add(refreshUrl);
+                }
+                if ((day - i) >= 10) {
+
+                    refreshUrl = Url + year + month + (day - i) + "";
+                    urlsList.add(refreshUrl);
+                }
+
+            }
+        }
+    }
+
+
+
+    private String lashMoth(int daycount) {
+
+        int maxDay;
+        if ((month - 1) == 0) {
+            maxDay = new Date(year - 1, 12, 0).getDate();
+        }
+        maxDay = new Date(year, month - 1, 0).getDate();
+        if (month == 1) {
+//            return Url + (year - 1) + "12" + (maxDay + daycount) + "";
+
+            if ((maxDay + daycount) >= 10) {
+                return Url + (year - 1) + "12" + (maxDay + daycount) + "";
+            } else {
+                return Url + (year - 1) + "12" + "0" + (maxDay + daycount) + "";
+            }
+        } else {
+            if ((month - 1) < 10) {
+                if ((maxDay + daycount) > 10) {
+                    return Url + year + "0" + (month - 1) + (maxDay + daycount) + "";
+                } else {
+                    return Url + year + "0" + (month - 1) + "0" + (maxDay + daycount) + "";
+                }
+            } else {
+
+                if ((maxDay + daycount) >= 10) {
+                    return Url + year + (month - 1) + (maxDay + daycount) + "";
+                } else {
+                    return Url + year + (month - 1) + "0" + (maxDay + daycount) + "";
+                }
+
+            }
+        }
+    }
+
+    private void afterNet() {
+//        for (int j = 0; j < 200 + LENGTH; j++) {
+//            ArrayList<Integer> integers = new ArrayList<Integer>();
+//            Set<Integer> resultSet = generateRandomArray(10);
+//            Iterator<Integer> it = resultSet.iterator();
+//
+//            //result
+//            while (it.hasNext()) {
+//                integers.add(it.next());
+//            }
+//            allLists.add(0, integers);
+//        }
+
+
+        for (int i = allLists.size(); i >= 200; i--) {
+            difbuyCount = 0;
+            if (i <= (allLists.size() - BLANK_INT)) {
+                resetBuyMap();
+                for (int j = BLANK_INT; j < END_BLANK; j++) {
+                    getNumBlankData(i, j);
+                }
+//                    get2PostionBuyMap(i);
+                LAST_TREM = i;
+//                    setLastMap(i);
+            }
+            getDifPositionBuyMap(i);
+            lastdifCount = difbuyCount;
+            getProgress(i);
+        }
+
+        if (ALI_LESS_AMOUNT > LESS_AMOUNT) {
+            ALI_LESS_AMOUNT = LESS_AMOUNT;
+        }
+        if (ALI_MORE_AMOUNT < BUY_AMOUNT) {
+            ALI_MORE_AMOUNT = BUY_AMOUNT;
+        }
+        ALL_AMOUNT = ALL_AMOUNT + BUY_AMOUNT;
+        Log.e("", "LESS_AMOUNT: " + LESS_AMOUNT + ",ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + ",ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + ",ALL_AMOUNT:" + ALL_AMOUNT + ",BUY_AMOUNT:" + BUY_AMOUNT + ",count:" + count);
+    }
+
+    private void getDataFromNet() {
+
+        if (IS_SC) {
+            Url = myurlpk10;
+        } else {
+            Url = myurlxyft;
+        }
+        VolleyManager.newInstance().StrRequest("TAG", Request.Method.GET, urlsList.get(index), new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                gsonParse(response);
+                index++;
+                Toast.makeText(MainActivity.this, "成功：" + index, Toast.LENGTH_LONG).show();
+
+                try {
+                    Thread.sleep(1000);
+                    if (index < urlNum) {
+                        getDataFromNet();
+                    } else {
+                        afterNet();
+                    }
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+//                getDataFromNet();
+                Toast.makeText(MainActivity.this, "失败", Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+    private void afterGetData() {
+
+    }
+
+    private void gsonParse(String result) {
+
+        Gson gson = new Gson();
+        MyBean pcOriginBean = gson.fromJson(result, MyBean.class);
+        allLists.addAll(pcOriginBean.getList());
+    }
+
+
     private void getDifPositionBuyMap(int term) {
         difLastBuyEarnStr = "";
-        if (difbuyCount > difNUm) {
-            BUY_AMOUNT = BUY_AMOUNT - 10 * difbuyCount;
-            Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + term + "-difbuyCount:" + difbuyCount);
-        }
+//        if (difbuyCount > difNUm) {
+//            BUY_AMOUNT = BUY_AMOUNT - 10 * difbuyCount;
+//            Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTerm() + "-difbuyCount:" + difbuyCount);
+//        }
 
         if (lastdifCount > difNUm) {
             for (int i = 0; i < 10; i++) {
                 for (int j = 0; j < 10; j++) {
 
-                    if (lastPositionMap.size() > 0 && -1 != lastPositionMap.get(i * 10 + j) && -1 == trueMap.get(i * 10 + j)) {
+                    if (lastPositionMap.size() > 0 && -1 != lastPositionMap.get(i * 10 + j) && -1 == trueMap.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) <= MAX_2) {
                         BUY_AMOUNT = BUY_AMOUNT + 99;
                         difLastBuyEarnStr = difLastBuyEarnStr + "\n" + "位置:" + (i * 10 + j) + ",blank:" + lastPositionMap.get(i * 10 + j);
-                        Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~: " + BUY_AMOUNT + "-trem:" + term + "-lastdifCount:" + lastdifCount);
+                        Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTerm() + "-lastdifCount:" + lastdifCount);
                     }
 
                 }
@@ -337,11 +481,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (!TextUtils.isEmpty(difLastBuyEarnStr)) {
-            Log.e("difBuyStr", "difLastBuyEarnStr: " + difLastBuyEarnStr + "----term:" + term);
+            Log.e("difBuyStr", "difLastBuyEarnStr: " + difLastBuyEarnStr + "----term:" + allLists.get(term).getCTerm());
         }
         if (difbuyCount > difNUm) {
             setDifLastMap(term);
         }
+    }
+
+
+    private String[] getNum(int i) {
+        MyBean.ListBean listBean = allLists.get(i);
+        return listBean.getCTermResult().split(",");
     }
 
     private void getNumBlankData(int term, int blank) {
@@ -353,6 +503,28 @@ public class MainActivity extends AppCompatActivity {
         templepositionMoreList.clear();
         templepositionMoreList = initList(0);
 
+        for (int i = term; i < allLists.size(); i++) {
+            for (int j = 0; j < 10; j++) {
+                String[] split = getNum(i);
+                getPositionData(Integer.parseInt(split[j])-1, j);
+            }
+        }
+        for (int i = blank + term; i < allLists.size(); i++) {
+
+            for (int j = 0; j < 10; j++) {
+                String[] split = getNum(i);
+                getTemplePositionData(Integer.parseInt(split[j])-1, j);
+            }
+        }
+
+        for (int i = blank + term + 1; i < allLists.size(); i++) {
+            for (int j = 0; j < 10; j++) {
+                String[] split = getNum(i);
+                getTempleMorePositionData(Integer.parseInt(split[j])-1, j);
+            }
+        }
+
+
         for (int i = 0; i < positionList.size(); i++) {
 
             for (int j = 0; j < 10; j++) {
@@ -361,8 +533,8 @@ public class MainActivity extends AppCompatActivity {
 
                     Log.e("********size~~~" + term, ",位置：" + (i + 1) + ",数字：" + (j + 1) + "---" + positionList.get(i)[j] + ",blank:" + blank);
 
-                    if (blank <= MAX_2) {
-                        if (trueMap.get(i * 10 + j) == -1) {
+                    if (blank <= (MAX_2 + 1)) {
+                        if (blank < MAX_2 && trueMap.get(i * 10 + j) == -1) {
                             difbuyCount++;
                         }
                         trueMap.put(i * 10 + j, blank);
@@ -381,6 +553,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
+    private void getTempleMorePositionData(Integer integer, int i) {
+        templepositionMoreList.get(i)[integer]++;
+    }
+
+
+    private void getTemplePositionData(int integer, int i) {
+        templepositionList.get(i)[integer]++;
+    }
+
+    private void getNumData(Integer integer, int i) {
+        numList.get(integer)[i]++;
+    }
+
+    private void getPositionData(Integer integer, int i) {
+        positionList.get(i)[integer]++;
+    }
+
     private void setDifLastMap(int term) {
 
 
@@ -388,16 +579,24 @@ public class MainActivity extends AppCompatActivity {
         difBuyStr = "";
         while (iterator.hasNext()) {
             Map.Entry<Integer, Integer> next = iterator.next();
+//            if (next.getValue() <= MAX_2) {
+//            }
             lastPositionMap.put(next.getKey(), next.getValue());
             if (next.getValue() != -1) {
                 difBuyStr = difBuyStr + "\n" + "位置:" + next.getKey() + ",blank:" + next.getValue();
+
+                if (next.getValue() <= MAX_2) {
+                    BUY_AMOUNT = BUY_AMOUNT - 10;
+                }
             }
 //            if (next.getValue() > 0) {
 //                Log.e("!!!!!!!!!!!!", "setLastMap: ");
 //            }
         }
+        Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTerm() + "-difbuyCount:" + difbuyCount);
+
         if (!TextUtils.isEmpty(difBuyStr)) {
-            Log.e("difBuyStr", "difBuyStr: " + difBuyStr + "----term:" + term);
+            Log.e("difBuyStr", "difBuyStr: " + difBuyStr + "----term:" + allLists.get(term).getCTerm());
         }
     }
 
