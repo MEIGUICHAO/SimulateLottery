@@ -60,6 +60,14 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
     <EditText
+        android:id="@+id/et_bigbegin"
+        android:hint="bigbiein"
+        android:inputType="number"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+    <EditText
         android:id="@+id/et_less_blank"
         android:hint="lessBlank"
         android:visibility="gone"

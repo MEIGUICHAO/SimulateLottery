@@ -109,6 +109,7 @@ public class MainActivity extends Activity {
     private String type = "SC";
     private boolean IS_SC = true;
     private int[] earnPositionArray;
+    private int[] buyPositionArray;
 
 
     private void initBaseData() {
@@ -122,9 +123,11 @@ public class MainActivity extends Activity {
             buyPositonList = initList(-1);
         }
         earnPositionArray = new int[110];
+        buyPositionArray = new int[110];
 
         for (int i = 0; i < 110; i++) {
             earnPositionArray[i] = 0;
+            buyPositionArray[i] = 0;
         }
 
         if (null == buyPositionMap) {
@@ -136,6 +139,7 @@ public class MainActivity extends Activity {
             numLists = new ArrayList<Integer>();
             resetBuyMap();
         }
+        lastPositionMap.clear();
 
         if (null == positionList) {
             positionList = initList(0);
@@ -458,10 +462,17 @@ public class MainActivity extends Activity {
         ALL_AMOUNT = ALL_AMOUNT + BUY_AMOUNT;
         Log.e("", "LESS_AMOUNT: " + LESS_AMOUNT + ",ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + ",ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + ",ALL_AMOUNT:" + ALL_AMOUNT + ",BUY_AMOUNT:" + BUY_AMOUNT + ",count:" + count);
         String endResult = "";
+        String buyResult = "";
         for (int i = 0; i < earnPositionArray.length; i++) {
-            endResult = endResult + i + ":" + earnPositionArray[i] + "~~~~~~~~~~~~~";
+            if (earnPositionArray[i] != 0) {
+                endResult = endResult + i + ":" + earnPositionArray[i] + "~~~~~~~~~~~~~";
+            }
+            if (buyPositionArray[i] != 0) {
+                buyResult = buyResult + i + ":" + buyPositionArray[i] + "~~~~~~~~~~~~~";
+            }
         }
         Log.e("end", "endresultBUY_AMOUNT: " + endResult);
+        Log.e("end", "buyResultBUY_AMOUNT: " + buyResult);
     }
 
     private void getDataFromNet() {
@@ -654,7 +665,7 @@ public class MainActivity extends Activity {
             lastPositionMap.put(next.getKey(), next.getValue());
             if (next.getValue() != -1) {
                 difBuyStr = difBuyStr + "\n" + "位置:" + next.getKey() + ",blank:" + next.getValue();
-
+                buyPositionArray[next.getValue()]++;
                 if (next.getValue() <= MAX_2) {
                     BUY_AMOUNT = BUY_AMOUNT - 10;
                     difbuyCount++;
