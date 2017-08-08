@@ -13,6 +13,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
+import com.itworks.simulatelottery.volley.CacheUtils;
 import com.itworks.simulatelottery.volley.VolleyManager;
 
 import java.sql.Date;
@@ -36,7 +37,8 @@ public class MainActivity extends Activity {
     private ArrayList<int[]> templenumList;
     private ArrayList<MyBean.ListBean> allLists;
     private ArrayList<Integer> numLists;
-    private int BLANK_INT = 11;
+    //begin
+    private int BLANK_INT = 3;
     private EditText et_blank;
     private int BLANK_COUNT = 0;
     private ArrayList<int[]> allcountList;
@@ -64,7 +66,8 @@ public class MainActivity extends Activity {
     private HashMap<Integer, Integer> lastNumMap;
     private int LAST_TREM = -1;
 
-    private int MAX_2 = 13;
+    //bigger
+    private int MAX_2 = 7;
     private int BLANK_2 = 15;
 
     private int count = 0;
@@ -74,6 +77,7 @@ public class MainActivity extends Activity {
     private EditText et_less_blank;
     private int buyCount;
     private int difbuyCount;
+    private int biggercount;
     private int lastCount;
     private int lastdifCount;
 
@@ -83,7 +87,6 @@ public class MainActivity extends Activity {
     private double difNUm = 0;
     private String difBuyStr;
     private String difLastBuyEarnStr;
-    private boolean IS_SC = true;
 
     private String myurlxyft = "http://api.kaijiangtong.com/lottery/?name=xyft&format=json2&uid=533810&token=8ecc79c616cc9475d246369db1165d9466df61e7&date=";
     private String myurlpk10 = "http://api.kaijiangtong.com/lottery/?name=bjpks&format=json2&uid=533810&token=8ecc79c616cc9475d246369db1165d9466df61e7&date=";
@@ -91,14 +94,21 @@ public class MainActivity extends Activity {
     private ArrayList<String> urlsList;
 
     private int year = 2017;
-    private int month=7;
-    private int day = 30;
+    private int month=8;
+    private int day = 5;
     private String refreshUrl;
     private int index = 0;
-    int urlNum = 3;
+    int urlNum = 5;
     private EditText et_date;
     private EditText et_urlnum;
     private Button btn_change;
+    private EditText et_bigbegin;
+    private int Bint = 45;
+    private int BiggerInt = 35;
+
+    private String type = "SC";
+    private boolean IS_SC = true;
+    private int[] earnPositionArray;
 
 
     private void initBaseData() {
@@ -111,7 +121,11 @@ public class MainActivity extends Activity {
             blankCountList = initList(0);
             buyPositonList = initList(-1);
         }
+        earnPositionArray = new int[110];
 
+        for (int i = 0; i < 110; i++) {
+            earnPositionArray[i] = 0;
+        }
 
         if (null == buyPositionMap) {
             buyPositionMap = new HashMap<Integer, Integer>();
@@ -197,6 +211,7 @@ public class MainActivity extends Activity {
         et_endBuy = (EditText) findViewById(R.id.et_endBuy);
         et_max2Int = (EditText) findViewById(R.id.et_max2Int);
         et_less_blank = (EditText) findViewById(R.id.et_less_blank);
+        et_bigbegin = (EditText) findViewById(R.id.et_bigbegin);
 
         et_date = (EditText) findViewById(R.id.et_date);
         et_urlnum = (EditText) findViewById(R.id.et_urlnum);
@@ -206,9 +221,11 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 if (IS_SC) {
+                    type = "FT";
                     IS_SC = false;
                     btn_change.setText("FT");
                 } else {
+                    type = "SC";
                     IS_SC = true;
                     btn_change.setText("SC");
                 }
@@ -266,11 +283,15 @@ public class MainActivity extends Activity {
         String lessBlank = et_less_blank.getText().toString();
         String urlNums = et_urlnum.getText().toString();
         String date = et_date.getText().toString();
+        String bigger = et_bigbegin.getText().toString();
         if (!TextUtils.isEmpty(date)) {
             String[] split = date.split("-");
             year = Integer.parseInt(split[0]);
             month = Integer.parseInt(split[1]);
             day = Integer.parseInt(split[2]);
+        }
+        if (!TextUtils.isEmpty(bigger)) {
+            BiggerInt = Integer.parseInt(bigger);
         }
         if (!TextUtils.isEmpty(urlNums)) {
             urlNum = Integer.parseInt(urlNums);
@@ -413,6 +434,7 @@ public class MainActivity extends Activity {
 
         for (int i = allLists.size(); i >= 200; i--) {
             difbuyCount = 0;
+            biggercount = 0;
             if (i <= (allLists.size() - BLANK_INT)) {
                 resetBuyMap();
                 for (int j = BLANK_INT; j < END_BLANK; j++) {
@@ -435,6 +457,11 @@ public class MainActivity extends Activity {
         }
         ALL_AMOUNT = ALL_AMOUNT + BUY_AMOUNT;
         Log.e("", "LESS_AMOUNT: " + LESS_AMOUNT + ",ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + ",ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + ",ALL_AMOUNT:" + ALL_AMOUNT + ",BUY_AMOUNT:" + BUY_AMOUNT + ",count:" + count);
+        String endResult = "";
+        for (int i = 0; i < earnPositionArray.length; i++) {
+            endResult = endResult + i + ":" + earnPositionArray[i] + "~~~~~~~~~~~~~";
+        }
+        Log.e("end", "endresultBUY_AMOUNT: " + endResult);
     }
 
     private void getDataFromNet() {
@@ -444,35 +471,47 @@ public class MainActivity extends Activity {
         } else {
             Url = myurlxyft;
         }
-        VolleyManager.newInstance().StrRequest("TAG", Request.Method.GET, urlsList.get(index), new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                gsonParse(response);
-                index++;
-                Toast.makeText(MainActivity.this, "成功：" + index, Toast.LENGTH_LONG).show();
+        String cache = CacheUtils.getCache(this, type + urlsList.get(index));
+        if (!TextUtils.isEmpty(cache)) {
+            gsonParse(cache);
+            index++;
+            if (index < urlNum) {
+                getDataFromNet();
+            } else {
+                afterNet();
+            }
+        } else {
 
-                try {
-                    Thread.sleep(1000);
-                    if (index < urlNum) {
-                        getDataFromNet();
-                    } else {
-                        afterNet();
+            VolleyManager.newInstance().StrRequest("TAG", Request.Method.GET, urlsList.get(index), new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    CacheUtils.putCache(MainActivity.this, type + urlsList.get(index), response);
+                    gsonParse(response);
+                    index++;
+                    Toast.makeText(MainActivity.this, "成功：" + index, Toast.LENGTH_SHORT).show();
+
+                    try {
+                        Thread.sleep(1000);
+                        if (index < urlNum) {
+                            getDataFromNet();
+                        } else {
+                            afterNet();
+                        }
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
 
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+
                 }
-
-
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
 //                getDataFromNet();
-                Toast.makeText(MainActivity.this, "失败", Toast.LENGTH_LONG).show();
-            }
-        });
+                    Toast.makeText(MainActivity.this, "失败", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
     }
 
@@ -495,14 +534,15 @@ public class MainActivity extends Activity {
 //            Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTerm() + "-difbuyCount:" + difbuyCount);
 //        }
 
-        if (lastdifCount > difNUm) {
+        if (lastdifCount > 0) {
             for (int i = 0; i < 10; i++) {
                 for (int j = 0; j < 10; j++) {
 
                     if (lastPositionMap.size() > 0 && -1 != lastPositionMap.get(i * 10 + j) && -1 == trueMap.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) <= MAX_2) {
                         BUY_AMOUNT = BUY_AMOUNT + 99;
                         difLastBuyEarnStr = difLastBuyEarnStr + "\n" + "位置:" + (i * 10 + j) + ",blank:" + lastPositionMap.get(i * 10 + j);
-                        Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTerm() + "-lastdifCount:" + lastdifCount);
+                        earnPositionArray[lastPositionMap.get(i * 10 + j)]++;
+                        Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTerm() + "-lastdifCount:" + lastdifCount + "-blank:" + lastPositionMap.get(i * 10 + j));
                     }
 
                 }
@@ -513,7 +553,7 @@ public class MainActivity extends Activity {
         if (!TextUtils.isEmpty(difLastBuyEarnStr)) {
             Log.e("difBuyStr", "difLastBuyEarnStr: " + difLastBuyEarnStr + "----term:" + allLists.get(term).getCTerm());
         }
-        if (difbuyCount > difNUm) {
+        if (term < allLists.size()) {
             setDifLastMap(term);
         }
     }
@@ -561,14 +601,14 @@ public class MainActivity extends Activity {
 
                 if ((positionList.get(i)[j] == templepositionList.get(i)[j]) && (templepositionMoreList.get(i)[j] != templepositionList.get(i)[j])) {
 
-                    Log.e("********size~~~" + term, ",位置：" + (i + 1) + ",数字：" + (j + 1) + "---" + positionList.get(i)[j] + ",blank:" + blank);
+//                    Log.e("********size~~~" + term, ",位置：" + (i + 1) + ",数字：" + (j + 1) + "---" + positionList.get(i)[j] + ",blank:" + blank);
 
-                    if (blank <= (MAX_2 + 1)) {
-                        if (blank < MAX_2 && trueMap.get(i * 10 + j) == -1) {
-                            difbuyCount++;
-                        }
-                        trueMap.put(i * 10 + j, blank);
-                    }
+//                    if (blank <= (MAX_2 + 1)) {
+////                        if (blank < MAX_2 && trueMap.get(i * 10 + j) == -1) {
+////                            difbuyCount++;
+////                        }
+//                    }
+                    trueMap.put(i * 10 + j, blank);
 //                    else {
 //
 //                        if (largerMap.get(i * 10 + j) == -1) {
@@ -617,13 +657,17 @@ public class MainActivity extends Activity {
 
                 if (next.getValue() <= MAX_2) {
                     BUY_AMOUNT = BUY_AMOUNT - 10;
+                    difbuyCount++;
+                }
+                if (next.getValue() >= BiggerInt) {
+                    biggercount++;
                 }
             }
 //            if (next.getValue() > 0) {
 //                Log.e("!!!!!!!!!!!!", "setLastMap: ");
 //            }
         }
-        Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTerm() + "-difbuyCount:" + difbuyCount);
+        Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTerm() + "-difbuyCount:" + difbuyCount + "-biggercount:" + biggercount);
 
         if (!TextUtils.isEmpty(difBuyStr)) {
             Log.e("difBuyStr", "difBuyStr: " + difBuyStr + "----term:" + allLists.get(term).getCTerm());
