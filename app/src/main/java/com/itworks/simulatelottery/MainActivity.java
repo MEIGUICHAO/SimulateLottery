@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
     private ArrayList<MyBean.ListBean> allLists;
     private ArrayList<Integer> numLists;
     //begin
-    private int BLANK_INT = 3;
+    private int BLANK_INT = 1;
     private EditText et_blank;
     private int BLANK_COUNT = 0;
     private ArrayList<int[]> allcountList;
@@ -66,8 +66,8 @@ public class MainActivity extends Activity {
     private HashMap<Integer, Integer> lastNumMap;
     private int LAST_TREM = -1;
 
-    //bigger
-    private int MAX_2 = 7;
+    //end
+    private int MAX_2 = 109;
     private int BLANK_2 = 15;
 
     private int count = 0;
@@ -98,7 +98,7 @@ public class MainActivity extends Activity {
     private int day = 5;
     private String refreshUrl;
     private int index = 0;
-    int urlNum = 5;
+    int urlNum = 2;
     private EditText et_date;
     private EditText et_urlnum;
     private Button btn_change;
@@ -463,16 +463,33 @@ public class MainActivity extends Activity {
         Log.e("", "LESS_AMOUNT: " + LESS_AMOUNT + ",ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + ",ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + ",ALL_AMOUNT:" + ALL_AMOUNT + ",BUY_AMOUNT:" + BUY_AMOUNT + ",count:" + count);
         String endResult = "";
         String buyResult = "";
+        String earnResult = "";
+        String earnMoreResult = "";
+        int buycount = 0;
+        int earncount = 0;
         for (int i = 0; i < earnPositionArray.length; i++) {
             if (earnPositionArray[i] != 0) {
+                earncount = earncount + earnPositionArray[i];
                 endResult = endResult + i + ":" + earnPositionArray[i] + "~~~~~~~~~~~~~";
             }
             if (buyPositionArray[i] != 0) {
+                buycount = buycount + buyPositionArray[i];
                 buyResult = buyResult + i + ":" + buyPositionArray[i] + "~~~~~~~~~~~~~";
+            }
+            if (earnPositionArray[i] * 99 > buyPositionArray[i] * 10) {
+                earnResult = earnResult + "earnblank:" + i + "--earn:" + (earnPositionArray[i] * 99 - buyPositionArray[i] * 10) + "~~~";
+            }
+            if (earnPositionArray[i] * 99 > buyPositionArray[i] * 10 && (earnPositionArray[i] * 99 - buyPositionArray[i] * 10) > 300) {
+                earnMoreResult = earnMoreResult + "earnblank:" + i + "--earnMoreResult:" + (earnPositionArray[i] * 99 - buyPositionArray[i] * 10) + "~~~";
             }
         }
         Log.e("end", "endresultBUY_AMOUNT: " + endResult);
         Log.e("end", "buyResultBUY_AMOUNT: " + buyResult);
+        Log.e("end", "earnResult: " + earnResult);
+        Log.e("end", "earnResultMore: " + earnMoreResult);
+
+        Log.e("end", "earncount: " + earncount + "---earnAmount:" + earncount * 99);
+        Log.e("end", "buycount: " + buycount + "---buyAmount:" + buycount * 10 + "----endAmount:" + (earncount * 99 - buycount * 10));
     }
 
     private void getDataFromNet() {
