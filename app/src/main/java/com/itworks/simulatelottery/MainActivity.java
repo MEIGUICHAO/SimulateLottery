@@ -63,6 +63,7 @@ public class MainActivity extends Activity {
     private HashMap<Integer, Integer> buyNumMap;
     private HashMap<Integer, Integer> trueMap;
     private HashMap<Integer, Integer> lastPositionMap;
+    private HashMap<Integer, Integer> recordMap;
     private HashMap<Integer, Integer> lastNumMap;
     private int LAST_TREM = -1;
 
@@ -104,12 +105,17 @@ public class MainActivity extends Activity {
     private Button btn_change;
     private EditText et_bigbegin;
     private int Bint = 45;
-    private int BiggerInt = 35;
+
+    private int BiggerInt = 70;
+    private int DANGER = 35;
 
     private String type = "SC";
     private boolean IS_SC = true;
     private int[] earnPositionArray;
     private int[] buyPositionArray;
+    private boolean CAN_BUY;
+    private boolean LAST_CAN_BUY;
+    private EditText et_danger;
 
 
     private void initBaseData() {
@@ -132,6 +138,7 @@ public class MainActivity extends Activity {
 
         if (null == buyPositionMap) {
             buyPositionMap = new HashMap<Integer, Integer>();
+            recordMap = new HashMap<Integer, Integer>();
             buyNumMap = new HashMap<Integer, Integer>();
             trueMap = new HashMap<Integer, Integer>();
             lastPositionMap = new HashMap<Integer, Integer>();
@@ -216,6 +223,7 @@ public class MainActivity extends Activity {
         et_max2Int = (EditText) findViewById(R.id.et_max2Int);
         et_less_blank = (EditText) findViewById(R.id.et_less_blank);
         et_bigbegin = (EditText) findViewById(R.id.et_bigbegin);
+        et_danger = (EditText) findViewById(R.id.et_danger);
 
         et_date = (EditText) findViewById(R.id.et_date);
         et_urlnum = (EditText) findViewById(R.id.et_urlnum);
@@ -288,11 +296,15 @@ public class MainActivity extends Activity {
         String urlNums = et_urlnum.getText().toString();
         String date = et_date.getText().toString();
         String bigger = et_bigbegin.getText().toString();
+        String mDanger = et_danger.getText().toString();
         if (!TextUtils.isEmpty(date)) {
             String[] split = date.split("-");
             year = Integer.parseInt(split[0]);
             month = Integer.parseInt(split[1]);
             day = Integer.parseInt(split[2]);
+        }
+        if (!TextUtils.isEmpty(mDanger)) {
+            DANGER = Integer.parseInt(mDanger);
         }
         if (!TextUtils.isEmpty(bigger)) {
             BiggerInt = Integer.parseInt(bigger);
@@ -439,8 +451,10 @@ public class MainActivity extends Activity {
         for (int i = allLists.size(); i >= 200; i--) {
             difbuyCount = 0;
             biggercount = 0;
+            recordMap.clear();
             if (i <= (allLists.size() - BLANK_INT)) {
                 resetBuyMap();
+                CAN_BUY = true;
                 for (int j = BLANK_INT; j < END_BLANK; j++) {
                     getNumBlankData(i, j);
                 }
@@ -561,12 +575,17 @@ public class MainActivity extends Activity {
 //            BUY_AMOUNT = BUY_AMOUNT - 10 * difbuyCount;
 //            Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTerm() + "-difbuyCount:" + difbuyCount);
 //        }
+        if (recordMap.size() >= BiggerInt && CAN_BUY) {
+            CAN_BUY = true;
+        } else {
+            CAN_BUY = false;
+        }
 
         if (lastdifCount > 0) {
             for (int i = 0; i < 10; i++) {
                 for (int j = 0; j < 10; j++) {
 
-                    if (lastPositionMap.size() > 0 && -1 != lastPositionMap.get(i * 10 + j) && -1 == trueMap.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) <= MAX_2) {
+                    if (lastPositionMap.size() > 0 && -1 != lastPositionMap.get(i * 10 + j) && -1 == trueMap.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) <= MAX_2 && LAST_CAN_BUY) {
                         BUY_AMOUNT = BUY_AMOUNT + 99;
                         difLastBuyEarnStr = difLastBuyEarnStr + "\n" + "位置:" + (i * 10 + j) + ",blank:" + lastPositionMap.get(i * 10 + j);
                         earnPositionArray[lastPositionMap.get(i * 10 + j)]++;
@@ -636,7 +655,13 @@ public class MainActivity extends Activity {
 ////                            difbuyCount++;
 ////                        }
 //                    }
+                    if (blank <= MAX_2) {
+                        recordMap.put(i * 10 + j, blank);
+                    }
                     trueMap.put(i * 10 + j, blank);
+                    if (blank >= DANGER) {
+                        CAN_BUY = false;
+                    }
 //                    else {
 //
 //                        if (largerMap.get(i * 10 + j) == -1) {
@@ -683,11 +708,11 @@ public class MainActivity extends Activity {
             if (next.getValue() != -1) {
                 difBuyStr = difBuyStr + "\n" + "位置:" + next.getKey() + ",blank:" + next.getValue();
                 buyPositionArray[next.getValue()]++;
-                if (next.getValue() <= MAX_2) {
+                if (CAN_BUY && next.getValue() <= MAX_2) {
                     BUY_AMOUNT = BUY_AMOUNT - 10;
                     difbuyCount++;
                 }
-                if (next.getValue() >= BiggerInt) {
+                if (next.getValue() > MAX_2) {
                     biggercount++;
                 }
             }
@@ -695,6 +720,7 @@ public class MainActivity extends Activity {
 //                Log.e("!!!!!!!!!!!!", "setLastMap: ");
 //            }
         }
+        LAST_CAN_BUY = CAN_BUY;
         Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTerm() + "-difbuyCount:" + difbuyCount + "-biggercount:" + biggercount);
 
         if (!TextUtils.isEmpty(difBuyStr)) {
