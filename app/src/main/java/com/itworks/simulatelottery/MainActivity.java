@@ -680,21 +680,29 @@ public class MainActivity extends Activity {
             }
         }
         if (BUY_AMOUNT > RECORD_AMOUNT) {
+//            count0[difbuyCount]++;
+//            count110[bigge110rcount]++;
+//            count1020[bigge1020rcount]++;
+//            count2030[bigge2030rcount]++;
+//            count3040[bigge3040rcount]++;
+//            count4050[bigge4050rcount]++;
+//            count50[bigge50rcount]++;
+        } else {
+
+//            count0[difbuyCount]--;
+//            count110[bigge110rcount]--;
+//            count1020[bigge1020rcount]--;
+//            count2030[bigge2030rcount]--;
+//            count3040[bigge3040rcount]--;
+//            count4050[bigge4050rcount]--;
+//            count50[bigge50rcount]--;
+
             count0[difbuyCount]++;
             count110[bigge110rcount]++;
             count1020[bigge1020rcount]++;
             count2030[bigge2030rcount]++;
             count3040[bigge3040rcount]++;
             count4050[bigge4050rcount]++;
-            count50[bigge50rcount]++;
-        } else {
-
-            count0[difbuyCount]--;
-            count110[bigge110rcount]--;
-            count1020[bigge1020rcount]--;
-            count2030[bigge2030rcount]--;
-            count3040[bigge3040rcount]--;
-            count4050[bigge4050rcount]--;
             count50[bigge50rcount]++;
         }
 
