@@ -113,9 +113,15 @@ public class MainActivity extends Activity {
     private boolean IS_SC = true;
     private int[] earnPositionArray;
     private int[] buyPositionArray;
-    private boolean CAN_BUY;
+    private boolean CAN_BUY = true;
     private boolean LAST_CAN_BUY;
     private EditText et_danger;
+    private int bigge2030rcount;
+    private int bigge3040rcount;
+    private int bigge4050rcount;
+    private int bigge50rcount;
+    private int bigge1020rcount;
+    private int bigge110rcount;
 
 
     private void initBaseData() {
@@ -448,9 +454,20 @@ public class MainActivity extends Activity {
 //        }
 
 
-        for (int i = allLists.size(); i >= 200; i--) {
+        for (int i = allLists.size()-200; i >= 0; i--) {
             difbuyCount = 0;
             biggercount = 0;
+            bigge110rcount = 0;
+            bigge1020rcount = 0;
+            bigge2030rcount = 0;
+            bigge3040rcount = 0;
+            bigge4050rcount = 0;
+            bigge50rcount = 0;
+
+
+
+
+
             recordMap.clear();
             if (i <= (allLists.size() - BLANK_INT)) {
                 resetBuyMap();
@@ -571,14 +588,10 @@ public class MainActivity extends Activity {
 
     private void getDifPositionBuyMap(int term) {
         difLastBuyEarnStr = "";
-//        if (difbuyCount > difNUm) {
-//            BUY_AMOUNT = BUY_AMOUNT - 10 * difbuyCount;
-//            Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTerm() + "-difbuyCount:" + difbuyCount);
-//        }
-        if (recordMap.size() >= BiggerInt && CAN_BUY) {
-            CAN_BUY = true;
-        } else {
+        if (recordMap.size() >= 1) {
             CAN_BUY = false;
+        } else {
+            CAN_BUY = true;
         }
 
         if (lastdifCount > 0) {
@@ -655,13 +668,13 @@ public class MainActivity extends Activity {
 ////                            difbuyCount++;
 ////                        }
 //                    }
-                    if (blank <= MAX_2) {
+                    if (blank >= 40) {
                         recordMap.put(i * 10 + j, blank);
                     }
                     trueMap.put(i * 10 + j, blank);
-                    if (blank >= DANGER) {
-                        CAN_BUY = false;
-                    }
+//                    if (blank >= DANGER) {
+//                        CAN_BUY = false;
+//                    }
 //                    else {
 //
 //                        if (largerMap.get(i * 10 + j) == -1) {
@@ -715,13 +728,33 @@ public class MainActivity extends Activity {
                 if (next.getValue() > MAX_2) {
                     biggercount++;
                 }
+                if (next.getValue() >= 1&&next.getValue()<=10) {
+                    bigge110rcount++;
+                }
+                if (next.getValue() >= 10&&next.getValue()<=20) {
+                    bigge1020rcount++;
+                }
+                if (next.getValue() >= 20&&next.getValue()<=30) {
+                    bigge2030rcount++;
+                }
+                if (next.getValue() >= 30&&next.getValue()<=40) {
+                    bigge3040rcount++;
+                }
+                if (next.getValue() >= 40&&next.getValue()<=50) {
+                    bigge4050rcount++;
+                }
+                if (next.getValue() >= 50) {
+                    bigge50rcount++;
+                }
             }
 //            if (next.getValue() > 0) {
 //                Log.e("!!!!!!!!!!!!", "setLastMap: ");
 //            }
         }
         LAST_CAN_BUY = CAN_BUY;
-        Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTerm() + "-difbuyCount:" + difbuyCount + "-biggercount:" + biggercount);
+        Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTerm() + "-difbuyCount:" + difbuyCount + "-biggercount:" + biggercount + "-1to10:" + bigge110rcount + "-10to20:" + bigge1020rcount
+                + "-20to30:" + bigge2030rcount + "-30to40:" + bigge3040rcount + "-40to50:" + bigge4050rcount + "-50+:" + bigge50rcount);
+
 
         if (!TextUtils.isEmpty(difBuyStr)) {
             Log.e("difBuyStr", "difBuyStr: " + difBuyStr + "----term:" + allLists.get(term).getCTerm());
