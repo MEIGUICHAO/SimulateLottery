@@ -48,6 +48,7 @@ public class MainActivity extends Activity {
     private int CURRENT_BLANK;
     private int END_BLANK = 200;
     private int BUY_AMOUNT = 15;
+    private int RECORD_AMOUNT = 0;
     private EditText et_endBlank;
     private EditText et_length;
     private int LENGTH = 2000;
@@ -123,6 +124,14 @@ public class MainActivity extends Activity {
     private int bigge1020rcount;
     private int bigge110rcount;
 
+    private int[] count0;
+    private int[] count110;
+    private int[] count1020;
+    private int[] count2030;
+    private int[] count3040;
+    private int[] count4050;
+    private int[] count50;
+
 
     private void initBaseData() {
 
@@ -136,6 +145,8 @@ public class MainActivity extends Activity {
         }
         earnPositionArray = new int[110];
         buyPositionArray = new int[110];
+
+        initCountIntArray();
 
         for (int i = 0; i < 110; i++) {
             earnPositionArray[i] = 0;
@@ -184,6 +195,18 @@ public class MainActivity extends Activity {
             templenumList.clear();
             templenumList = initList(0);
         }
+    }
+
+    private void initCountIntArray() {
+
+        count0 = new int[100];
+        count110 = new int[100];
+        count1020 = new int[100];
+        count2030 = new int[100];
+        count3040 = new int[100];
+        count4050 = new int[100];
+        count50 = new int[100];
+
     }
 
     private void resetBuyMap() {
@@ -455,14 +478,6 @@ public class MainActivity extends Activity {
 
 
         for (int i = allLists.size()-200; i >= 0; i--) {
-            difbuyCount = 0;
-            biggercount = 0;
-            bigge110rcount = 0;
-            bigge1020rcount = 0;
-            bigge2030rcount = 0;
-            bigge3040rcount = 0;
-            bigge4050rcount = 0;
-            bigge50rcount = 0;
 
 
 
@@ -521,6 +536,61 @@ public class MainActivity extends Activity {
 
         Log.e("end", "earncount: " + earncount + "---earnAmount:" + earncount * 99);
         Log.e("end", "buycount: " + buycount + "---buyAmount:" + buycount * 10 + "----endAmount:" + (earncount * 99 - buycount * 10));
+        String str0 = "0:";
+        String str110 = "110:";
+        String str1020 = "1020:";
+        String str2030 = "2030:";
+        String str3040 = "3040:";
+        String str4050 = "4050:";
+        String str50 = "50:";
+        for (int i = 0; i < count0.length; i++) {
+            if (count0[i] != 0) {
+                str0 = str0 + i + "@" + count0[i] + "--";
+            }
+        }
+        for (int i = 0; i < count110.length; i++) {
+            if (count110[i] != 0) {
+                str110 = str110 + i + "@" + count110[i] + "--";
+            }
+        }
+        for (int i = 0; i < count1020.length; i++) {
+            if (count1020[i] != 0) {
+                str1020 = str1020 + i + "@" + count1020[i] + "--";
+            }
+        }
+        for (int i = 0; i < count2030.length; i++) {
+            if (count2030[i] != 0) {
+                str2030 = str2030 + i + "@" + count2030[i] + "--";
+            }
+        }
+        for (int i = 0; i < count3040.length; i++) {
+            if (count3040[i] != 0) {
+                str3040 = str3040 + i + "@" + count3040[i] + "--";
+            }
+        }
+        for (int i = 0; i < count4050.length; i++) {
+            if (count4050[i] != 0) {
+                str4050 = str4050 + i + "@" + count4050[i] + "--";
+            }
+        }
+        for (int i = 0; i < count50.length; i++) {
+            if (count50[i] != 0) {
+                str50 = str50 + i + "@" + count50[i] + "--";
+            }
+        }
+        Log.e("endend", "endCaculate: " + str0 + "\n" + str110 + "\n" + str1020 + "\n" + str2030 + "\n" + str3040 + "\n" + str4050 + "\n" + str50);
+
+    }
+
+    private void resetCount() {
+        difbuyCount = 0;
+        biggercount = 0;
+        bigge110rcount = 0;
+        bigge1020rcount = 0;
+        bigge2030rcount = 0;
+        bigge3040rcount = 0;
+        bigge4050rcount = 0;
+        bigge50rcount = 0;
     }
 
     private void getDataFromNet() {
@@ -609,6 +679,24 @@ public class MainActivity extends Activity {
 
             }
         }
+        if (BUY_AMOUNT > RECORD_AMOUNT) {
+            count0[difbuyCount]++;
+            count110[bigge110rcount]++;
+            count1020[bigge1020rcount]++;
+            count2030[bigge2030rcount]++;
+            count3040[bigge3040rcount]++;
+            count4050[bigge4050rcount]++;
+            count50[bigge50rcount]++;
+        } else {
+
+            count0[difbuyCount]--;
+            count110[bigge110rcount]--;
+            count1020[bigge1020rcount]--;
+            count2030[bigge2030rcount]--;
+            count3040[bigge3040rcount]--;
+            count4050[bigge4050rcount]--;
+            count50[bigge50rcount]++;
+        }
 
         if (!TextUtils.isEmpty(difLastBuyEarnStr)) {
             Log.e("difBuyStr", "difLastBuyEarnStr: " + difLastBuyEarnStr + "----term:" + allLists.get(term).getCTerm());
@@ -668,7 +756,7 @@ public class MainActivity extends Activity {
 ////                            difbuyCount++;
 ////                        }
 //                    }
-                    if (blank >= 40) {
+                    if (blank >= 200) {
                         recordMap.put(i * 10 + j, blank);
                     }
                     trueMap.put(i * 10 + j, blank);
@@ -713,11 +801,13 @@ public class MainActivity extends Activity {
 
         Iterator<Map.Entry<Integer, Integer>> iterator = trueMap.entrySet().iterator();
         difBuyStr = "";
+        resetCount();
         while (iterator.hasNext()) {
             Map.Entry<Integer, Integer> next = iterator.next();
 //            if (next.getValue() <= MAX_2) {
 //            }
             lastPositionMap.put(next.getKey(), next.getValue());
+            RECORD_AMOUNT = BUY_AMOUNT;
             if (next.getValue() != -1) {
                 difBuyStr = difBuyStr + "\n" + "位置:" + next.getKey() + ",blank:" + next.getValue();
                 buyPositionArray[next.getValue()]++;
