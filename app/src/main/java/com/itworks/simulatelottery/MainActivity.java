@@ -139,6 +139,10 @@ public class MainActivity extends Activity {
     private int[] count3040;
     private int[] count4050;
     private int[] count50;
+    private int positionCount;
+    private int numCount;
+    private int sameCount;
+    private String sameStr;
 
 
     private void initBaseData() {
@@ -675,6 +679,30 @@ public class MainActivity extends Activity {
 
 
     private void getDifPositionBuyMap(int term) {
+
+        sameCount = 0;
+        sameStr = "";
+        for (int i = 0; i < 10; i++) {
+            positionCount = 0;
+            numCount = 0;
+            for (int j = 0; j < 10; j++) {
+                if (trueMap.get(i * 10 + j) >= 20) {
+                    positionCount++;
+                }
+                if (trueMap.get(j * 10 + i) >= 20) {
+                    numCount++;
+                }
+            }
+            if (positionCount > 1) {
+                sameCount++;
+                sameStr = sameStr + "--samePositonCount:" + positionCount;
+            }
+            if (numCount > 1) {
+                sameCount++;
+                sameStr = sameStr + "--sameNmCount:" + numCount;
+            }
+        }
+
         difLastBuyEarnStr = "";
         if (recordMap.size() >= 1) {
             CAN_BUY = false;
@@ -705,8 +733,9 @@ public class MainActivity extends Activity {
 //            count3040[bigge3040rcount]++;
 //            count4050[bigge4050rcount]++;
 //            count50[bigge50rcount]++;
-        } else {
 
+            Log.e("BUY_AMOUNT", "++++++++++++sameCount: " + sameCount + ",BUY_AMOUNT:" + BUY_AMOUNT + ",RECORD_AMOUNT:" + RECORD_AMOUNT + "\n" + "sameStr:" + sameStr);
+        } else {
 //            count0[difbuyCount]--;
 //            count110[bigge110rcount]--;
 //            count1020[bigge1020rcount]--;
@@ -714,7 +743,7 @@ public class MainActivity extends Activity {
 //            count3040[bigge3040rcount]--;
 //            count4050[bigge4050rcount]--;
 //            count50[bigge50rcount]--;
-
+            Log.e("BUY_AMOUNT", "---------------sameCount: " + sameCount + ",BUY_AMOUNT:" + BUY_AMOUNT + ",RECORD_AMOUNT:" + RECORD_AMOUNT + "\n" + "sameStr:" + sameStr);
             count0[difbuyCount]++;
             count110[bigge110rcount]++;
             count1020[bigge1020rcount]++;
@@ -786,6 +815,7 @@ public class MainActivity extends Activity {
                         recordMap.put(i * 10 + j, blank);
                     }
                     trueMap.put(i * 10 + j, blank);
+
 //                    if (blank >= DANGER) {
 //                        CAN_BUY = false;
 //                    }
@@ -828,12 +858,12 @@ public class MainActivity extends Activity {
         Iterator<Map.Entry<Integer, Integer>> iterator = trueMap.entrySet().iterator();
         difBuyStr = "";
         resetCount();
+        RECORD_AMOUNT = BUY_AMOUNT;
         while (iterator.hasNext()) {
             Map.Entry<Integer, Integer> next = iterator.next();
 //            if (next.getValue() <= MAX_2) {
 //            }
             lastPositionMap.put(next.getKey(), next.getValue());
-            RECORD_AMOUNT = BUY_AMOUNT;
             if (next.getValue() != -1) {
                 difBuyStr = difBuyStr + "\n" + "位置:" + next.getKey() + ",blank:" + next.getValue();
                 buyPositionArray[next.getValue()]++;
