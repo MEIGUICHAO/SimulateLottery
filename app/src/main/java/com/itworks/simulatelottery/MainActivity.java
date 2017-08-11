@@ -128,6 +128,14 @@ public class MainActivity extends Activity {
     private int[] count110;
     private int[] count1020;
     private int[] count2030;
+//    private int[] count3040;
+//    private int[] count4050;
+//    private int[] count50;
+
+    private int[] count0less;
+    private int[] count110less;
+    private int[] count1020less;
+    private int[] count2030less;
     private int[] count3040;
     private int[] count4050;
     private int[] count50;
@@ -143,8 +151,8 @@ public class MainActivity extends Activity {
             blankCountList = initList(0);
             buyPositonList = initList(-1);
         }
-        earnPositionArray = new int[110];
-        buyPositionArray = new int[110];
+        earnPositionArray = new int[200];
+        buyPositionArray = new int[200];
 
         initCountIntArray();
 
@@ -607,7 +615,12 @@ public class MainActivity extends Activity {
             if (index < urlNum) {
                 getDataFromNet();
             } else {
-                afterNet();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        afterNet();
+                    }
+                }).start();
             }
         } else {
 
@@ -624,7 +637,12 @@ public class MainActivity extends Activity {
                         if (index < urlNum) {
                             getDataFromNet();
                         } else {
-                            afterNet();
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    afterNet();
+                                }
+                            }).start();
                         }
 
                     } catch (InterruptedException e) {
@@ -672,7 +690,7 @@ public class MainActivity extends Activity {
                         BUY_AMOUNT = BUY_AMOUNT + 99;
                         difLastBuyEarnStr = difLastBuyEarnStr + "\n" + "位置:" + (i * 10 + j) + ",blank:" + lastPositionMap.get(i * 10 + j);
                         earnPositionArray[lastPositionMap.get(i * 10 + j)]++;
-                        Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTerm() + "-lastdifCount:" + lastdifCount + "-blank:" + lastPositionMap.get(i * 10 + j));
+                        Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-lastdifCount:" + lastdifCount + "-blank:" + lastPositionMap.get(i * 10 + j));
                     }
 
                 }
@@ -764,7 +782,7 @@ public class MainActivity extends Activity {
 ////                            difbuyCount++;
 ////                        }
 //                    }
-                    if (blank >= 200) {
+                    if (blank >= DANGER) {
                         recordMap.put(i * 10 + j, blank);
                     }
                     trueMap.put(i * 10 + j, blank);
@@ -850,7 +868,7 @@ public class MainActivity extends Activity {
 //            }
         }
         LAST_CAN_BUY = CAN_BUY;
-        Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTerm() + "-difbuyCount:" + difbuyCount + "-biggercount:" + biggercount + "-1to10:" + bigge110rcount + "-10to20:" + bigge1020rcount
+        Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-difbuyCount:" + difbuyCount + "-biggercount:" + biggercount + "-1to10:" + bigge110rcount + "-10to20:" + bigge1020rcount
                 + "-20to30:" + bigge2030rcount + "-30to40:" + bigge3040rcount + "-40to50:" + bigge4050rcount + "-50+:" + bigge50rcount);
 
 
@@ -862,6 +880,7 @@ public class MainActivity extends Activity {
 
 
     private void getProgress(final int j) {
+
 
         this. runOnUiThread(new Runnable() {
             @Override
