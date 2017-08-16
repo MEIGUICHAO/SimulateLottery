@@ -39,7 +39,7 @@ public class MainActivity extends Activity {
     private ArrayList<MyBean.ListBean> allLists;
     private ArrayList<Integer> numLists;
     //begin
-    private int BLANK_INT = 16;
+    private int BLANK_INT = 15;
     private EditText et_blank;
     private int BLANK_COUNT = 0;
     private ArrayList<int[]> allcountList;
@@ -71,7 +71,7 @@ public class MainActivity extends Activity {
     private int LAST_TREM = -1;
 
     //end
-    private int MAX_2 = 50;
+    private int MAX_2 = 65;
     private int BLANK_2 = 15;
 
     private int count = 0;
@@ -109,7 +109,7 @@ public class MainActivity extends Activity {
     private EditText et_bigbegin;
     private int Bint = 45;
 
-    private int BiggerInt = 6;
+    private int BiggerInt = 2;
     private int DANGER = 5;
 
     private String type = "SC";
@@ -149,6 +149,10 @@ public class MainActivity extends Activity {
     private String str0;
     private String str0less;
     private int sameCount;
+    private String strSame0;
+    private String strSame0less;
+    private String numBlankStr;
+    private String positionBlankStr;
 
 
     private void initBaseData() {
@@ -538,7 +542,22 @@ public class MainActivity extends Activity {
                 str0less = str0less + i + "@" + count0less[i] + "--";
             }
         }
-        Log.e("end", "end: " + "\n" + str0 + "\n" + str0less);
+
+
+        strSame0 = "sameEarn:";
+        strSame0less = "sameLost:";
+        for (int i = 0; i < count110.length; i++) {
+            if (count110[i] != 0) {
+                strSame0 = strSame0 + i + "@" + count110[i] + "--";
+            }
+        }
+        for (int i = 0; i < count110less.length; i++) {
+            if (count110less[i] != 0) {
+                strSame0less = strSame0less + i + "@" + count110less[i] + "--";
+            }
+        }
+        Log.e("end", "end: " + "\n" + str0 + "\n" + str0less + "\n" + strSame0 + "\n" + strSame0less);
+
 
     }
 
@@ -618,7 +637,7 @@ public class MainActivity extends Activity {
             for (int i = 0; i < 10; i++) {
                 for (int j = 0; j < 10; j++) {
 
-                    if (lastPositionMap.size() > 0 && -1 != lastPositionMap.get(i * 10 + j) && -1 == trueMap.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) <= MAX_2 && LAST_CAN_BUY) {
+                    if (lastPositionMap.size() > 0 && -1 != lastPositionMap.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) > record2Map.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) <= MAX_2 && LAST_CAN_BUY) {
                         BUY_AMOUNT = BUY_AMOUNT + 99;
                         difLastBuyEarnStr = difLastBuyEarnStr + "\n" + "位置:" + (i * 10 + j) + ",blank:" + lastPositionMap.get(i * 10 + j);
                         Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-lastdifCount:" + lastdifCount + "-blank:" + lastPositionMap.get(i * 10 + j) + "-sameCount:" + sameCount);
@@ -645,13 +664,18 @@ public class MainActivity extends Activity {
 
             positionStr = "";
             numStr = "";
+
+            positionBlankStr = "";
+            numBlankStr = "";
             for (int j = 0; j < 10; j++) {
                 if (record2Map.get(i * 10 + j) > DANGER) {
                     positionCount++;
                     if (TextUtils.isEmpty(positionStr)) {
                         positionStr = (i * 10 + j) + "";
+                        positionBlankStr = record2Map.get(i * 10 + j) + "";
                     } else {
                         positionStr = positionStr + "-" + (i * 10 + j);
+                        positionBlankStr = positionBlankStr + "-" + record2Map.get(i * 10 + j);
                     }
                 }
 
@@ -659,23 +683,31 @@ public class MainActivity extends Activity {
                     numCount++;
                     if (TextUtils.isEmpty(numStr)) {
                         numStr = (j * 10 + i) + "";
+                        numBlankStr = record2Map.get(j * 10 + i) + "";
                     } else {
                         numStr = numStr + "-" + (j * 10 + i);
+                        numBlankStr = numBlankStr + "-" + record2Map.get(j * 10 + i);
                     }
                 }
             }
-            if (positionCount > BiggerInt) {
+            if (positionCount < BiggerInt) {
                 sameCount++;
                 String[] positionSplite = positionStr.split("-");
+                String[] blankStr = positionBlankStr.split("-");
                 for (int j = 0; j < positionSplite.length; j++) {
-                    trueMap.put(Integer.parseInt(positionSplite[j]), -1);
+                    if (!TextUtils.isEmpty(positionSplite[j]) && !TextUtils.isEmpty(blankStr[j])) {
+                        trueMap.put(Integer.parseInt(positionSplite[j]), Integer.parseInt(blankStr[j]));
+                    }
                 }
             }
-            if (numCount > BiggerInt) {
+            if (numCount < BiggerInt) {
                 sameCount++;
                 String[] numSplite = numStr.split("-");
+                String[] blankStr = numBlankStr.split("-");
                 for (int j = 0; j < numSplite.length; j++) {
-                    trueMap.put(Integer.parseInt(numSplite[j]), -1);
+                    if (!TextUtils.isEmpty(numSplite[j]) && !TextUtils.isEmpty(blankStr[j])) {
+                        trueMap.put(Integer.parseInt(numSplite[j]), Integer.parseInt(blankStr[j]));
+                    }
                 }
             }
 
@@ -739,9 +771,9 @@ public class MainActivity extends Activity {
                     if (blank >= 200) {
                         recordMap.put(i * 10 + j, blank);
                     }
-                    if (blank >= BLANK_INT) {
-                        trueMap.put(i * 10 + j, blank);
-                    }
+//                    if (blank >= BLANK_INT) {
+//                        trueMap.put(i * 10 + j, blank);
+//                    }
                     if (blank <= MAX_2) {
                         record2Map.put(i * 10 + j, blank);
                     }
