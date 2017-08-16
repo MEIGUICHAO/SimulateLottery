@@ -109,8 +109,8 @@ public class MainActivity extends Activity {
     private EditText et_bigbegin;
     private int Bint = 45;
 
-    private int BiggerInt = 2;
-    private int DANGER = 5;
+    private int BiggerInt = 3;
+    private int DANGER = 15;
 
     private String type = "SC";
     private boolean IS_SC = true;
