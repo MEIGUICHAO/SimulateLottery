@@ -510,7 +510,7 @@ public class MainActivity extends Activity {
             if (i <= (allLists.size() - BLANK_INT)) {
                 resetBuyMap();
                 CAN_BUY = true;
-                for (int j = 0; j < END_BLANK; j++) {
+                for (int j = 1; j < END_BLANK; j++) {
                     getNumBlankData(i, j);
                 }
 //                    get2PostionBuyMap(i);
@@ -570,7 +570,11 @@ public class MainActivity extends Activity {
         }
         String cache = CacheUtils.getCache(this, type + urlsList.get(index));
         if (!TextUtils.isEmpty(cache)) {
-            gsonParse(cache);
+            try {
+                gsonParse(cache);
+            } catch (Exception e) {
+                CacheUtils.putCache(this, type + urlsList.get(index), "");
+            }
             index++;
             if (index < urlNum) {
                 getDataFromNet();
@@ -588,7 +592,13 @@ public class MainActivity extends Activity {
                 @Override
                 public void onResponse(String response) {
                     CacheUtils.putCache(MainActivity.this, type + urlsList.get(index), response);
-                    gsonParse(response);
+
+
+                    try {
+                        gsonParse(response);
+                    } catch (Exception e) {
+                        CacheUtils.putCache(MainActivity.this, type + urlsList.get(index), "");
+                    }
                     index++;
                     Toast.makeText(MainActivity.this, "成功：" + index, Toast.LENGTH_SHORT).show();
 
@@ -637,7 +647,8 @@ public class MainActivity extends Activity {
             for (int i = 0; i < 10; i++) {
                 for (int j = 0; j < 10; j++) {
 
-                    if (lastPositionMap.size() > 0 && -1 != lastPositionMap.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) > record2Map.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) <= MAX_2 && LAST_CAN_BUY) {
+                    if (lastPositionMap.size() > 0 && -1 != lastPositionMap.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) > record2Map.get(i * 10 + j) && -1 == record2Map.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) <= MAX_2 && LAST_CAN_BUY) {
+
                         BUY_AMOUNT = BUY_AMOUNT + 99;
                         difLastBuyEarnStr = difLastBuyEarnStr + "\n" + "位置:" + (i * 10 + j) + ",blank:" + lastPositionMap.get(i * 10 + j);
                         Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-lastdifCount:" + lastdifCount + "-blank:" + lastPositionMap.get(i * 10 + j) + "-sameCount:" + sameCount);
@@ -668,7 +679,7 @@ public class MainActivity extends Activity {
             positionBlankStr = "";
             numBlankStr = "";
             for (int j = 0; j < 10; j++) {
-                if (record2Map.get(i * 10 + j) > DANGER) {
+                if (record2Map.get(i * 10 + j) > DANGER && record2Map.get(i * 10 + j) <= MAX_2) {
                     positionCount++;
                     if (TextUtils.isEmpty(positionStr)) {
                         positionStr = (i * 10 + j) + "";
@@ -679,7 +690,7 @@ public class MainActivity extends Activity {
                     }
                 }
 
-                if (record2Map.get(j * 10 + i) > DANGER) {
+                if (record2Map.get((j * 10 + i)) > DANGER && record2Map.get((j * 10 + i)) <= MAX_2) {
                     numCount++;
                     if (TextUtils.isEmpty(numStr)) {
                         numStr = (j * 10 + i) + "";
@@ -690,7 +701,7 @@ public class MainActivity extends Activity {
                     }
                 }
             }
-            if (positionCount < BiggerInt) {
+            if ( positionCount < BiggerInt) {
                 sameCount++;
                 String[] positionSplite = positionStr.split("-");
                 String[] blankStr = positionBlankStr.split("-");
@@ -701,6 +712,7 @@ public class MainActivity extends Activity {
                 }
             }
             if (numCount < BiggerInt) {
+
                 sameCount++;
                 String[] numSplite = numStr.split("-");
                 String[] blankStr = numBlankStr.split("-");
@@ -774,9 +786,9 @@ public class MainActivity extends Activity {
 //                    if (blank >= BLANK_INT) {
 //                        trueMap.put(i * 10 + j, blank);
 //                    }
-                    if (blank <= MAX_2) {
-                        record2Map.put(i * 10 + j, blank);
-                    }
+//                    if (blank <= MAX_2) {
+//                    }
+                    record2Map.put(i * 10 + j, blank);
                 }
             }
 
@@ -820,12 +832,15 @@ public class MainActivity extends Activity {
         int more30 = 0;
         while (iterator.hasNext()) {
             Map.Entry<Integer, Integer> next = iterator.next();
-            lastPositionMap.put(next.getKey(), next.getValue());
             if (next.getValue() != -1) {
-                difBuyStr = difBuyStr + "\n" + "位置:" + next.getKey() + ",blank:" + next.getValue();
-                if (CAN_BUY && next.getValue() <= MAX_2) {
+                if (CAN_BUY && next.getValue() <= MAX_2 && next.getValue() >= BLANK_INT) {
+                    difBuyStr = difBuyStr + "\n" + "位置:" + next.getKey() + ",blank:" + next.getValue();
+                    lastPositionMap.put(next.getKey(), next.getValue());
                     BUY_AMOUNT = BUY_AMOUNT - 10;
                     difbuyCount++;
+                } else {
+                    lastPositionMap.put(next.getKey(), -1);
+
                 }
                 if (next.getValue() > MAX_2) {
                     biggercount++;
@@ -839,10 +854,11 @@ public class MainActivity extends Activity {
                 if (next.getValue() >= 40) {
                     more30++;
                 }
+            } else {
+                lastPositionMap.put(next.getKey(), -1);
             }
         }
-        Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-difbuyCount:" + difbuyCount
-                        + "-50+:" + more50 + "-40+:" + more40 + "-30+:" + more30 + "-sameCount:" + sameCount
+        Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-difbuyCount:" + difbuyCount + "-sameCount:" + sameCount
 //                + "-biggercount:" + biggercount + "-1to10:" + bigge110rcount + "-10to20:" + bigge1020rcount
 //                + "-20to30:" + bigge2030rcount + "-30to40:" + bigge3040rcount + "-40to50:" + bigge4050rcount + "-50+:" + bigge50rcount
         );
