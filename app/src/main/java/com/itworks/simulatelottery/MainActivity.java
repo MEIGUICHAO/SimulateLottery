@@ -158,6 +158,7 @@ public class MainActivity extends Activity {
     private int[] fiboArr;
     private int fibIndex = 0;
     private String biggerStr;
+    private int fibLength = 7;
 
 
     private void initBaseData() {
@@ -340,18 +341,18 @@ public class MainActivity extends Activity {
 
 
         if (fiboArr == null) {
-            fiboArr = new int[16];
-            fiboArr[0] = fiboArr[1] = fiboArr[2] = fiboArr[3] = 1;
-            fiboArr[4] = fiboArr[5] = fiboArr[0] + fiboArr[2];
-            fiboArr[6] = fiboArr[7] = fiboArr[2] + fiboArr[4];
-            fiboArr[8] = fiboArr[9] = fiboArr[4] + fiboArr[6];
-            fiboArr[10] = fiboArr[11] = fiboArr[6] + fiboArr[8];
-            fiboArr[12] = fiboArr[13] = fiboArr[8] + fiboArr[10];
-            fiboArr[14] = fiboArr[15] = fiboArr[10] + fiboArr[12];
+            fiboArr = new int[fibLength];
+//            fiboArr[0] = fiboArr[1] = fiboArr[2] = fiboArr[3] = 1;
+//            fiboArr[4] = fiboArr[5] = fiboArr[0] + fiboArr[2];
+//            fiboArr[6] = fiboArr[7] = fiboArr[2] + fiboArr[4];
+//            fiboArr[8] = fiboArr[9] = fiboArr[4] + fiboArr[6];
+//            fiboArr[10] = fiboArr[11] = fiboArr[6] + fiboArr[8];
+//            fiboArr[12] = fiboArr[13] = fiboArr[8] + fiboArr[10];
+//            fiboArr[14] = fiboArr[15] = fiboArr[10] + fiboArr[12];
 
-//            for (int i = 2; i < 7; i++) {
-//                fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
-//            }
+            for (int i = 2; i < 7; i++) {
+                fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
+            }
         }
 
     }
@@ -681,8 +682,10 @@ public class MainActivity extends Activity {
             ALI_MORE_AMOUNT = BUY_AMOUNT;
             fibIndex = 0;
         } else {
-            if (fibIndex < 15 && !TextUtils.isEmpty(biggerStr)) {
-                if (BUY_AMOUNT < RECORD_AMOUNT) {
+            if (fibIndex < (fibLength - 1) && !TextUtils.isEmpty(biggerStr)) {
+                if ((BUY_AMOUNT - RECORD_AMOUNT) >= 800) {
+                    fibIndex = 0;
+                } else if (BUY_AMOUNT < RECORD_AMOUNT && ((ALI_MORE_AMOUNT - BUY_AMOUNT) > 200)) {
                     fibIndex++;
                 }
             } else {
@@ -702,7 +705,7 @@ public class MainActivity extends Activity {
         sameStr = "";
         sameCount = 0;
 
-        biggerStr = "";
+        biggerStr = "-";
         for (int i = 0; i < 10; i++) {
 //            sameCount(i);
             positionCount = 0;
@@ -719,7 +722,7 @@ public class MainActivity extends Activity {
 
                 if (record2Map.get(i * 10 + j) > MAX_2) {
                     if (TextUtils.isEmpty(biggerStr)) {
-                        biggerStr = record2Map.get(i * 10 + j) + "";
+                        biggerStr = record2Map.get(i * 10 + j) + "-";
                     } else {
                         biggerStr = biggerStr + "-" + record2Map.get(i * 10 + j);
                     }
@@ -909,7 +912,7 @@ public class MainActivity extends Activity {
                 lastPositionMap.put(next.getKey(), -1);
             }
         }
-        Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-difbuyCount:" + difbuyCount + "-sameCount:" + sameCount + "-fibIndex:" + fibIndex
+        Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-difbuyCount:" + difbuyCount + "-sameCount:" + sameCount + "-fibIndex:" + fibIndex + "-ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT
 //                + "-biggercount:" + biggercount + "-1to10:" + bigge110rcount + "-10to20:" + bigge1020rcount
 //                + "-20to30:" + bigge2030rcount + "-30to40:" + bigge3040rcount + "-40to50:" + bigge4050rcount + "-50+:" + bigge50rcount
         );
