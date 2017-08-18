@@ -681,8 +681,12 @@ public class MainActivity extends Activity {
             ALI_MORE_AMOUNT = BUY_AMOUNT;
             fibIndex = 0;
         } else {
-            if (fibIndex < 15 && !TextUtils.isEmpty(biggerStr) && ((ALI_MORE_AMOUNT - BUY_AMOUNT) >= 300)) {
-                fibIndex++;
+            if (fibIndex < 15 && !TextUtils.isEmpty(biggerStr)) {
+                if (BUY_AMOUNT < RECORD_AMOUNT) {
+                    fibIndex++;
+                }
+            } else {
+                fibIndex = 0;
             }
         }
         if (BUY_AMOUNT >= RECORD_AMOUNT) {
