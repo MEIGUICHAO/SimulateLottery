@@ -153,6 +153,11 @@ public class MainActivity extends Activity {
     private String strSame0less;
     private String numBlankStr;
     private String positionBlankStr;
+    private boolean positionContinue;
+    private boolean numContinue;
+    private int[] fiboArr;
+    private int fibIndex = 0;
+
 
 
     private void initBaseData() {
@@ -332,6 +337,15 @@ public class MainActivity extends Activity {
                 }).start();
             }
         });
+
+
+        if (fiboArr == null) {
+            fiboArr = new int[7];
+            fiboArr[0] = fiboArr[1] = 1;
+            for (int i = 2; i < 7; i++) {
+                fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
+            }
+        }
 
     }
 
@@ -649,7 +663,7 @@ public class MainActivity extends Activity {
 
                     if (lastPositionMap.size() > 0 && -1 != lastPositionMap.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) > record2Map.get(i * 10 + j) && -1 == record2Map.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) <= MAX_2 && LAST_CAN_BUY) {
 
-                        BUY_AMOUNT = BUY_AMOUNT + 99;
+                        BUY_AMOUNT = BUY_AMOUNT + 99 * fiboArr[fibIndex];
                         difLastBuyEarnStr = difLastBuyEarnStr + "\n" + "位置:" + (i * 10 + j) + ",blank:" + lastPositionMap.get(i * 10 + j);
                         Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-lastdifCount:" + lastdifCount + "-blank:" + lastPositionMap.get(i * 10 + j) + "-sameCount:" + sameCount);
                     }
@@ -658,12 +672,17 @@ public class MainActivity extends Activity {
 
             }
         }
-        if (BUY_AMOUNT > RECORD_AMOUNT) {
+        if (BUY_AMOUNT >= RECORD_AMOUNT) {
             count0[difbuyCount]++;
             count110[sameCount]++;
+            fibIndex = 0;
         } else if (BUY_AMOUNT < RECORD_AMOUNT) {
             count0less[difbuyCount]++;
             count110less[sameCount]++;
+            if (fibIndex <= 7) {
+                fibIndex++;
+            }
+
         }
         difbuyCount = 0;
         sameStr = "";
@@ -678,8 +697,15 @@ public class MainActivity extends Activity {
 
             positionBlankStr = "";
             numBlankStr = "";
+            positionContinue = true;
+            numContinue = true;
             for (int j = 0; j < 10; j++) {
+
+                if (record2Map.get(i * 10 + j) > MAX_2) {
+                    positionContinue = false;
+                }
                 if (record2Map.get(i * 10 + j) > DANGER && record2Map.get(i * 10 + j) <= MAX_2) {
+
                     positionCount++;
                     if (TextUtils.isEmpty(positionStr)) {
                         positionStr = (i * 10 + j) + "";
@@ -689,8 +715,11 @@ public class MainActivity extends Activity {
                         positionBlankStr = positionBlankStr + "-" + record2Map.get(i * 10 + j);
                     }
                 }
-
+                if (record2Map.get(j * 10 + i) > MAX_2) {
+                    numContinue = false;
+                }
                 if (record2Map.get((j * 10 + i)) > DANGER && record2Map.get((j * 10 + i)) <= MAX_2) {
+
                     numCount++;
                     if (TextUtils.isEmpty(numStr)) {
                         numStr = (j * 10 + i) + "";
@@ -701,7 +730,8 @@ public class MainActivity extends Activity {
                     }
                 }
             }
-            if ( positionCount < BiggerInt) {
+            if (positionContinue && positionCount > BiggerInt) {
+
                 sameCount++;
                 String[] positionSplite = positionStr.split("-");
                 String[] blankStr = positionBlankStr.split("-");
@@ -711,8 +741,7 @@ public class MainActivity extends Activity {
                     }
                 }
             }
-            if (numCount < BiggerInt) {
-
+            if (numContinue && numCount > BiggerInt) {
                 sameCount++;
                 String[] numSplite = numStr.split("-");
                 String[] blankStr = numBlankStr.split("-");
@@ -836,7 +865,7 @@ public class MainActivity extends Activity {
                 if (CAN_BUY && next.getValue() <= MAX_2 && next.getValue() >= BLANK_INT) {
                     difBuyStr = difBuyStr + "\n" + "位置:" + next.getKey() + ",blank:" + next.getValue();
                     lastPositionMap.put(next.getKey(), next.getValue());
-                    BUY_AMOUNT = BUY_AMOUNT - 10;
+                    BUY_AMOUNT = BUY_AMOUNT - 10 * fiboArr[fibIndex];
                     difbuyCount++;
                 } else {
                     lastPositionMap.put(next.getKey(), -1);
