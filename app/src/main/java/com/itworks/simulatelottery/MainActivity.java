@@ -350,6 +350,8 @@ public class MainActivity extends Activity {
 //            fiboArr[12] = fiboArr[13] = fiboArr[8] + fiboArr[10];
 //            fiboArr[14] = fiboArr[15] = fiboArr[10] + fiboArr[12];
 
+
+            fiboArr[0] = fiboArr[1] = 1;
             for (int i = 2; i < 7; i++) {
                 fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
             }
