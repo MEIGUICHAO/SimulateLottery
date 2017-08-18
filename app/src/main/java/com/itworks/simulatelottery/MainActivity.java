@@ -340,11 +340,18 @@ public class MainActivity extends Activity {
 
 
         if (fiboArr == null) {
-            fiboArr = new int[7];
-            fiboArr[0] = fiboArr[1] = 1;
-            for (int i = 2; i < 7; i++) {
-                fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
-            }
+            fiboArr = new int[16];
+            fiboArr[0] = fiboArr[1] = fiboArr[2] = fiboArr[3] = 1;
+            fiboArr[4] = fiboArr[5] = fiboArr[0] + fiboArr[2];
+            fiboArr[6] = fiboArr[7] = fiboArr[2] + fiboArr[4];
+            fiboArr[8] = fiboArr[9] = fiboArr[4] + fiboArr[6];
+            fiboArr[10] = fiboArr[11] = fiboArr[6] + fiboArr[8];
+            fiboArr[12] = fiboArr[13] = fiboArr[8] + fiboArr[10];
+            fiboArr[14] = fiboArr[15] = fiboArr[10] + fiboArr[12];
+
+//            for (int i = 2; i < 7; i++) {
+//                fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
+//            }
         }
 
     }
@@ -539,9 +546,6 @@ public class MainActivity extends Activity {
         if (ALI_LESS_AMOUNT > LESS_AMOUNT) {
             ALI_LESS_AMOUNT = LESS_AMOUNT;
         }
-        if (ALI_MORE_AMOUNT < BUY_AMOUNT) {
-            ALI_MORE_AMOUNT = BUY_AMOUNT;
-        }
 
 
         str0 = "earn:";
@@ -672,16 +676,22 @@ public class MainActivity extends Activity {
 
             }
         }
+
+        if (ALI_MORE_AMOUNT <= BUY_AMOUNT ) {
+            ALI_MORE_AMOUNT = BUY_AMOUNT;
+            fibIndex = 0;
+        } else {
+            if (fibIndex < 15 && BUY_AMOUNT < RECORD_AMOUNT) {
+                fibIndex++;
+            }
+        }
         if (BUY_AMOUNT >= RECORD_AMOUNT) {
             count0[difbuyCount]++;
             count110[sameCount]++;
-            fibIndex = 0;
+
         } else if (BUY_AMOUNT < RECORD_AMOUNT) {
             count0less[difbuyCount]++;
             count110less[sameCount]++;
-            if (fibIndex <= 7) {
-                fibIndex++;
-            }
 
         }
         difbuyCount = 0;
@@ -887,7 +897,7 @@ public class MainActivity extends Activity {
                 lastPositionMap.put(next.getKey(), -1);
             }
         }
-        Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-difbuyCount:" + difbuyCount + "-sameCount:" + sameCount
+        Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-difbuyCount:" + difbuyCount + "-sameCount:" + sameCount + "-fibIndex:" + fibIndex
 //                + "-biggercount:" + biggercount + "-1to10:" + bigge110rcount + "-10to20:" + bigge1020rcount
 //                + "-20to30:" + bigge2030rcount + "-30to40:" + bigge3040rcount + "-40to50:" + bigge4050rcount + "-50+:" + bigge50rcount
         );
