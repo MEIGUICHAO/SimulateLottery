@@ -157,7 +157,7 @@ public class MainActivity extends Activity {
     private boolean numContinue;
     private int[] fiboArr;
     private int fibIndex = 0;
-
+    private String biggerStr;
 
 
     private void initBaseData() {
@@ -669,7 +669,7 @@ public class MainActivity extends Activity {
 
                         BUY_AMOUNT = BUY_AMOUNT + 99 * fiboArr[fibIndex];
                         difLastBuyEarnStr = difLastBuyEarnStr + "\n" + "位置:" + (i * 10 + j) + ",blank:" + lastPositionMap.get(i * 10 + j);
-                        Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-lastdifCount:" + lastdifCount + "-blank:" + lastPositionMap.get(i * 10 + j) + "-sameCount:" + sameCount);
+                        Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-lastdifCount:" + lastdifCount + "-blank:" + lastPositionMap.get(i * 10 + j) + "-sameCount:" + sameCount + "-biggerStr:" + biggerStr);
                     }
 
                 }
@@ -681,7 +681,7 @@ public class MainActivity extends Activity {
             ALI_MORE_AMOUNT = BUY_AMOUNT;
             fibIndex = 0;
         } else {
-            if (fibIndex < 15 && BUY_AMOUNT < RECORD_AMOUNT) {
+            if (fibIndex < 15 && !TextUtils.isEmpty(biggerStr) && ((ALI_MORE_AMOUNT - BUY_AMOUNT) >= 300)) {
                 fibIndex++;
             }
         }
@@ -697,6 +697,8 @@ public class MainActivity extends Activity {
         difbuyCount = 0;
         sameStr = "";
         sameCount = 0;
+
+        biggerStr = "";
         for (int i = 0; i < 10; i++) {
 //            sameCount(i);
             positionCount = 0;
@@ -712,6 +714,11 @@ public class MainActivity extends Activity {
             for (int j = 0; j < 10; j++) {
 
                 if (record2Map.get(i * 10 + j) > MAX_2) {
+                    if (TextUtils.isEmpty(biggerStr)) {
+                        biggerStr = record2Map.get(i * 10 + j) + "";
+                    } else {
+                        biggerStr = biggerStr + "-" + record2Map.get(i * 10 + j);
+                    }
                     positionContinue = false;
                 }
                 if (record2Map.get(i * 10 + j) > DANGER && record2Map.get(i * 10 + j) <= MAX_2) {
@@ -768,6 +775,7 @@ public class MainActivity extends Activity {
             Log.e("difBuyStr", "difLastBuyEarnStr: " + difLastBuyEarnStr + "----term:" + allLists.get(term).getCTerm());
         }
 
+//        Log.e("BUY_AMOUNT", "biggerStr: " + biggerStr);
 
         if (term < allLists.size()) {
             setDifLastMap(term);
@@ -872,7 +880,7 @@ public class MainActivity extends Activity {
         while (iterator.hasNext()) {
             Map.Entry<Integer, Integer> next = iterator.next();
             if (next.getValue() != -1) {
-                if (CAN_BUY && next.getValue() <= MAX_2 && next.getValue() >= BLANK_INT) {
+                if (CAN_BUY && next.getValue() <= MAX_2 && next.getValue() >= BLANK_INT && !TextUtils.isEmpty(biggerStr)) {
                     difBuyStr = difBuyStr + "\n" + "位置:" + next.getKey() + ",blank:" + next.getValue();
                     lastPositionMap.put(next.getKey(), next.getValue());
                     BUY_AMOUNT = BUY_AMOUNT - 10 * fiboArr[fibIndex];
@@ -881,18 +889,18 @@ public class MainActivity extends Activity {
                     lastPositionMap.put(next.getKey(), -1);
 
                 }
-                if (next.getValue() > MAX_2) {
-                    biggercount++;
-                }
-                if (next.getValue() >= 50) {
-                    more50++;
-                }
-                if (next.getValue() >= 40) {
-                    more40++;
-                }
-                if (next.getValue() >= 40) {
-                    more30++;
-                }
+//                if (next.getValue() > MAX_2) {
+//                    biggercount++;
+//                }
+//                if (next.getValue() >= 50) {
+//                    more50++;
+//                }
+//                if (next.getValue() >= 40) {
+//                    more40++;
+//                }
+//                if (next.getValue() >= 40) {
+//                    more30++;
+//                }
             } else {
                 lastPositionMap.put(next.getKey(), -1);
             }
