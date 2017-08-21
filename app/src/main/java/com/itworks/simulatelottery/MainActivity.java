@@ -627,12 +627,13 @@ public class MainActivity extends Activity {
                 LAST_TREM = i;
 //                    setLastMap(i);
             }
-            getDifPositionBuyMap(i);
+            try {
+                getDifPositionBuyMap(i);
+            } catch (Exception e) {
+
+            }
             lastdifCount = difbuyCount;
             getProgress(i);
-            if (CANT_BUY) {
-                break;
-            }
         }
 
 //        if (ALI_LESS_AMOUNT > LESS_AMOUNT) {
