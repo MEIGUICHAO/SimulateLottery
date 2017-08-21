@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -164,6 +165,10 @@ public class MainActivity extends Activity {
     private int dangerIndex;
     private int urlIndex = -1;
     private boolean CANT_BUY;
+    private TextView tv_earn;
+    private TextView tv_buy;
+    private TextView tv_end;
+    private String earnDispalyStr;
 
 
     /*
@@ -310,6 +315,10 @@ public class MainActivity extends Activity {
         btn_two = (Button) findViewById(R.id.btn_two);
         btn_change = (Button) findViewById(R.id.btn_change);
 
+        tv_earn = (TextView) findViewById(R.id.tv_earn);
+        tv_buy = (TextView) findViewById(R.id.tv_buy);
+        tv_end = (TextView) findViewById(R.id.tv_end);
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String strTime = sdf.format(new java.util.Date(System.currentTimeMillis()));
         et_date.setText(strTime);
@@ -416,6 +425,7 @@ public class MainActivity extends Activity {
 
     private void getLotteryResult() {
 //        allcount = 0;
+        urlIndex = -1;
         ALL_AMOUNT = 0;
         index = 0;
         buyPositonList = initList(-1);
@@ -575,6 +585,14 @@ public class MainActivity extends Activity {
     private void afterNet() {
 
         if (-1 == urlIndex) {
+            this. runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tv_end.setText(" ");
+                }
+            });
+
+
             urlIndex = urlsList.size()-1;
         } else if (-2 != urlIndex && -1 != urlIndex && urlIndex > 0) {
             urlIndex--;
@@ -588,9 +606,11 @@ public class MainActivity extends Activity {
         BUY_AMOUNT = 0;
         TODAY_AMOUNT = 0;
         CANT_BUY = false;
-        for (int i = urlIndex; i > urlIndex - 2; i--) {
-            gsonParse(CacheUtils.getCache(this, type + urlsList.get(i)));
-            Log.e("BUY_AMOUNT", "url: " + urlsList.get(i));
+        if (urlIndex - 2 >= 0) {
+            for (int i = urlIndex; i > urlIndex - 2; i--) {
+                gsonParse(CacheUtils.getCache(this, type + urlsList.get(i)));
+                Log.e("BUY_AMOUNT", "url: " + urlsList.get(i));
+            }
         }
 
         for (int i = allLists.size() / 2; i >= 0; i--) {
@@ -610,13 +630,17 @@ public class MainActivity extends Activity {
             getDifPositionBuyMap(i);
             lastdifCount = difbuyCount;
             getProgress(i);
+            if (CANT_BUY) {
+                break;
+            }
         }
 
 //        if (ALI_LESS_AMOUNT > LESS_AMOUNT) {
 //            ALI_LESS_AMOUNT = LESS_AMOUNT;
 //        }
-
-        Log.e("end", "end: " + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT);
+        String date = urlsList.get(urlIndex).split("&date=")[1];
+        Log.e("end", "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-" + date);
+        tv_end.setText(tv_end.getText().toString() + "\n" + "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-" + date);
         if (-2 != urlIndex) {
             ALI_MORE_AMOUNT = 0;
             ALI_LESS_AMOUNT = 0;
@@ -750,6 +774,16 @@ public class MainActivity extends Activity {
                                         + ALL_AMOUNT + "-ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT
 //                                + "-sameCount:" + sameCount + "-biggerStr:" + biggerStr
                         );
+                        earnDispalyStr = BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-lastdifCount:" + lastdifCount + "-blank:" + lastPositionMap.get(i * 10 + j) + "-ALL_AMOUNT:"
+                                + ALL_AMOUNT + "-ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT;
+                        this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                tv_earn.setText(earnDispalyStr);
+
+                            }
+                        });
+
                     }
 
                 }
@@ -985,7 +1019,7 @@ public class MainActivity extends Activity {
         positionList.get(i)[integer]++;
     }
 
-    private void setDifLastMap(int term) {
+    private void setDifLastMap(final int term) {
 
 
         if (recordMap.size() <= DANGER) {
@@ -1041,6 +1075,15 @@ public class MainActivity extends Activity {
 //                + "-biggercount:" + biggercount + "-1to10:" + bigge110rcount + "-10to20:" + bigge1020rcount
 //                + "-20to30:" + bigge2030rcount + "-30to40:" + bigge3040rcount + "-40to50:" + bigge4050rcount + "-50+:" + bigge50rcount
         );
+
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tv_buy.setText(BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-difbuyCount:" + difbuyCount
+//                        + "-sameCount:" + sameCount +
+                        + "-fibIndex:" + fibIndex + "-ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALL_AMOUNT:" + ALL_AMOUNT);
+            }
+        });
 
 
         if (!TextUtils.isEmpty(difBuyStr)) {
