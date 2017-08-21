@@ -638,9 +638,14 @@ public class MainActivity extends Activity {
 //        if (ALI_LESS_AMOUNT > LESS_AMOUNT) {
 //            ALI_LESS_AMOUNT = LESS_AMOUNT;
 //        }
-        String date = urlsList.get(urlIndex).split("&date=")[1];
+        final String date = urlsList.get(urlIndex).split("&date=")[1];
         Log.e("end", "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-" + date);
-        tv_end.setText(tv_end.getText().toString() + "\n" + "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-date:" + date);
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tv_end.setText(tv_end.getText().toString() + "\n" + "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-date:" + date);
+            }
+        });
         if (-2 != urlIndex) {
             ALI_MORE_AMOUNT = 0;
             ALI_LESS_AMOUNT = 0;
