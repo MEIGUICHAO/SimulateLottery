@@ -60,6 +60,7 @@ public class MainActivity extends Activity {
     private int ALI_LESS_AMOUNT = 0;
     private int ALI_MORE_AMOUNT = 0;
     private int ALL_AMOUNT = 0;
+    private int TODAY_AMOUNT = 0;
     private int END_BUY = 0;
     private EditText et_size;
     private HashMap<Integer, Integer> buyPositionMap;
@@ -162,6 +163,7 @@ public class MainActivity extends Activity {
     private int fibLength = 21;
     private int dangerIndex;
     private int urlIndex = -1;
+    private boolean CANT_BUY;
 
 
     /*
@@ -476,8 +478,10 @@ public class MainActivity extends Activity {
         for (int m = 0; m < SIZE; m++) {
 
             ALI_MORE_AMOUNT = 0;
+            ALI_LESS_AMOUNT = 0;
             ALL_AMOUNT = 0;
             BUY_AMOUNT = 0;
+            TODAY_AMOUNT = 0;
             AMOUNT_CURRENT = 0;
             LESS_AMOUNT = 0;
             count = 0;
@@ -580,7 +584,10 @@ public class MainActivity extends Activity {
         allLists.clear();
         fibIndex = 0;
         ALI_MORE_AMOUNT = 0;
+        ALI_LESS_AMOUNT = 0;
         BUY_AMOUNT = 0;
+        TODAY_AMOUNT = 0;
+        CANT_BUY = false;
         for (int i = urlIndex; i > urlIndex - 2; i--) {
             gsonParse(CacheUtils.getCache(this, type + urlsList.get(i)));
             Log.e("BUY_AMOUNT", "url: " + urlsList.get(i));
@@ -605,12 +612,14 @@ public class MainActivity extends Activity {
             getProgress(i);
         }
 
-        if (ALI_LESS_AMOUNT > LESS_AMOUNT) {
-            ALI_LESS_AMOUNT = LESS_AMOUNT;
-        }
+//        if (ALI_LESS_AMOUNT > LESS_AMOUNT) {
+//            ALI_LESS_AMOUNT = LESS_AMOUNT;
+//        }
 
+        Log.e("end", "end: " + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT);
         if (-2 != urlIndex) {
             ALI_MORE_AMOUNT = 0;
+            ALI_LESS_AMOUNT = 0;
             afterNet();
         }
 
@@ -732,12 +741,13 @@ public class MainActivity extends Activity {
             for (int i = 0; i < 10; i++) {
                 for (int j = 0; j < 10; j++) {
 
-                    if (lastPositionMap.size() > 0 && -1 != lastPositionMap.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) > record2Map.get(i * 10 + j) && -1 == record2Map.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) <= MAX_2 && LAST_CAN_BUY) {
-
+                    if (!CANT_BUY && lastPositionMap.size() > 0 && -1 != lastPositionMap.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) > record2Map.get(i * 10 + j) && -1 == record2Map.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) <= MAX_2 && LAST_CAN_BUY) {
                         BUY_AMOUNT = BUY_AMOUNT + 99 * fiboArr[fibIndex];
+                        TODAY_AMOUNT = TODAY_AMOUNT + 99 * fiboArr[fibIndex];
                         AMOUNT_CURRENT = AMOUNT_CURRENT + 99 * fiboArr[fibIndex];
                         difLastBuyEarnStr = difLastBuyEarnStr + "\n" + "位置:" + (i * 10 + j) + ",blank:" + lastPositionMap.get(i * 10 + j);
-                        Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-lastdifCount:" + lastdifCount + "-blank:" + lastPositionMap.get(i * 10 + j) + "-ALL_AMOUNT:" + ALL_AMOUNT + "-ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT
+                        Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-lastdifCount:" + lastdifCount + "-blank:" + lastPositionMap.get(i * 10 + j) + "-ALL_AMOUNT:"
+                                        + ALL_AMOUNT + "-ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT
 //                                + "-sameCount:" + sameCount + "-biggerStr:" + biggerStr
                         );
                     }
@@ -747,11 +757,27 @@ public class MainActivity extends Activity {
             }
         }
 
-        if (ALI_MORE_AMOUNT < 300 + BUY_AMOUNT&&fibIndex>10) {
+        if (ALI_MORE_AMOUNT >= 500) {
+            BUY_AMOUNT = 0;
+            ALI_MORE_AMOUNT = 0;
+        }
+        if (BUY_AMOUNT <= -500) {
+            BUY_AMOUNT = 0;
+            ALI_MORE_AMOUNT = 0;
+        }
+        if (TODAY_AMOUNT < -1000) {
+            CANT_BUY = true;
+        }
+
+        if (ALI_MORE_AMOUNT < 300 + BUY_AMOUNT && fibIndex > 10) {
+
             fibIndex = 0;
         }
         if (ALI_MORE_AMOUNT >ALL_AMOUNT) {
             ALL_AMOUNT = ALI_MORE_AMOUNT;
+        }
+        if (ALI_LESS_AMOUNT >TODAY_AMOUNT) {
+            ALI_LESS_AMOUNT = TODAY_AMOUNT;
         }
 
         if (ALI_MORE_AMOUNT <= BUY_AMOUNT ) {
@@ -979,11 +1005,12 @@ public class MainActivity extends Activity {
         while (iterator.hasNext()) {
             Map.Entry<Integer, Integer> next = iterator.next();
             if (next.getValue() != -1) {
-                if (CAN_BUY && next.getValue() <= MAX_2 && next.getValue() >= BEGIN_INT && !TextUtils.isEmpty(biggerStr)) {
+                if (!CANT_BUY && CAN_BUY && next.getValue() <= MAX_2 && next.getValue() >= BEGIN_INT && !TextUtils.isEmpty(biggerStr)) {
                     difBuyStr = difBuyStr + "\n" + "位置:" + next.getKey() + ",blank:" + next.getValue();
                     lastPositionMap.put(next.getKey(), next.getValue());
                     BUY_AMOUNT = BUY_AMOUNT - 10 * fiboArr[fibIndex];
                     AMOUNT_CURRENT = AMOUNT_CURRENT - 10 * fiboArr[fibIndex];
+                    TODAY_AMOUNT = TODAY_AMOUNT - 10 * fiboArr[fibIndex];
                     difbuyCount++;
                 } else {
                     lastPositionMap.put(next.getKey(), -1);
@@ -1007,7 +1034,7 @@ public class MainActivity extends Activity {
         }
         Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-difbuyCount:" + difbuyCount
 //                        + "-sameCount:" + sameCount +
-                        + "-fibIndex:" + fibIndex + "-ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + "-ALL_AMOUNT:" + ALL_AMOUNT
+                        + "-fibIndex:" + fibIndex + "-ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALL_AMOUNT:" + ALL_AMOUNT
 //                                + "-biggerStr:" + biggerStr
 
 
