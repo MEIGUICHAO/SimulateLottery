@@ -49,6 +49,7 @@ public class MainActivity extends Activity {
     private int CURRENT_BLANK;
     private int END_BLANK = 200;
     private int BUY_AMOUNT = 15;
+    private int AMOUNT_CURRENT = 0;
     private int RECORD_AMOUNT = 0;
     private EditText et_endBlank;
     private EditText et_length;
@@ -160,6 +161,8 @@ public class MainActivity extends Activity {
     private String biggerStr;
     private int fibLength = 21;
     private int dangerIndex;
+    private int urlIndex = -1;
+
 
     /*
     *
@@ -473,7 +476,9 @@ public class MainActivity extends Activity {
         for (int m = 0; m < SIZE; m++) {
 
             ALI_MORE_AMOUNT = 0;
+            ALL_AMOUNT = 0;
             BUY_AMOUNT = 0;
+            AMOUNT_CURRENT = 0;
             LESS_AMOUNT = 0;
             count = 0;
             allLists.clear();
@@ -565,8 +570,23 @@ public class MainActivity extends Activity {
 
     private void afterNet() {
 
-        for (int i = allLists.size()-200; i >= 0; i--) {
+        if (-1 == urlIndex) {
+            urlIndex = urlsList.size()-1;
+        } else if (-2 != urlIndex && -1 != urlIndex && urlIndex > 0) {
+            urlIndex--;
+        } else {
+            urlIndex = -2;
+        }
+        allLists.clear();
+        fibIndex = 0;
+        ALI_MORE_AMOUNT = 0;
+        BUY_AMOUNT = 0;
+        for (int i = urlIndex; i > urlIndex - 2; i--) {
+            gsonParse(CacheUtils.getCache(this, type + urlsList.get(i)));
+            Log.e("BUY_AMOUNT", "url: " + urlsList.get(i));
+        }
 
+        for (int i = allLists.size() / 2; i >= 0; i--) {
 
             recordMap.clear();
             record2Map.clear();
@@ -589,34 +609,39 @@ public class MainActivity extends Activity {
             ALI_LESS_AMOUNT = LESS_AMOUNT;
         }
 
-
-        str0 = "earn:";
-        str0less = "lost:";
-        for (int i = 0; i < count0.length; i++) {
-            if (count0[i] != 0) {
-                str0 = str0 + i + "@" + count0[i] + "--";
-            }
-        }
-        for (int i = 0; i < count0less.length; i++) {
-            if (count0less[i] != 0) {
-                str0less = str0less + i + "@" + count0less[i] + "--";
-            }
+        if (-2 != urlIndex) {
+            ALI_MORE_AMOUNT = 0;
+            afterNet();
         }
 
-
-        strSame0 = "sameEarn:";
-        strSame0less = "sameLost:";
-        for (int i = 0; i < count110.length; i++) {
-            if (count110[i] != 0) {
-                strSame0 = strSame0 + i + "@" + count110[i] + "--";
-            }
-        }
-        for (int i = 0; i < count110less.length; i++) {
-            if (count110less[i] != 0) {
-                strSame0less = strSame0less + i + "@" + count110less[i] + "--";
-            }
-        }
-        Log.e("end", "end: " + "\n" + str0 + "\n" + str0less + "\n" + strSame0 + "\n" + strSame0less);
+//
+//        str0 = "earn:";
+//        str0less = "lost:";
+//        for (int i = 0; i < count0.length; i++) {
+//            if (count0[i] != 0) {
+//                str0 = str0 + i + "@" + count0[i] + "--";
+//            }
+//        }
+//        for (int i = 0; i < count0less.length; i++) {
+//            if (count0less[i] != 0) {
+//                str0less = str0less + i + "@" + count0less[i] + "--";
+//            }
+//        }
+//
+//
+//        strSame0 = "sameEarn:";
+//        strSame0less = "sameLost:";
+//        for (int i = 0; i < count110.length; i++) {
+//            if (count110[i] != 0) {
+//                strSame0 = strSame0 + i + "@" + count110[i] + "--";
+//            }
+//        }
+//        for (int i = 0; i < count110less.length; i++) {
+//            if (count110less[i] != 0) {
+//                strSame0less = strSame0less + i + "@" + count110less[i] + "--";
+//            }
+//        }
+//        Log.e("end", "end: " + "\n" + str0 + "\n" + str0less + "\n" + strSame0 + "\n" + strSame0less);
 
 
     }
@@ -710,8 +735,11 @@ public class MainActivity extends Activity {
                     if (lastPositionMap.size() > 0 && -1 != lastPositionMap.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) > record2Map.get(i * 10 + j) && -1 == record2Map.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) <= MAX_2 && LAST_CAN_BUY) {
 
                         BUY_AMOUNT = BUY_AMOUNT + 99 * fiboArr[fibIndex];
+                        AMOUNT_CURRENT = AMOUNT_CURRENT + 99 * fiboArr[fibIndex];
                         difLastBuyEarnStr = difLastBuyEarnStr + "\n" + "位置:" + (i * 10 + j) + ",blank:" + lastPositionMap.get(i * 10 + j);
-                        Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-lastdifCount:" + lastdifCount + "-blank:" + lastPositionMap.get(i * 10 + j) + "-sameCount:" + sameCount + "-biggerStr:" + biggerStr);
+                        Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-lastdifCount:" + lastdifCount + "-blank:" + lastPositionMap.get(i * 10 + j) + "-ALL_AMOUNT:" + ALL_AMOUNT + "-ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT
+//                                + "-sameCount:" + sameCount + "-biggerStr:" + biggerStr
+                        );
                     }
 
                 }
@@ -721,6 +749,9 @@ public class MainActivity extends Activity {
 
         if (ALI_MORE_AMOUNT < 300 + BUY_AMOUNT&&fibIndex>10) {
             fibIndex = 0;
+        }
+        if (ALI_MORE_AMOUNT >ALL_AMOUNT) {
+            ALL_AMOUNT = ALI_MORE_AMOUNT;
         }
 
         if (ALI_MORE_AMOUNT <= BUY_AMOUNT ) {
@@ -952,6 +983,7 @@ public class MainActivity extends Activity {
                     difBuyStr = difBuyStr + "\n" + "位置:" + next.getKey() + ",blank:" + next.getValue();
                     lastPositionMap.put(next.getKey(), next.getValue());
                     BUY_AMOUNT = BUY_AMOUNT - 10 * fiboArr[fibIndex];
+                    AMOUNT_CURRENT = AMOUNT_CURRENT - 10 * fiboArr[fibIndex];
                     difbuyCount++;
                 } else {
                     lastPositionMap.put(next.getKey(), -1);
@@ -973,7 +1005,12 @@ public class MainActivity extends Activity {
                 lastPositionMap.put(next.getKey(), -1);
             }
         }
-        Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-difbuyCount:" + difbuyCount + "-sameCount:" + sameCount + "-fibIndex:" + fibIndex + "-ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + "-biggerStr:" + biggerStr
+        Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-difbuyCount:" + difbuyCount
+//                        + "-sameCount:" + sameCount +
+                        + "-fibIndex:" + fibIndex + "-ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + "-ALL_AMOUNT:" + ALL_AMOUNT
+//                                + "-biggerStr:" + biggerStr
+
+
 //                + "-biggercount:" + biggercount + "-1to10:" + bigge110rcount + "-10to20:" + bigge1020rcount
 //                + "-20to30:" + bigge2030rcount + "-30to40:" + bigge3040rcount + "-40to50:" + bigge4050rcount + "-50+:" + bigge50rcount
         );
