@@ -648,17 +648,18 @@ public class MainActivity extends Activity {
 //        if (ALI_LESS_AMOUNT > LESS_AMOUNT) {
 //            ALI_LESS_AMOUNT = LESS_AMOUNT;
 //        }
-        final String date = urlsList.get(urlIndex).split("&date=")[1];
-        Log.e("end", "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-" + date);
-        final String endDispalyStr = tv_end.getText().toString() + "\n" + "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-date:" + date;
 
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                tv_end.setText(endDispalyStr);
-            }
-        });
         if (-2 != urlIndex) {
+            final String date = urlsList.get(urlIndex).split("&date=")[1];
+            Log.e("end", "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-" + date);
+            final String endDispalyStr = tv_end.getText().toString() + "\n" + "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-date:" + date;
+
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    tv_end.setText(endDispalyStr);
+                }
+            });
             ALI_MORE_AMOUNT = 0;
             ALI_LESS_AMOUNT = 0;
             afterNet();
@@ -812,14 +813,14 @@ public class MainActivity extends Activity {
             BUY_AMOUNT = 0;
             ALI_MORE_AMOUNT = 0;
         }
-        if (BUY_AMOUNT <= -1000 && fibIndex > fibLength / 2) {
-            fibIndex = 5;
+        if (BUY_AMOUNT <= -1000 && fibIndex > 10) {
+            fibIndex = 0;
 //            BUY_AMOUNT = 0;
 //            ALI_MORE_AMOUNT = 0;
         }
-//        if (TODAY_AMOUNT < -1000) {
-//            CANT_BUY = true;
-//        }
+        if (TODAY_AMOUNT < -2000) {
+            CANT_BUY = true;
+        }
 
 //        if (ALI_MORE_AMOUNT < 300 + BUY_AMOUNT && fibIndex > fibLength / 2) {
 //            fibIndex = 0;
