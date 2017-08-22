@@ -161,7 +161,7 @@ public class MainActivity extends Activity {
     private int[] fiboArr;
     private int fibIndex = 0;
     private String biggerStr;
-    private int fibLength = 21;
+    private int fibLength = 33;
     private int dangerIndex;
     private int urlIndex = -1;
     private boolean CANT_BUY;
@@ -384,13 +384,22 @@ public class MainActivity extends Activity {
                     fiboArr[i] = 5;
                 }
                 if (i >= 15 && i < 18) {
-                    fiboArr[i] = 5;
-                }
-                if (i >= 15 && i < 18) {
                     fiboArr[i] = 8;
                 }
                 if (i >= 18 && i < 21) {
                     fiboArr[i] = 13;
+                }
+                if (i >= 21 && i < 24) {
+                    fiboArr[i] = 21;
+                }
+                if (i >= 24 && i < 27) {
+                    fiboArr[i] = 34;
+                }
+                if (i >= 27 && i < 30) {
+                    fiboArr[i] = 55;
+                }
+                if (i >= 30 && i < 33) {
+                    fiboArr[i] = 89;
                 }
             }
 
@@ -404,7 +413,7 @@ public class MainActivity extends Activity {
 
 
 //            fiboArr[0] = fiboArr[1] = 1;
-//            for (int i = 2; i < 7; i++) {
+//            for (int i = 2; i < fibLength; i++) {
 //                fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
 //            }
         }
@@ -641,10 +650,12 @@ public class MainActivity extends Activity {
 //        }
         final String date = urlsList.get(urlIndex).split("&date=")[1];
         Log.e("end", "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-" + date);
+        final String endDispalyStr = tv_end.getText().toString() + "\n" + "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-date:" + date;
+
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                tv_end.setText(tv_end.getText().toString() + "\n" + "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-date:" + date);
+                tv_end.setText(endDispalyStr);
             }
         });
         if (-2 != urlIndex) {
@@ -801,16 +812,16 @@ public class MainActivity extends Activity {
             BUY_AMOUNT = 0;
             ALI_MORE_AMOUNT = 0;
         }
-        if (BUY_AMOUNT <= -500) {
-            BUY_AMOUNT = 0;
-            ALI_MORE_AMOUNT = 0;
+        if (BUY_AMOUNT <= -1000 && fibIndex > fibLength / 2) {
+            fibIndex = 5;
+//            BUY_AMOUNT = 0;
+//            ALI_MORE_AMOUNT = 0;
         }
-        if (TODAY_AMOUNT < -1000) {
-            CANT_BUY = true;
-        }
+//        if (TODAY_AMOUNT < -1000) {
+//            CANT_BUY = true;
+//        }
 
-        if (ALI_MORE_AMOUNT < 300 + BUY_AMOUNT && fibIndex > 10) {
-
+        if (ALI_MORE_AMOUNT < 300 + BUY_AMOUNT && fibIndex > fibLength / 2) {
             fibIndex = 0;
         }
         if (ALI_MORE_AMOUNT >ALL_AMOUNT) {
@@ -825,10 +836,11 @@ public class MainActivity extends Activity {
             fibIndex = 0;
         } else {
             if (fibIndex < (fibLength - 1)) {
-                if ((BUY_AMOUNT - RECORD_AMOUNT) >= 400 && fibIndex >= 10) {
-
-                    fibIndex = 0;
-                } else if (recordMap.size() <= DANGER && BUY_AMOUNT < RECORD_AMOUNT && !TextUtils.isEmpty(biggerStr)
+//                if ((BUY_AMOUNT - RECORD_AMOUNT) >= 1000 && fibIndex >= 10) {
+//
+////                    fibIndex = 0;
+//                } else
+                    if (recordMap.size() <= DANGER && BUY_AMOUNT < RECORD_AMOUNT && !TextUtils.isEmpty(biggerStr)
 //                        && ((ALI_MORE_AMOUNT - BUY_AMOUNT) > 200)
                         ) {
 
@@ -907,7 +919,7 @@ public class MainActivity extends Activity {
                     }
                 }
             }
-            if (positionContinue && positionCount > BiggerInt && positionCount != 3) {
+            if (positionContinue && positionCount > BiggerInt) {
 
                 sameCount++;
                 String[] positionSplite = positionStr.split("-");
@@ -920,7 +932,7 @@ public class MainActivity extends Activity {
                 }
 
             }
-            if (numContinue && numCount > BiggerInt&& positionCount != 3) {
+            if (numContinue && numCount > BiggerInt) {
                 sameCount++;
                 String[] numSplite = numStr.split("-");
                 String[] blankStr = numBlankStr.split("-");
@@ -1082,12 +1094,14 @@ public class MainActivity extends Activity {
 //                + "-20to30:" + bigge2030rcount + "-30to40:" + bigge3040rcount + "-40to50:" + bigge4050rcount + "-50+:" + bigge50rcount
         );
 
+        final String buyDisplayStr = BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-difbuyCount:" + difbuyCount
+//                        + "-sameCount:" + sameCount +
+                + "-fibIndex:" + fibIndex + "-ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALL_AMOUNT:" + ALL_AMOUNT;
+
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                tv_buy.setText(BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-difbuyCount:" + difbuyCount
-//                        + "-sameCount:" + sameCount +
-                        + "-fibIndex:" + fibIndex + "-ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALL_AMOUNT:" + ALL_AMOUNT);
+                tv_buy.setText(buyDisplayStr);
             }
         });
 
