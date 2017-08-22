@@ -808,7 +808,7 @@ public class MainActivity extends Activity {
             }
         }
 
-        if (ALI_MORE_AMOUNT >= 500) {
+        if (ALI_MORE_AMOUNT >= 300) {
             BUY_AMOUNT = 0;
             ALI_MORE_AMOUNT = 0;
         }
@@ -821,9 +821,9 @@ public class MainActivity extends Activity {
 //            CANT_BUY = true;
 //        }
 
-        if (ALI_MORE_AMOUNT < 300 + BUY_AMOUNT && fibIndex > fibLength / 2) {
-            fibIndex = 0;
-        }
+//        if (ALI_MORE_AMOUNT < 300 + BUY_AMOUNT && fibIndex > fibLength / 2) {
+//            fibIndex = 0;
+//        }
         if (ALI_MORE_AMOUNT >ALL_AMOUNT) {
             ALL_AMOUNT = ALI_MORE_AMOUNT;
         }
