@@ -808,7 +808,7 @@ public class MainActivity extends Activity {
             }
         }
 
-        if (ALI_MORE_AMOUNT >= 300) {
+        if (ALI_MORE_AMOUNT >= 500) {
             BUY_AMOUNT = 0;
             ALI_MORE_AMOUNT = 0;
         }
@@ -826,9 +826,6 @@ public class MainActivity extends Activity {
 //        }
         if (ALI_MORE_AMOUNT >ALL_AMOUNT) {
             ALL_AMOUNT = ALI_MORE_AMOUNT;
-        }
-        if (ALI_LESS_AMOUNT >TODAY_AMOUNT) {
-            ALI_LESS_AMOUNT = TODAY_AMOUNT;
         }
 
         if (ALI_MORE_AMOUNT <= BUY_AMOUNT ) {
@@ -1086,13 +1083,17 @@ public class MainActivity extends Activity {
         }
         Log.e("BUY_AMOUNT", "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-difbuyCount:" + difbuyCount
 //                        + "-sameCount:" + sameCount +
-                        + "-fibIndex:" + fibIndex + "-ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALL_AMOUNT:" + ALL_AMOUNT
+                        + "-fibIndex:" + fibIndex + "-ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALL_AMOUNT:" + ALL_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT
 //                                + "-biggerStr:" + biggerStr
 
 
 //                + "-biggercount:" + biggercount + "-1to10:" + bigge110rcount + "-10to20:" + bigge1020rcount
 //                + "-20to30:" + bigge2030rcount + "-30to40:" + bigge3040rcount + "-40to50:" + bigge4050rcount + "-50+:" + bigge50rcount
         );
+
+        if (ALI_LESS_AMOUNT > BUY_AMOUNT) {
+            ALI_LESS_AMOUNT = BUY_AMOUNT;
+        }
 
         final String buyDisplayStr = BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-difbuyCount:" + difbuyCount
 //                        + "-sameCount:" + sameCount +
