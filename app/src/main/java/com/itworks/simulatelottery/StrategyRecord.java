@@ -18,4 +18,10 @@ public class StrategyRecord {
     * danger10
     *
     * */
+
+    /*
+    * 10-20
+    * danger12
+    *
+    * */
 }
