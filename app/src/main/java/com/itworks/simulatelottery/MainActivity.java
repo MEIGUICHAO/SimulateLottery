@@ -59,6 +59,7 @@ public class MainActivity extends Activity {
 
     private int LESS_AMOUNT = 0;
     private int ALI_LESS_AMOUNT = 0;
+    private int BIGGEST_AMOUNT = 0;
     private int ALI_MORE_AMOUNT = 0;
     private int ALL_AMOUNT = 0;
     private int TODAY_AMOUNT = 0;
@@ -498,6 +499,7 @@ public class MainActivity extends Activity {
 
             ALI_MORE_AMOUNT = 0;
             ALI_LESS_AMOUNT = 0;
+            BIGGEST_AMOUNT = 0;
             ALL_AMOUNT = 0;
             BUY_AMOUNT = 0;
             TODAY_AMOUNT = 0;
@@ -612,6 +614,7 @@ public class MainActivity extends Activity {
         fibIndex = 0;
         ALI_MORE_AMOUNT = 0;
         ALI_LESS_AMOUNT = 0;
+        BIGGEST_AMOUNT = 0;
         BUY_AMOUNT = 0;
         TODAY_AMOUNT = 0;
         CANT_BUY = false;
@@ -652,7 +655,7 @@ public class MainActivity extends Activity {
         if (-2 != urlIndex) {
             final String date = urlsList.get(urlIndex).split("&date=")[1];
             Log.e("end", "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-" + date);
-            final String endDispalyStr = tv_end.getText().toString() + "\n" + "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-date:" + date;
+            final String endDispalyStr = tv_end.getText().toString() + "\n" + "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-BIGGEST_AMOUNT:" + BIGGEST_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-date:" + date;
 
             this.runOnUiThread(new Runnable() {
                 @Override
@@ -662,6 +665,7 @@ public class MainActivity extends Activity {
             });
             ALI_MORE_AMOUNT = 0;
             ALI_LESS_AMOUNT = 0;
+            BIGGEST_AMOUNT = 0;
             afterNet();
         }
 
@@ -789,7 +793,7 @@ public class MainActivity extends Activity {
                         AMOUNT_CURRENT = AMOUNT_CURRENT + 99 * fiboArr[fibIndex];
                         difLastBuyEarnStr = difLastBuyEarnStr + "\n" + "位置:" + (i * 10 + j) + ",blank:" + lastPositionMap.get(i * 10 + j);
                         Log.e("BUY_AMOUNT", "BUY_AMOUNT_EARN~~~~: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-lastdifCount:" + lastdifCount + "-blank:" + lastPositionMap.get(i * 10 + j) + "-ALL_AMOUNT:"
-                                        + ALL_AMOUNT + "-ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT
+                                        + ALL_AMOUNT + "-ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + "-TODAY_AMOUNT:" + TODAY_AMOUNT+ "-BIGGEST_AMOUNT:" + BIGGEST_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT
 //                                + "-sameCount:" + sameCount + "-biggerStr:" + biggerStr
                         );
                         earnDispalyStr = BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-lastdifCount:" + lastdifCount + "-blank:" + lastPositionMap.get(i * 10 + j) + "-ALL_AMOUNT:"
@@ -807,6 +811,11 @@ public class MainActivity extends Activity {
                 }
 
             }
+        }
+
+
+        if (BIGGEST_AMOUNT < BUY_AMOUNT) {
+            BIGGEST_AMOUNT = BUY_AMOUNT;
         }
 
         if (ALI_MORE_AMOUNT >= 500) {
@@ -1095,6 +1104,7 @@ public class MainActivity extends Activity {
         if (ALI_LESS_AMOUNT > BUY_AMOUNT) {
             ALI_LESS_AMOUNT = BUY_AMOUNT;
         }
+
 
         final String buyDisplayStr = BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-difbuyCount:" + difbuyCount
 //                        + "-sameCount:" + sameCount +
