@@ -31,6 +31,7 @@ public class StrategyRecord {
     * 30-50
     * size>5
     *fib:1-7
+    * 50-60skip
     *
     * */
 }

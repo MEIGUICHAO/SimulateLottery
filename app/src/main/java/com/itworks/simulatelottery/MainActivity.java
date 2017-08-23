@@ -171,6 +171,7 @@ public class MainActivity extends Activity {
     private TextView tv_end;
     private String earnDispalyStr;
     private boolean DIF35BEGIN;
+    private boolean DIF5060 = false;
 
 
     /*
@@ -853,17 +854,19 @@ public class MainActivity extends Activity {
 //
 ////                    fibIndex = 0;
 //                } else
-                    if (recordMap.size() <= DANGER && BUY_AMOUNT < RECORD_AMOUNT && !TextUtils.isEmpty(biggerStr) && DIF35BEGIN
+                if (recordMap.size() <= DANGER && BUY_AMOUNT < RECORD_AMOUNT && !TextUtils.isEmpty(biggerStr) && DIF35BEGIN && !DIF5060
 //                        && ((ALI_MORE_AMOUNT - BUY_AMOUNT) > 200)
                         ) {
 
                     fibIndex++;
 //                    dangerIndex = 0;
-                } else if (BUY_AMOUNT == RECORD_AMOUNT) {
+                } else {
+                    if (BUY_AMOUNT == RECORD_AMOUNT) {
 //                    dangerIndex++;
 //                    if (dangerIndex >= 10) {
 //                        fibIndex = 0;
 //                    }
+                    }
                 }
             } else {
                 fibIndex = 0;
@@ -883,6 +886,7 @@ public class MainActivity extends Activity {
         sameCount = 0;
 
         biggerStr = "-";
+        DIF5060 = false;
         for (int i = 0; i < 10; i++) {
 //            sameCount(i);
             positionCount = 0;
@@ -905,6 +909,9 @@ public class MainActivity extends Activity {
                     }
 //                    biggerStr = "";
                     positionContinue = false;
+                }
+                if (record2Map.get(i * 10 + j) >= 50 && record2Map.get(i * 10 + j) <= 60) {
+                    DIF5060 = true;
                 }
                 if (record2Map.get(i * 10 + j) >= BEGIN_INT && record2Map.get(i * 10 + j) <= MAX_2) {
 
@@ -1078,7 +1085,7 @@ public class MainActivity extends Activity {
         while (iterator.hasNext()) {
             Map.Entry<Integer, Integer> next = iterator.next();
             if (next.getValue() != -1) {
-                if (!CANT_BUY && CAN_BUY && next.getValue() <= MAX_2 && next.getValue() >= BEGIN_INT && !TextUtils.isEmpty(biggerStr) && DIF35BEGIN) {
+                if (!CANT_BUY && CAN_BUY && next.getValue() <= MAX_2 && next.getValue() >= BEGIN_INT && !TextUtils.isEmpty(biggerStr) && DIF35BEGIN && !DIF5060) {
                     difBuyStr = difBuyStr + "\n" + "位置:" + next.getKey() + ",blank:" + next.getValue();
                     lastPositionMap.put(next.getKey(), next.getValue());
                     BUY_AMOUNT = BUY_AMOUNT - 10 * fiboArr[fibIndex];
