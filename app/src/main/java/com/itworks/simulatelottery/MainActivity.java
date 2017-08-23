@@ -172,6 +172,7 @@ public class MainActivity extends Activity {
     private String earnDispalyStr;
     private boolean DIF35BEGIN;
     private boolean DIF5060 = false;
+    private int record4050;
 
 
     /*
@@ -622,7 +623,7 @@ public class MainActivity extends Activity {
         CANT_BUY = false;
         DIF35BEGIN = false;
         if (urlIndex - 2 >= 0) {
-            for (int i = urlIndex; i > urlIndex - 2; i--) {
+            for (int i = urlIndex - 2; i < urlIndex; i++) {
                 gsonParse(CacheUtils.getCache(this, type + urlsList.get(i)));
                 Log.e("BUY_AMOUNT", "url: " + urlsList.get(i));
             }
@@ -884,6 +885,7 @@ public class MainActivity extends Activity {
         difbuyCount = 0;
         sameStr = "";
         sameCount = 0;
+        record4050 = 0;
 
         biggerStr = "-";
         DIF5060 = false;
@@ -912,6 +914,9 @@ public class MainActivity extends Activity {
                 }
                 if (record2Map.get(i * 10 + j) >= 50 && record2Map.get(i * 10 + j) <= 60) {
                     DIF5060 = true;
+                }
+                if (record2Map.get(i * 10 + j) >= 40 && record2Map.get(i * 10 + j) <= 50) {
+                    record4050++;
                 }
                 if (record2Map.get(i * 10 + j) >= BEGIN_INT && record2Map.get(i * 10 + j) <= MAX_2) {
 
@@ -963,6 +968,9 @@ public class MainActivity extends Activity {
                 }
             }
 
+        }
+        if (record4050 >= 3) {
+            DIF5060 = true;
         }
 
         if (!TextUtils.isEmpty(difLastBuyEarnStr)) {
