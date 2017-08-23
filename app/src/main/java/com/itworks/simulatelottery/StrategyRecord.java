@@ -24,4 +24,13 @@ public class StrategyRecord {
     * danger12
     *
     * */
+
+
+    //best
+    /*
+    * 30-50
+    * size>5
+    *fib:1-7
+    *
+    * */
 }
