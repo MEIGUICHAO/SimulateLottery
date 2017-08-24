@@ -656,8 +656,8 @@ public class MainActivity extends Activity {
 //            ALI_LESS_AMOUNT = LESS_AMOUNT;
 //        }
 
-        if (-2 != urlIndex) {
-            final String date = urlsList.get(urlIndex).split("&date=")[1];
+        if ( urlIndex > 1) {
+            final String date = urlsList.get(urlIndex - 2).split("&date=")[1];
             Log.e("end", "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-BIGGEST_AMOUNT:" + BIGGEST_AMOUNT + "-" + date);
             final String endDispalyStr = tv_end.getText().toString() + "\n" + "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-BIGGEST_AMOUNT:" + BIGGEST_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-date:" + date;
 
@@ -833,9 +833,6 @@ public class MainActivity extends Activity {
 //            fibIndex = 0;
 ////            BUY_AMOUNT = 0;
 ////            ALI_MORE_AMOUNT = 0;
-//        }
-//        if (TODAY_AMOUNT < -2000) {
-//            CANT_BUY = true;
 //        }
 
 //        if (ALI_MORE_AMOUNT < 300 + BUY_AMOUNT && fibIndex > fibLength / 2) {
@@ -1082,11 +1079,15 @@ public class MainActivity extends Activity {
         CAN_BUY = DIF35BEGIN;
 
         LAST_CAN_BUY = CAN_BUY;
-        if (DIF35BEGIN && recordMap.size() > 5) {
+        if (DIF35BEGIN && recordMap.size() > DANGER + 2) {
             CAN_BUY = false;
 //            if (fibIndex > 0) {
 //                fibIndex--;
 //            }
+        }
+
+        if (TODAY_AMOUNT < -500) {
+            CANT_BUY = true;
         }
 
         Iterator<Map.Entry<Integer, Integer>> iterator = trueMap.entrySet().iterator();
