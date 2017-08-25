@@ -162,7 +162,7 @@ public class MainActivity extends Activity {
     private int[] fiboArr;
     private int fibIndex = 0;
     private String biggerStr;
-    private int fibLength = 8;
+    private int fibLength = 60;
     private int dangerIndex;
     private int urlIndex = -1;
     private boolean CANT_BUY;
@@ -172,7 +172,8 @@ public class MainActivity extends Activity {
     private String earnDispalyStr;
     private boolean DIF35BEGIN;
     private boolean DIF5060 = false;
-//    private int record4050;
+    private int LOST_MOST_TODAY;
+    //    private int record4050;
 
 
     /*
@@ -365,8 +366,12 @@ public class MainActivity extends Activity {
         });
 
 
-        if (fiboArr == null) {
-            fiboArr = new int[fibLength];
+        initFibArr();
+
+    }
+
+    private void initFibArr() {
+        fiboArr = new int[fibLength];
 //            fiboArr[0] = fiboArr[1] = fiboArr[2] = fiboArr[3] = fiboArr[4] = fiboArr[5]= fiboArr[6] = fiboArr[7]= fiboArr[8] = fiboArr[9] = 1;
 //            fiboArr[10] = fiboArr[11]= fiboArr[12] = fiboArr[13]= fiboArr[14] = fiboArr[0] + fiboArr[9];
 //            fiboArr[15] = fiboArr[16]= fiboArr[17] = fiboArr[18]= fiboArr[19] = fiboArr[9] + fiboArr[10];
@@ -374,38 +379,38 @@ public class MainActivity extends Activity {
 //            fiboArr[25] = fiboArr[26]= fiboArr[27] = fiboArr[28]= fiboArr[29] = fiboArr[15] + fiboArr[20];
 //            fiboArr[30] = fiboArr[31]= fiboArr[32] = fiboArr[33]= fiboArr[34] = fiboArr[20] + fiboArr[25];
 
-//            for (int i = 0; i < fibLength; i++) {
-//                if (i >= 0 && i < 6) {
-//                    fiboArr[i] = 1;
-//                }
-//                if (i >= 6 && i < 9) {
-//                    fiboArr[i] = 2;
-//                }
-//                if (i >= 9 && i < 12) {
-//                    fiboArr[i] = 3;
-//                }
-//                if (i >= 12 && i < 15) {
-//                    fiboArr[i] = 5;
-//                }
-//                if (i >= 15 && i < 18) {
-//                    fiboArr[i] = 8;
-//                }
-//                if (i >= 18 && i < 21) {
-//                    fiboArr[i] = 13;
-//                }
-//                if (i >= 21 && i < 24) {
-//                    fiboArr[i] = 21;
-//                }
-//                if (i >= 24 && i < 27) {
-//                    fiboArr[i] = 34;
-//                }
-//                if (i >= 27 && i < 30) {
-//                    fiboArr[i] = 55;
-//                }
-//                if (i >= 30 && i < 33) {
-//                    fiboArr[i] = 89;
-//                }
-//            }
+            for (int i = 0; i < fibLength; i++) {
+                if (i >= 0 && i < 6) {
+                    fiboArr[i] = 1;
+                }
+                if (i >= 6 && i < 12) {
+                    fiboArr[i] = 2;
+                }
+                if (i >= 12 && i < 18) {
+                    fiboArr[i] = 3;
+                }
+                if (i >= 18 && i < 24) {
+                    fiboArr[i] = 5;
+                }
+                if (i >= 24 && i < 30) {
+                    fiboArr[i] = 8;
+                }
+                if (i >= 30 && i < 36) {
+                    fiboArr[i] = 13;
+                }
+                if (i >= 36 && i < 42) {
+                    fiboArr[i] = 21;
+                }
+                if (i >= 42 && i < 48) {
+                    fiboArr[i] = 34;
+                }
+                if (i >= 48 && i < 54) {
+                    fiboArr[i] = 55;
+                }
+                if (i >= 54 && i < 60) {
+                    fiboArr[i] = 89;
+                }
+            }
 
 //            fiboArr[0] = fiboArr[1] = fiboArr[2] = fiboArr[3] = fiboArr[4] = fiboArr[5] = 1;
 //            fiboArr[6] = fiboArr[7]= fiboArr[8] = fiboArr[4] + fiboArr[5];
@@ -416,12 +421,12 @@ public class MainActivity extends Activity {
 //            fiboArr[21] = fiboArr[22] = fiboArr[23] = fiboArr[15] + fiboArr[18];
 
 
-            fiboArr[0] = fiboArr[1] = 1;
-            for (int i = 2; i < fibLength; i++) {
-                fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
-            }
-        }
-
+//        fiboArr[0] = fiboArr[1] = 1;
+//        for (int i = 2; i < fibLength; i++) {
+//            fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
+//        }
+//        if (fiboArr == null) {
+//        }
     }
 
     @Override
@@ -617,6 +622,7 @@ public class MainActivity extends Activity {
         fibIndex = 0;
         ALI_MORE_AMOUNT = 0;
         ALI_LESS_AMOUNT = 0;
+        LOST_MOST_TODAY = 0;
         BIGGEST_AMOUNT = 0;
         BUY_AMOUNT = 0;
         TODAY_AMOUNT = 0;
@@ -658,8 +664,8 @@ public class MainActivity extends Activity {
 
         if ( urlIndex > 1) {
             final String date = urlsList.get(urlIndex - 2).split("&date=")[1];
-            Log.e("end", "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-BIGGEST_AMOUNT:" + BIGGEST_AMOUNT + "-" + date);
-            final String endDispalyStr = tv_end.getText().toString() + "\n" + "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-BIGGEST_AMOUNT:" + BIGGEST_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-date:" + date;
+            Log.e("end", "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-LOST_MOST_TODAY:" + LOST_MOST_TODAY + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-BIGGEST_AMOUNT:" + BIGGEST_AMOUNT + "-" + date);
+            final String endDispalyStr = tv_end.getText().toString() + "\n" + "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT+ "-LOST_MOST_TODAY:" + LOST_MOST_TODAY + "-BIGGEST_AMOUNT:" + BIGGEST_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-date:" + date;
 
             this.runOnUiThread(new Runnable() {
                 @Override
@@ -851,7 +857,7 @@ public class MainActivity extends Activity {
 //
 ////                    fibIndex = 0;
 //                } else
-                if (recordMap.size() <= DANGER && BUY_AMOUNT < RECORD_AMOUNT && !TextUtils.isEmpty(biggerStr) && DIF35BEGIN && !DIF5060
+                if (recordMap.size() <= DANGER && !TextUtils.isEmpty(biggerStr) && DIF35BEGIN && !DIF5060
 //                        && ((ALI_MORE_AMOUNT - BUY_AMOUNT) > 200)
                         ) {
 
@@ -906,7 +912,7 @@ public class MainActivity extends Activity {
                         biggerStr = biggerStr + "-" + record2Map.get(i * 10 + j);
                     }
 //                    biggerStr = "";
-                    positionContinue = false;
+                    positionContinue = true;
                 }
 //                if (record2Map.get(i * 10 + j) >= 50 && record2Map.get(i * 10 + j) <= 60) {
 //                    DIF5060 = true;
@@ -926,7 +932,7 @@ public class MainActivity extends Activity {
                     }
                 }
                 if (record2Map.get(j * 10 + i) > MAX_2) {
-                    numContinue = false;
+                    numContinue = true;
                 }
                 if (record2Map.get((j * 10 + i)) >= BEGIN_INT && record2Map.get((j * 10 + i)) <= MAX_2) {
 
@@ -1079,16 +1085,16 @@ public class MainActivity extends Activity {
         CAN_BUY = DIF35BEGIN;
 
         LAST_CAN_BUY = CAN_BUY;
-        if (DIF35BEGIN && recordMap.size() > DANGER + 2) {
-            CAN_BUY = false;
-//            if (fibIndex > 0) {
-//                fibIndex--;
-//            }
-        }
+//        if (DIF35BEGIN && recordMap.size() > DANGER + 2) {
+//            CAN_BUY = false;
+////            if (fibIndex > 0) {
+////                fibIndex--;
+////            }
+//        }
 
-        if (TODAY_AMOUNT < -500) {
-            CANT_BUY = true;
-        }
+//        if (TODAY_AMOUNT < -500) {
+//            CANT_BUY = true;
+//        }
 
         Iterator<Map.Entry<Integer, Integer>> iterator = trueMap.entrySet().iterator();
         difBuyStr = "";
@@ -1121,6 +1127,10 @@ public class MainActivity extends Activity {
 
         if (ALI_LESS_AMOUNT > BUY_AMOUNT) {
             ALI_LESS_AMOUNT = BUY_AMOUNT;
+        }
+
+        if (LOST_MOST_TODAY > TODAY_AMOUNT) {
+            LOST_MOST_TODAY = TODAY_AMOUNT;
         }
 
 
