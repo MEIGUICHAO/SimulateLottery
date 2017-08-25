@@ -162,7 +162,7 @@ public class MainActivity extends Activity {
     private int[] fiboArr;
     private int fibIndex = 0;
     private String biggerStr;
-    private int fibLength = 60;
+    private int fibLength = 36;
     private int dangerIndex;
     private int urlIndex = -1;
     private boolean CANT_BUY;
@@ -914,9 +914,9 @@ public class MainActivity extends Activity {
 //                    biggerStr = "";
                     positionContinue = true;
                 }
-//                if (record2Map.get(i * 10 + j) >= 50 && record2Map.get(i * 10 + j) <= 60) {
-//                    DIF5060 = true;
-//                }
+                if (record2Map.get(i * 10 + j) >= 50 && record2Map.get(i * 10 + j) <= 60) {
+                    DIF5060 = true;
+                }
 //                if (record2Map.get(i * 10 + j) >= 40 && record2Map.get(i * 10 + j) <= 50) {
 //                    record4050++;
 //                }
@@ -1084,7 +1084,12 @@ public class MainActivity extends Activity {
         }
         CAN_BUY = DIF35BEGIN;
 
+
+        if (recordMap.size() < DANGER-2) {
+            CAN_BUY = false;
+        }
         LAST_CAN_BUY = CAN_BUY;
+
 //        if (DIF35BEGIN && recordMap.size() > DANGER + 2) {
 //            CAN_BUY = false;
 ////            if (fibIndex > 0) {
