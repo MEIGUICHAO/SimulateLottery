@@ -861,7 +861,6 @@ public class MainActivity extends Activity {
 //                        && ((ALI_MORE_AMOUNT - BUY_AMOUNT) > 200)
                         ) {
 
-                    fibIndex++;
 //                    dangerIndex = 0;
                 } else {
                     if (BUY_AMOUNT == RECORD_AMOUNT) {
@@ -1087,6 +1086,9 @@ public class MainActivity extends Activity {
 
         if (recordMap.size() < 2 || recordMap.size() > DANGER) {
             CAN_BUY = false;
+        }
+        if (CAN_BUY) {
+            fibIndex++;
         }
 
 
