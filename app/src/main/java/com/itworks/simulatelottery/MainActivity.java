@@ -173,6 +173,7 @@ public class MainActivity extends Activity {
     private boolean DIF35BEGIN;
     private boolean DIF5060 = false;
     private int LOST_MOST_TODAY;
+    private String BIGGEST_TERM;
     //    private int record4050;
 
 
@@ -664,7 +665,11 @@ public class MainActivity extends Activity {
 
         if ( urlIndex > 1) {
             final String date = urlsList.get(urlIndex - 2).split("&date=")[1];
-            Log.e("end", "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-LOST_MOST_TODAY:" + LOST_MOST_TODAY + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-BIGGEST_AMOUNT:" + BIGGEST_AMOUNT + "-" + date);
+            if (TODAY_AMOUNT > 0) {
+                Log.e("end", "end: " + "earn+++urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-LOST_MOST_TODAY:" + LOST_MOST_TODAY + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-BIGGEST_AMOUNT:" + BIGGEST_AMOUNT + "-" + date + "-BIGGEST_TERM:" + BIGGEST_TERM);
+            } else {
+                Log.e("end", "end: " + "lost---urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT + "-LOST_MOST_TODAY:" + LOST_MOST_TODAY + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-BIGGEST_AMOUNT:" + BIGGEST_AMOUNT + "-" + date + "-BIGGEST_TERM:" + BIGGEST_TERM);
+            }
             final String endDispalyStr = tv_end.getText().toString() + "\n" + "end: " + "-urlIndex:" + urlIndex + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT+ "-LOST_MOST_TODAY:" + LOST_MOST_TODAY + "-BIGGEST_AMOUNT:" + BIGGEST_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT + "-date:" + date;
 
             this.runOnUiThread(new Runnable() {
@@ -834,6 +839,7 @@ public class MainActivity extends Activity {
 
         if (BIGGEST_AMOUNT < TODAY_AMOUNT) {
             BIGGEST_AMOUNT = TODAY_AMOUNT;
+            BIGGEST_TERM = allLists.get(term).getCTermDT();
         }
 //        if (BUY_AMOUNT <= -1000 && fibIndex > 20) {
 //            fibIndex = 0;
@@ -1078,7 +1084,7 @@ public class MainActivity extends Activity {
 //            CAN_BUY = false;
 //        }
 
-        if (recordMap.size() <= DANGER) {
+        if (recordMap.size() == DANGER) {
             DIF35BEGIN = true;
         }
         CAN_BUY = DIF35BEGIN;
