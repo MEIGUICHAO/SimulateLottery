@@ -1104,7 +1104,13 @@ public class MainActivity extends Activity {
 //        if (TODAY_AMOUNT < -500) {
 //            CANT_BUY = true;
 //        }
-        if ((TODAY_AMOUNT - recordMap.size() * 10 * fiboArr[fibIndex]) < -5000) {
+        if ((TODAY_AMOUNT - recordMap.size() * 10 * fiboArr[fibIndex]) < -4000) {
+            CANT_BUY = true;
+        }
+        if (TODAY_AMOUNT < -2000 && BIGGEST_AMOUNT < 800) {
+            CANT_BUY = true;
+        }
+        if (TODAY_AMOUNT > 7000) {
             CANT_BUY = true;
         }
 
