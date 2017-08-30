@@ -790,9 +790,13 @@ public class MainActivity extends Activity {
 
     private void gsonParse(String result) {
 
-        Gson gson = new Gson();
-        MyBean pcOriginBean = gson.fromJson(result, MyBean.class);
-        allLists.addAll(pcOriginBean.getList());
+        try {
+            Gson gson = new Gson();
+            MyBean pcOriginBean = gson.fromJson(result, MyBean.class);
+            allLists.addAll(pcOriginBean.getList());
+        } catch (Exception e) {
+
+        }
     }
 
 
