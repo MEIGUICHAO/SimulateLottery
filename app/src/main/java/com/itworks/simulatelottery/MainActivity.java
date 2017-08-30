@@ -832,7 +832,7 @@ public class MainActivity extends Activity {
             fibIndex = 0;
         }
 
-        if (ALI_MORE_AMOUNT >= 500) {
+        if (ALI_MORE_AMOUNT >= 300) {
             BUY_AMOUNT = 0;
             ALI_MORE_AMOUNT = 0;
         }
@@ -1095,6 +1095,9 @@ public class MainActivity extends Activity {
         }
         if (CAN_BUY) {
             fibIndex++;
+        }
+        if (BIGGEST_AMOUNT == 0) {
+            fibIndex = 0;
         }
 
 
