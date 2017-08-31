@@ -162,7 +162,7 @@ public class MainActivity extends Activity {
     private int[] fiboArr;
     private int fibIndex = 0;
     private String biggerStr;
-    private int fibLength = 8;
+    private int fibLength = 12;
     private int dangerIndex;
     private int urlIndex = -1;
     private boolean CANT_BUY;
@@ -1088,7 +1088,7 @@ public class MainActivity extends Activity {
 //            CAN_BUY = false;
 //        }
 
-        if (recordMap.size() <= DANGER && recordMap.size() != 2&& recordMap.size() != 3) {
+        if (recordMap.size() <= DANGER) {
             DIF35BEGIN = true;
         }
         CAN_BUY = DIF35BEGIN;
@@ -1103,7 +1103,7 @@ public class MainActivity extends Activity {
         if (BIGGEST_AMOUNT < 150) {
             fibIndex = 0;
         }
-        if (BIGGEST_AMOUNT < 200 && TODAY_AMOUNT < -500) {
+        if (BIGGEST_AMOUNT < 500 && TODAY_AMOUNT < -500) {
             CANT_BUY = true;
         }
         if (BIGGEST_AMOUNT < 50 && TODAY_AMOUNT < -300) {
