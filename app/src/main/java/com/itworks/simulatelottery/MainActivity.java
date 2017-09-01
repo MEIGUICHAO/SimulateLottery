@@ -162,7 +162,7 @@ public class MainActivity extends Activity {
     private int[] fiboArr;
     private int fibIndex = 0;
     private String biggerStr;
-    private int fibLength = 12;
+    private int fibLength = 14;
     private int dangerIndex;
     private int urlIndex = -1;
     private boolean CANT_BUY;
@@ -380,7 +380,9 @@ public class MainActivity extends Activity {
 //            fiboArr[25] = fiboArr[26]= fiboArr[27] = fiboArr[28]= fiboArr[29] = fiboArr[15] + fiboArr[20];
 //            fiboArr[30] = fiboArr[31]= fiboArr[32] = fiboArr[33]= fiboArr[34] = fiboArr[20] + fiboArr[25];
 
-//            for (int i = 0; i < fibLength; i++) {
+            for (int i = 0; i < fibLength; i++) {
+                                    fiboArr[i] = 1;
+
 //                if (i >= 0 && i < 6) {
 //                    fiboArr[i] = 1;
 //                }
@@ -411,7 +413,7 @@ public class MainActivity extends Activity {
 //                if (i >= 54 && i < 60) {
 //                    fiboArr[i] = 89;
 //                }
-//            }
+            }
 
 //            fiboArr[0] = fiboArr[1] = fiboArr[2] = fiboArr[3] = fiboArr[4] = fiboArr[5] = 1;
 //            fiboArr[6] = fiboArr[7]= fiboArr[8] = fiboArr[4] + fiboArr[5];
@@ -422,10 +424,18 @@ public class MainActivity extends Activity {
 //            fiboArr[21] = fiboArr[22] = fiboArr[23] = fiboArr[15] + fiboArr[18];
 
 
-        fiboArr[0] = fiboArr[1] = 1;
-        for (int i = 2; i < fibLength; i++) {
-            fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
-        }
+//        fiboArr[0] = fiboArr[1] = 1;
+//        for (int i = 2; i < 7; i++) {
+//            fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
+//        }
+//        fiboArr[7] = fiboArr[8] = 3;
+//        for (int i = 9; i < 14; i++) {
+//            fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
+//        }
+//        fiboArr[14] = fiboArr[15] = 9;
+//        for (int i = 16; i < 21; i++) {
+//            fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
+//        }
 //        if (fiboArr == null) {
 //        }
     }
@@ -955,7 +965,7 @@ public class MainActivity extends Activity {
                     }
                 }
             }
-            if (positionContinue && positionCount > BiggerInt && positionCount != 3) {
+            if (positionContinue && positionCount == BiggerInt) {
                 sameCount++;
                 String[] positionSplite = positionStr.split("-");
                 String[] blankStr = positionBlankStr.split("-");
@@ -967,7 +977,7 @@ public class MainActivity extends Activity {
                 }
 
             }
-            if (numContinue && numCount > BiggerInt && numCount != 3) {
+            if (numContinue && numCount == BiggerInt) {
                 sameCount++;
                 String[] numSplite = numStr.split("-");
                 String[] blankStr = numBlankStr.split("-");
@@ -1088,27 +1098,29 @@ public class MainActivity extends Activity {
 //            CAN_BUY = false;
 //        }
 
-        if (recordMap.size() <= DANGER) {
-            DIF35BEGIN = true;
-        }
+//        if (recordMap.size() <= DANGER) {
+//        }
+        DIF35BEGIN = true;
         CAN_BUY = DIF35BEGIN;
 
 
-        if (recordMap.size() < 2 || recordMap.size() > DANGER) {
+        if (recordMap.size() > DANGER) {
+            CAN_BUY = true;
+        } else {
             CAN_BUY = false;
         }
         if (CAN_BUY) {
             fibIndex++;
         }
-        if (BIGGEST_AMOUNT < 150) {
-            fibIndex = 0;
-        }
-        if (BIGGEST_AMOUNT < 500 && TODAY_AMOUNT < -500) {
-            CANT_BUY = true;
-        }
-        if (BIGGEST_AMOUNT < 50 && TODAY_AMOUNT < -300) {
-            CANT_BUY = true;
-        }
+//        if (BIGGEST_AMOUNT < 150) {
+//            fibIndex = 0;
+//        }
+//        if (BIGGEST_AMOUNT < 500 && TODAY_AMOUNT < -500) {
+//            CANT_BUY = true;
+//        }
+//        if (BIGGEST_AMOUNT < 50 && TODAY_AMOUNT < -300) {
+//            CANT_BUY = true;
+//        }
 
 
         LAST_CAN_BUY = CAN_BUY;
@@ -1123,18 +1135,18 @@ public class MainActivity extends Activity {
 //        if (TODAY_AMOUNT < -500) {
 //            CANT_BUY = true;
 //        }
-        if ((TODAY_AMOUNT - recordMap.size() * 10 * fiboArr[fibIndex]) < -4000) {
-            CANT_BUY = true;
-        }
-        if (TODAY_AMOUNT < -2000 && BIGGEST_AMOUNT < 800) {
-            CANT_BUY = true;
-        }
-        if (TODAY_AMOUNT > 7000) {
-            CANT_BUY = true;
-        }
-        if (BIGGEST_AMOUNT > 3500 && BUY_AMOUNT < -2000) {
-            CANT_BUY = true;
-        }
+//        if ((TODAY_AMOUNT - recordMap.size() * 10 * fiboArr[fibIndex]) < -3000) {
+//            CANT_BUY = true;
+//        }
+//        if (TODAY_AMOUNT < -2000 && BIGGEST_AMOUNT < 800) {
+//            CANT_BUY = true;
+//        }
+//        if (TODAY_AMOUNT > 7000) {
+//            CANT_BUY = true;
+//        }
+//        if (BIGGEST_AMOUNT > 3500 && BUY_AMOUNT < -2000) {
+//            CANT_BUY = true;
+//        }
 
         Iterator<Map.Entry<Integer, Integer>> iterator = trueMap.entrySet().iterator();
         difBuyStr = "";
@@ -1161,7 +1173,7 @@ public class MainActivity extends Activity {
             }
         }
         final String buyDisplayStr = "BUY_AMOUNT: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-difbuyCount:" + difbuyCount
-                + "-fibIndex:" + fibIndex + "-ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALL_AMOUNT:" + ALL_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT;
+                + "-fibIndex:" + fiboArr[fibIndex] + "-ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-ALL_AMOUNT:" + ALL_AMOUNT + "-ALI_LESS_AMOUNT:" + ALI_LESS_AMOUNT;
 
         Log.e("BUY_AMOUNT", buyDisplayStr);
 
