@@ -156,7 +156,7 @@ public class MainActivity extends Activity {
     private int[] fiboArr;
     private int fibIndex = 0;
     private String biggerStr;
-    private int fibLength = 21;
+    private int fibLength = 33;
     private int dangerIndex;
     private int urlIndex = -1;
     private boolean CANT_BUY;
@@ -437,22 +437,55 @@ public class MainActivity extends Activity {
 //            fiboArr[21] = fiboArr[22] = fiboArr[23] = fiboArr[15] + fiboArr[18];
 
 
-        fiboArr[0] = fiboArr[1] = 1;
-        for (int i = 2; i < 7; i++) {
-//            fiboArr[i] = 1;
-            fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
-        }
-        fiboArr[7] = fiboArr[8] = 1;
-        for (int i = 9; i < 14; i++) {
-
-            fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
-        }
-        fiboArr[14] = fiboArr[15] = 1;
-        for (int i = 16; i < 21; i++) {
-            fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
-        }
+//        fiboArr[0] = fiboArr[1] = 1;
+//        for (int i = 2; i < 7; i++) {
+////            fiboArr[i] = 1;
+//            fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
+//        }
+//        fiboArr[7] = fiboArr[8] = 1;
+//        for (int i = 9; i < 14; i++) {
+//
+//            fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
+//        }
+//        fiboArr[14] = fiboArr[15] = 1;
+//        for (int i = 16; i < 21; i++) {
+//            fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
+//        }
 //        if (fiboArr == null) {
 //        }
+        for (int i = 0; i < fibLength; i++) {
+
+            if (i >= 0 && i < 2) {
+                fiboArr[i] = 1;
+            }
+            if (i >= 2 && i < 5) {
+                fiboArr[i] = 2;
+            }
+            if (i >= 5 && i < 8) {
+                fiboArr[i] = 3;
+            }
+            if (i >= 8 && i < 10) {
+                fiboArr[i] = 5;
+            }
+            if (i >= 10 && i < 12) {
+                fiboArr[i] = 8;
+            }
+            if (i >= 12 && i < 21) {
+                fiboArr[i] = 13;
+            }
+            if (i >= 21 && i < 24) {
+                fiboArr[i] = 21;
+            }
+            if (i >= 24 && i < 27) {
+                fiboArr[i] = 34;
+            }
+            if (i >= 27 && i < 30) {
+                fiboArr[i] = 55;
+            }
+            if (i >= 30 && i < 33) {
+                fiboArr[i] = 89;
+            }
+        }
     }
 
     @Override
@@ -804,9 +837,9 @@ public class MainActivity extends Activity {
 //
                                 && -1 == record2Map.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) <= MAX_2 && LAST_CAN_BUY) {
 
-                            BUY_AMOUNT = BUY_AMOUNT + 99 * fiboArr[lastPositionMap.get(i * 10 + j) - (MAX_2-10)];
-                            TODAY_AMOUNT = TODAY_AMOUNT + 99 * fiboArr[lastPositionMap.get(i * 10 + j) - (MAX_2-10)];
-                            AMOUNT_CURRENT = AMOUNT_CURRENT + 99 * fiboArr[lastPositionMap.get(i * 10 + j) - (MAX_2-10)];
+                            BUY_AMOUNT = BUY_AMOUNT + 99 * fiboArr[lastPositionMap.get(i * 10 + j) - (BEGIN_INT + 10)];
+                            TODAY_AMOUNT = TODAY_AMOUNT + 99 * fiboArr[lastPositionMap.get(i * 10 + j) - (BEGIN_INT + 10)];
+                            AMOUNT_CURRENT = AMOUNT_CURRENT + 99 * fiboArr[lastPositionMap.get(i * 10 + j) - (BEGIN_INT + 10)];
                             difLastBuyEarnStr = difLastBuyEarnStr + "\n" + "位置:" + (i * 10 + j) + ",blank:" + lastPositionMap.get(i * 10 + j);
                             Log.e("difBuyStr", "RealBuyEarnStr: " + (i * 10 + j) + ",blank:" + lastPositionMap.get(i * 10 + j));
                             earnDispalyStr = "BUY_AMOUNT_EARN~~~~: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-lastdifCount:" + lastdifCount + "-blank:" + lastPositionMap.get(i * 10 + j) + "-ALL_AMOUNT:"
@@ -945,7 +978,7 @@ public class MainActivity extends Activity {
                             } else {
                                 beginCountMap.put(index, 0);
                             }
-                            if (i >= ((MAX_2 - 10)) && beginCountMap.get(Integer.parseInt(blankMap.get(i))) > 4) {
+                            if (i >= ((BEGIN_INT + 10)) && beginCountMap.get(Integer.parseInt(blankMap.get(i))) > 5) {
                                 trueMap.put(index, i);
                                 recordMap.put(index, i);
                             }
@@ -1169,9 +1202,9 @@ public class MainActivity extends Activity {
                         lastBuyStr = lastBuyStr + "----" + next.getKey() + "##" + next.getValue();
                     }
                     lastPositionMap.put(next.getKey(), next.getValue());
-                    BUY_AMOUNT = BUY_AMOUNT - 10 * fiboArr[next.getValue() - (MAX_2 - 10)];
-                    AMOUNT_CURRENT = AMOUNT_CURRENT - 10 * fiboArr[next.getValue() - (MAX_2 - 10)];
-                    TODAY_AMOUNT = TODAY_AMOUNT - 10 * fiboArr[next.getValue() - (MAX_2 - 10)];
+                    BUY_AMOUNT = BUY_AMOUNT - 10 * fiboArr[next.getValue() - (BEGIN_INT + 10)];
+                    AMOUNT_CURRENT = AMOUNT_CURRENT - 10 * fiboArr[next.getValue() - (BEGIN_INT + 10)];
+                    TODAY_AMOUNT = TODAY_AMOUNT - 10 * fiboArr[next.getValue() - (BEGIN_INT + 10)];
                     difbuyCount++;
                 } else {
                     lastPositionMap.put(next.getKey(), -1);
