@@ -176,6 +176,7 @@ public class MainActivity extends Activity {
     private String beginStr;
     private HashMap<Integer, Integer> beginMap;
     private HashMap<Integer, Integer> beginCountRecordMap;
+    private int BEGIN_COUNT = 5;
     //    private int record4050;
 
 
@@ -837,11 +838,17 @@ public class MainActivity extends Activity {
 //
                                 && -1 == record2Map.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) <= MAX_2 && LAST_CAN_BUY) {
 
-                            BUY_AMOUNT = BUY_AMOUNT + 99 * fiboArr[lastPositionMap.get(i * 10 + j) - (BEGIN_INT + 10)];
-                            TODAY_AMOUNT = TODAY_AMOUNT + 99 * fiboArr[lastPositionMap.get(i * 10 + j) - (BEGIN_INT + 10)];
-                            AMOUNT_CURRENT = AMOUNT_CURRENT + 99 * fiboArr[lastPositionMap.get(i * 10 + j) - (BEGIN_INT + 10)];
+//                            int buyAmount = fiboArr[beginCountMap.get(i * 10 + j) - BEGIN_COUNT];
+                            int buyAmount = fiboArr[lastPositionMap.get(i * 10 + j) - (BEGIN_INT + 10)];
+                            BUY_AMOUNT = BUY_AMOUNT + 99 * buyAmount;
+                            TODAY_AMOUNT = TODAY_AMOUNT + 99 * buyAmount;
+                            AMOUNT_CURRENT = AMOUNT_CURRENT + 99 * buyAmount;
+//                            BUY_AMOUNT = BUY_AMOUNT + 99 * fiboArr[lastPositionMap.get(i * 10 + j) - (BEGIN_INT + 10)];
+//                            TODAY_AMOUNT = TODAY_AMOUNT + 99 * fiboArr[lastPositionMap.get(i * 10 + j) - (BEGIN_INT + 10)];
+//                            AMOUNT_CURRENT = AMOUNT_CURRENT + 99 * fiboArr[lastPositionMap.get(i * 10 + j) - (BEGIN_INT + 10)];
                             difLastBuyEarnStr = difLastBuyEarnStr + "\n" + "位置:" + (i * 10 + j) + ",blank:" + lastPositionMap.get(i * 10 + j);
-                            Log.e("difBuyStr", "RealBuyEarnStr: " + (i * 10 + j) + ",blank:" + lastPositionMap.get(i * 10 + j));
+                            Log.e("difBuyStr", "RealBuyEarnStr: " + (i * 10 + j) + ",blank:" + lastPositionMap.get(i * 10 + j) + "buyAmount:" + buyAmount
+                                    + "earnAmount:" + 99 * buyAmount);
                             earnDispalyStr = "BUY_AMOUNT_EARN~~~~: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-lastdifCount:" + lastdifCount + "-blank:" + lastPositionMap.get(i * 10 + j) + "-ALL_AMOUNT:"
                                     + ALL_AMOUNT + "-ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-BIGGEST_AMOUNT:" + BIGGEST_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT;
                             Log.e("BUY_AMOUNT", earnDispalyStr);
@@ -978,7 +985,7 @@ public class MainActivity extends Activity {
                             } else {
                                 beginCountMap.put(index, 0);
                             }
-                            if (i >= ((BEGIN_INT + 10)) && beginCountMap.get(Integer.parseInt(blankMap.get(i))) > 5) {
+                            if (i >= ((BEGIN_INT + 10)) && beginCountMap.get(Integer.parseInt(blankMap.get(i))) > BEGIN_COUNT) {
                                 trueMap.put(index, i);
                                 recordMap.put(index, i);
                             }
@@ -1191,20 +1198,27 @@ public class MainActivity extends Activity {
         int more50 = 0;
         int more40 = 0;
         int more30 = 0;
+        //TODO buy
         while (iterator.hasNext()) {
             Map.Entry<Integer, Integer> next = iterator.next();
             if (next.getValue() != -1) {
                 if (!CANT_BUY && CAN_BUY && next.getValue() <= MAX_2 && next.getValue() >= BEGIN_INT && !TextUtils.isEmpty(biggerStr) && DIF35BEGIN && !DIF5060) {
-                    difBuyStr = difBuyStr + "\n" + "位置:" + next.getKey() + ",blank:" + next.getValue();
                     if (TextUtils.isEmpty(lastBuyStr)) {
                         lastBuyStr = next.getKey() + "##" + next.getValue();
                     } else {
                         lastBuyStr = lastBuyStr + "----" + next.getKey() + "##" + next.getValue();
                     }
+                    int buyAmount =  10 * fiboArr[next.getValue() - (BEGIN_INT + 10)];
+//                    int buyAmount = 10 * fiboArr[beginCountMap.get(next.getKey()) - BEGIN_COUNT];
                     lastPositionMap.put(next.getKey(), next.getValue());
-                    BUY_AMOUNT = BUY_AMOUNT - 10 * fiboArr[next.getValue() - (BEGIN_INT + 10)];
-                    AMOUNT_CURRENT = AMOUNT_CURRENT - 10 * fiboArr[next.getValue() - (BEGIN_INT + 10)];
-                    TODAY_AMOUNT = TODAY_AMOUNT - 10 * fiboArr[next.getValue() - (BEGIN_INT + 10)];
+                    BUY_AMOUNT = BUY_AMOUNT - buyAmount;
+                    AMOUNT_CURRENT = AMOUNT_CURRENT - buyAmount;
+                    TODAY_AMOUNT = TODAY_AMOUNT - buyAmount;
+                    difBuyStr = difBuyStr + "\n" + "位置:" + next.getKey() + ",blank:" + next.getValue() + ",buyAmount:" + buyAmount;
+
+//                    BUY_AMOUNT = BUY_AMOUNT - 10 * fiboArr[next.getValue() - (BEGIN_INT + 10)];
+//                    AMOUNT_CURRENT = AMOUNT_CURRENT - 10 * fiboArr[next.getValue() - (BEGIN_INT + 10)];
+//                    TODAY_AMOUNT = TODAY_AMOUNT - 10 * fiboArr[next.getValue() - (BEGIN_INT + 10)];
                     difbuyCount++;
                 } else {
                     lastPositionMap.put(next.getKey(), -1);
