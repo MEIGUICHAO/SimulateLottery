@@ -705,8 +705,8 @@ public class MainActivity extends Activity {
 //                    setLastMap(i);
             }
             difLastBuyEarnStr = "";
-            getDifPositionBuyMap(i);
             try {
+                getDifPositionBuyMap(i);
             } catch (Exception e) {
 
             }
