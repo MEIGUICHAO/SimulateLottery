@@ -177,6 +177,7 @@ public class MainActivity extends Activity {
     private HashMap<Integer, Integer> beginMap;
     private HashMap<Integer, Integer> beginCountRecordMap;
     private int BEGIN_COUNT = 5;
+    private int beginSize;
     //    private int record4050;
 
 
@@ -1047,7 +1048,7 @@ public class MainActivity extends Activity {
             Iterator<Map.Entry<Integer, Integer>> iterator = beginCountRecordMap.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry<Integer, Integer> next = iterator.next();
-                if (next.getValue() == beginCountMap.get(next.getKey())) {
+                if (next.getValue() == beginCountMap.get(next.getKey()) && beginCountMap.get(next.getKey()) < DANGER) {
                     beginCountMap.remove(next.getKey());
                 }
             }
@@ -1177,9 +1178,35 @@ public class MainActivity extends Activity {
             CANT_BUY = true;
         }
 
-        if (recordMap.size() > 2) {
+
+
+
+        if (recordMap.size() > 2 * BiggerInt) {
             CAN_BUY = true;
+            if (beginSize == -1) {
+                beginSize = recordMap.size();
+            }
+            if (recordMap.size() <= beginSize) {
+                int smarllerCount = -1;
+                Iterator<Map.Entry<Integer, Integer>> iterator1 = recordMap.entrySet().iterator();
+                while (iterator1.hasNext()) {
+                    Map.Entry<Integer, Integer> next = iterator1.next();
+                    if (smarllerCount == -1) {
+                        smarllerCount = beginCountMap.get(next.getKey());
+                    }
+                    if (smarllerCount > beginCountMap.get(next.getKey())) {
+                        smarllerCount = beginCountMap.get(next.getKey());
+                    }
+                }
+                Iterator<Map.Entry<Integer, Integer>> iterator2 = recordMap.entrySet().iterator();
+                while (iterator2.hasNext()) {
+                    Map.Entry<Integer, Integer> next = iterator2.next();
+                    beginCountMap.put(next.getKey(), smarllerCount);
+                }
+            }
+
         } else {
+            beginSize = -1;
             CAN_BUY = false;
         }
 
