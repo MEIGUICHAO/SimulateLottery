@@ -156,7 +156,7 @@ public class MainActivity extends Activity {
     private int[] fiboArr;
     private int fibIndex = 0;
     private String biggerStr;
-    private int fibLength = 33;
+    private int fibLength = 10;
     private int dangerIndex;
     private int urlIndex = -1;
     private boolean CANT_BUY;
@@ -438,11 +438,15 @@ public class MainActivity extends Activity {
 //            fiboArr[21] = fiboArr[22] = fiboArr[23] = fiboArr[15] + fiboArr[18];
 
 
-//        fiboArr[0] = fiboArr[1] = 1;
-//        for (int i = 2; i < 7; i++) {
-////            fiboArr[i] = 1;
-//            fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
-//        }
+        fiboArr[0] = fiboArr[1] = 1;
+        for (int i = 2; i < 7; i++) {
+//            fiboArr[i] = 1;
+            fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
+        }
+        fiboArr[7] = 15;
+        fiboArr[8] = 20;
+        fiboArr[9] = 30;
+//        fiboArr[10] = 15;
 //        fiboArr[7] = fiboArr[8] = 1;
 //        for (int i = 9; i < 14; i++) {
 //
@@ -454,39 +458,39 @@ public class MainActivity extends Activity {
 //        }
 //        if (fiboArr == null) {
 //        }
-        for (int i = 0; i < fibLength; i++) {
-
-            if (i >= 0 && i < 2) {
-                fiboArr[i] = 1;
-            }
-            if (i >= 2 && i < 5) {
-                fiboArr[i] = 2;
-            }
-            if (i >= 5 && i < 8) {
-                fiboArr[i] = 3;
-            }
-            if (i >= 8 && i < 10) {
-                fiboArr[i] = 5;
-            }
-            if (i >= 10 && i < 12) {
-                fiboArr[i] = 8;
-            }
-            if (i >= 12 && i < 21) {
-                fiboArr[i] = 13;
-            }
-            if (i >= 21 && i < 24) {
-                fiboArr[i] = 21;
-            }
-            if (i >= 24 && i < 27) {
-                fiboArr[i] = 34;
-            }
-            if (i >= 27 && i < 30) {
-                fiboArr[i] = 55;
-            }
-            if (i >= 30 && i < 33) {
-                fiboArr[i] = 89;
-            }
-        }
+//        for (int i = 0; i < fibLength; i++) {
+//
+//            if (i >= 0 && i < 2) {
+//                fiboArr[i] = 1;
+//            }
+//            if (i >= 2 && i < 5) {
+//                fiboArr[i] = 2;
+//            }
+//            if (i >= 5 && i < 8) {
+//                fiboArr[i] = 3;
+//            }
+//            if (i >= 8 && i < 10) {
+//                fiboArr[i] = 5;
+//            }
+//            if (i >= 10 && i < 12) {
+//                fiboArr[i] = 8;
+//            }
+//            if (i >= 12 && i < 21) {
+//                fiboArr[i] = 13;
+//            }
+//            if (i >= 21 && i < 24) {
+//                fiboArr[i] = 21;
+//            }
+//            if (i >= 24 && i < 27) {
+//                fiboArr[i] = 34;
+//            }
+//            if (i >= 27 && i < 30) {
+//                fiboArr[i] = 55;
+//            }
+//            if (i >= 30 && i < 33) {
+//                fiboArr[i] = 89;
+//            }
+//        }
     }
 
     @Override
@@ -838,8 +842,8 @@ public class MainActivity extends Activity {
 //
                                 && -1 == record2Map.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) <= MAX_2 && LAST_CAN_BUY) {
 
-//                            int buyAmount = fiboArr[beginCountMap.get(i * 10 + j) - BEGIN_COUNT];
-                            int buyAmount = fiboArr[lastPositionMap.get(i * 10 + j) - (BEGIN_INT + 10)];
+                            int buyAmount = fiboArr[beginCountMap.get(i * 10 + j) - DANGER];
+//                            int buyAmount = fiboArr[lastPositionMap.get(i * 10 + j) - (BEGIN_INT + 10)];
                             BUY_AMOUNT = BUY_AMOUNT + 99 * buyAmount;
                             TODAY_AMOUNT = TODAY_AMOUNT + 99 * buyAmount;
                             AMOUNT_CURRENT = AMOUNT_CURRENT + 99 * buyAmount;
@@ -985,7 +989,8 @@ public class MainActivity extends Activity {
                             } else {
                                 beginCountMap.put(index, 0);
                             }
-                            if (i >= ((BEGIN_INT + 10)) && beginCountMap.get(Integer.parseInt(blankMap.get(i))) > BEGIN_COUNT) {
+                            if (i >= ((BEGIN_INT + 10)) && beginCountMap.get(Integer.parseInt(blankMap.get(i))) > DANGER && beginCountMap.get(Integer.parseInt(blankMap.get(i))) < (DANGER + 10)) {
+
                                 trueMap.put(index, i);
                                 recordMap.put(index, i);
                             }
@@ -1145,11 +1150,12 @@ public class MainActivity extends Activity {
             CANT_BUY = true;
         }
 
-        if (recordMap.size() < DANGER) {
+        if (recordMap.size() > 2) {
             CAN_BUY = true;
         } else {
             CAN_BUY = false;
         }
+
 
 //        if ((CAN_BUY && NEED_ADD) || (fibIndex < 6 && CAN_BUY)) {
         if (CAN_BUY) {
@@ -1208,13 +1214,13 @@ public class MainActivity extends Activity {
                     } else {
                         lastBuyStr = lastBuyStr + "----" + next.getKey() + "##" + next.getValue();
                     }
-                    int buyAmount =  10 * fiboArr[next.getValue() - (BEGIN_INT + 10)];
-//                    int buyAmount = 10 * fiboArr[beginCountMap.get(next.getKey()) - BEGIN_COUNT];
+//                    int buyAmount =  10 * fiboArr[next.getValue() - DANGER];
+                    int buyAmount = 10 * fiboArr[beginCountMap.get(next.getKey()) - DANGER];
                     lastPositionMap.put(next.getKey(), next.getValue());
                     BUY_AMOUNT = BUY_AMOUNT - buyAmount;
                     AMOUNT_CURRENT = AMOUNT_CURRENT - buyAmount;
                     TODAY_AMOUNT = TODAY_AMOUNT - buyAmount;
-                    difBuyStr = difBuyStr + "\n" + "位置:" + next.getKey() + ",blank:" + next.getValue() + ",buyAmount:" + buyAmount;
+                    difBuyStr = difBuyStr + "\n" + "位置:" + next.getKey() + ",blank:" + next.getValue() + ",buyAmount:" + buyAmount+",";
 
 //                    BUY_AMOUNT = BUY_AMOUNT - 10 * fiboArr[next.getValue() - (BEGIN_INT + 10)];
 //                    AMOUNT_CURRENT = AMOUNT_CURRENT - 10 * fiboArr[next.getValue() - (BEGIN_INT + 10)];
