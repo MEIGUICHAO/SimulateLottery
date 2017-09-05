@@ -178,6 +178,7 @@ public class MainActivity extends Activity {
     private HashMap<Integer, Integer> beginCountRecordMap;
     private int BEGIN_COUNT = 5;
     private int beginSize;
+    private String biggerMaxStr;
     //    private int record4050;
 
 
@@ -1292,6 +1293,7 @@ public class MainActivity extends Activity {
         Iterator<Map.Entry<Integer, Integer>> iterator = trueMap.entrySet().iterator();
         difBuyStr = "";
         lastBuyStr = "";
+        biggerMaxStr = "";
         RECORD_AMOUNT = BUY_AMOUNT;
         int more50 = 0;
         int more40 = 0;
@@ -1305,6 +1307,11 @@ public class MainActivity extends Activity {
                         lastBuyStr = next.getKey() + "##" + next.getValue();
                     } else {
                         lastBuyStr = lastBuyStr + "----" + next.getKey() + "##" + next.getValue();
+                    }
+                    if (next.getValue() >= MAX_2) {
+                        if (TextUtils.isEmpty(biggerMaxStr)) {
+                            biggerMaxStr = next.getKey() + "##" + next.getValue() + "##" + (beginCountMap.get(next.getKey()) - DANGER);
+                        }
                     }
 //                    int buyAmount =  10 * fiboArr[next.getValue() - DANGER];
                     int buyAmount = 10 * fiboArr[beginCountMap.get(next.getKey()) - DANGER];
