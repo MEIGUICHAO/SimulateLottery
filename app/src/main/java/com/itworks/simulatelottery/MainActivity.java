@@ -942,10 +942,8 @@ public class MainActivity extends Activity {
                 fibIndex = 0;
             }
         }
-        if (BUY_AMOUNT > RECORD_AMOUNT) {
-            NEED_ADD = false;
-        } else if (BUY_AMOUNT < RECORD_AMOUNT) {
-            NEED_ADD = true;
+        if (RECORD_AMOUNT < 0 && BUY_AMOUNT > 0) {
+            beginSize = -1;
         }
         difbuyCount = 0;
         sameStr = "";
@@ -1183,6 +1181,9 @@ public class MainActivity extends Activity {
 
         if (recordMap.size() > 2 * BiggerInt) {
             CAN_BUY = true;
+            if (recordMap.size() < beginSize) {
+                beginSize = -1;
+            }
             if (beginSize == -1) {
                 beginSize = recordMap.size();
             }
