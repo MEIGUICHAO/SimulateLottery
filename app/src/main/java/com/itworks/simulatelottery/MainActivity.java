@@ -156,7 +156,7 @@ public class MainActivity extends Activity {
     private int[] fiboArr;
     private int fibIndex = 0;
     private String biggerStr;
-    private int fibLength = 10;
+    private int fibLength = 11;
     private int dangerIndex;
     private int urlIndex = -1;
     private boolean CANT_BUY;
@@ -446,6 +446,7 @@ public class MainActivity extends Activity {
         fiboArr[7] = 15;
         fiboArr[8] = 20;
         fiboArr[9] = 30;
+        fiboArr[10] = 30;
 //        fiboArr[10] = 15;
 //        fiboArr[7] = fiboArr[8] = 1;
 //        for (int i = 9; i < 14; i++) {
@@ -461,19 +462,19 @@ public class MainActivity extends Activity {
 //        for (int i = 0; i < fibLength; i++) {
 //
 //            if (i >= 0 && i < 2) {
-//                fiboArr[i] = 1;
-//            }
-//            if (i >= 2 && i < 5) {
-//                fiboArr[i] = 2;
-//            }
-//            if (i >= 5 && i < 8) {
 //                fiboArr[i] = 3;
 //            }
-//            if (i >= 8 && i < 10) {
+//            if (i >= 2 && i < 5) {
+//                fiboArr[i] = 8;
+//            }
+//            if (i >= 5 && i < 8) {
 //                fiboArr[i] = 5;
 //            }
+//            if (i >= 8 && i < 10) {
+//                fiboArr[i] = 3;
+//            }
 //            if (i >= 10 && i < 12) {
-//                fiboArr[i] = 8;
+//                fiboArr[i] = 10;
 //            }
 //            if (i >= 12 && i < 21) {
 //                fiboArr[i] = 13;
@@ -710,8 +711,8 @@ public class MainActivity extends Activity {
 //                    setLastMap(i);
             }
             difLastBuyEarnStr = "";
+            getDifPositionBuyMap(i);
             try {
-                getDifPositionBuyMap(i);
             } catch (Exception e) {
 
             }
@@ -851,7 +852,7 @@ public class MainActivity extends Activity {
 //                            TODAY_AMOUNT = TODAY_AMOUNT + 99 * fiboArr[lastPositionMap.get(i * 10 + j) - (BEGIN_INT + 10)];
 //                            AMOUNT_CURRENT = AMOUNT_CURRENT + 99 * fiboArr[lastPositionMap.get(i * 10 + j) - (BEGIN_INT + 10)];
                             difLastBuyEarnStr = difLastBuyEarnStr + "\n" + "位置:" + (i * 10 + j) + ",blank:" + lastPositionMap.get(i * 10 + j);
-                            Log.e("difBuyStr", "RealBuyEarnStr: " + (i * 10 + j) + ",blank:" + lastPositionMap.get(i * 10 + j) + "buyAmount:" + buyAmount
+                            Log.e("difBuyStr", "RealBuyEarnStr: " + (i * 10 + j) + ",blank:" + lastPositionMap.get(i * 10 + j) + ",buyAmount:" + buyAmount
                                     + "earnAmount:" + 99 * buyAmount);
                             earnDispalyStr = "BUY_AMOUNT_EARN~~~~: " + BUY_AMOUNT + "-trem:" + allLists.get(term).getCTermDT() + "-lastdifCount:" + lastdifCount + "-blank:" + lastPositionMap.get(i * 10 + j) + "-ALL_AMOUNT:"
                                     + ALL_AMOUNT + "-ALI_MORE_AMOUNT:" + ALI_MORE_AMOUNT + "-TODAY_AMOUNT:" + TODAY_AMOUNT + "-BIGGEST_AMOUNT:" + BIGGEST_AMOUNT + "-AMOUNT_CURRENT:" + AMOUNT_CURRENT;
@@ -989,7 +990,7 @@ public class MainActivity extends Activity {
                             } else {
                                 beginCountMap.put(index, 0);
                             }
-                            if (i >= ((BEGIN_INT + 10)) && beginCountMap.get(Integer.parseInt(blankMap.get(i))) > DANGER && beginCountMap.get(Integer.parseInt(blankMap.get(i))) < (DANGER + 10)) {
+                            if (beginCountMap.get(Integer.parseInt(blankMap.get(i))) > DANGER && beginCountMap.get(Integer.parseInt(blankMap.get(i))) < (DANGER + 10)) {
 
                                 trueMap.put(index, i);
                                 recordMap.put(index, i);
@@ -1003,11 +1004,37 @@ public class MainActivity extends Activity {
                     }
                 }
             } else {
-                final String[] split = blankMap.get(i).split("---");
-                if (split.length == BiggerInt) {
-                    for (String str : split) {
-                        trueMap.put(Integer.parseInt(str), i);
-                        recordMap.put(Integer.parseInt(str), i);
+                if (!TextUtils.isEmpty(blankMap.get(i))) {
+                    final String[] split = blankMap.get(i).split("---");
+                    if (split.length == BiggerInt) {
+
+
+                        for (String str : split) {
+
+                            int index = Integer.parseInt(str);
+                            beginMap.put(index, i);
+
+                            if (!TextUtils.isEmpty(beginStr) && beginStr.contains(index + "--")) {
+                                if (null == beginCountMap.get(index)) {
+                                    beginCountMap.put(index, 0);
+                                } else {
+                                    Integer count = beginCountMap.get(index);
+                                    Integer integer = count + 1;
+                                    beginCountMap.put(index, integer);
+                                }
+                            } else {
+                                beginCountMap.put(index, 0);
+                            }
+                            if (beginCountMap.get(index) > DANGER && beginCountMap.get(index) < (DANGER + 10)) {
+
+                                trueMap.put(index, i);
+                                recordMap.put(index, i);
+                            }
+
+                        }
+
+//                        trueMap.put(Integer.parseInt(str), i);
+//                        recordMap.put(Integer.parseInt(str), i);
                     }
                 }
             }
