@@ -296,7 +296,8 @@ public class MainActivity extends Activity {
         if (null == blankMap) {
             blankMap = new HashMap<Integer, String>();
         }
-        for (int i = BEGIN_INT; i <= MAX_2; i++) {
+        blankMap.clear();
+        for (int i = BEGIN_INT; i <= MAX_2 + 10; i++) {
             blankMap.put(i, "");
 
         }
@@ -1038,6 +1039,9 @@ public class MainActivity extends Activity {
                 }
             }
         }
+        biggerMax();
+
+
         if (null == beginCountRecordMap) {
             beginCountRecordMap = new HashMap<Integer, Integer>();
             resetBeginCountMap();
@@ -1064,6 +1068,39 @@ public class MainActivity extends Activity {
 
         if (term < allLists.size()) {
             setDifLastMap(term);
+        }
+    }
+
+    private void biggerMax() {
+        //TODO
+        if (BiggerInt == 1) {
+            for (int i = (MAX_2 + 1); i <= (MAX_2 + 10); i++) {
+                if (!TextUtils.isEmpty(blankMap.get(i))) {
+                    if (!blankMap.get(i).contains("---")) {
+
+                        int index = Integer.parseInt(blankMap.get(i));
+
+                        if (!TextUtils.isEmpty(beginStr) && beginStr.contains(index + "--")) {
+                            if (null == beginCountMap.get(index)) {
+//                                beginCountMap.put(index, 0);
+                            } else {
+                                Integer count = beginCountMap.get(index);
+                                Integer integer = count + 1;
+                                beginCountMap.put(index, integer);
+                            }
+                        } else {
+//                            beginCountMap.put(index, 0);
+                        }
+                        if (null != beginCountMap.get(Integer.parseInt(blankMap.get(i)))) {
+                            if (beginCountMap.get(Integer.parseInt(blankMap.get(i))) > DANGER && beginCountMap.get(Integer.parseInt(blankMap.get(i))) < (DANGER + 10)) {
+                                beginMap.put(Integer.parseInt(blankMap.get(i)), i);
+                                trueMap.put(index, i);
+                                recordMap.put(index, i);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -1263,7 +1300,7 @@ public class MainActivity extends Activity {
         while (iterator.hasNext()) {
             Map.Entry<Integer, Integer> next = iterator.next();
             if (next.getValue() != -1) {
-                if (!CANT_BUY && CAN_BUY && next.getValue() <= MAX_2 && next.getValue() >= BEGIN_INT && !TextUtils.isEmpty(biggerStr) && DIF35BEGIN && !DIF5060) {
+                if (!CANT_BUY && CAN_BUY && next.getValue() <= (MAX_2 + 10) && next.getValue() >= BEGIN_INT && !TextUtils.isEmpty(biggerStr) && DIF35BEGIN && !DIF5060) {
                     if (TextUtils.isEmpty(lastBuyStr)) {
                         lastBuyStr = next.getKey() + "##" + next.getValue();
                     } else {
@@ -1275,7 +1312,7 @@ public class MainActivity extends Activity {
                     BUY_AMOUNT = BUY_AMOUNT - buyAmount;
                     AMOUNT_CURRENT = AMOUNT_CURRENT - buyAmount;
                     TODAY_AMOUNT = TODAY_AMOUNT - buyAmount;
-                    difBuyStr = difBuyStr + "\n" + "位置:" + next.getKey() + ",blank:" + next.getValue() + ",buyAmount:" + buyAmount+",";
+                    difBuyStr = difBuyStr + "\n" + "位置:" + next.getKey() + ",blank:" + next.getValue() + ",buyAmount:" + buyAmount + ",";
 
 //                    BUY_AMOUNT = BUY_AMOUNT - 10 * fiboArr[next.getValue() - (BEGIN_INT + 10)];
 //                    AMOUNT_CURRENT = AMOUNT_CURRENT - 10 * fiboArr[next.getValue() - (BEGIN_INT + 10)];
