@@ -184,5 +184,10 @@ public class StrategyRecord {
 //            09-05 05:25:24.348 23750-24062/com.itworks.simulatelottery E/end: end: earn+++urlIndex:8-TODAY_AMOUNT:1211-ALI_LESS_AMOUNT:-1140-LOST_MOST_TODAY:-530-AMOUNT_CURRENT:12155-BIGGEST_AMOUNT:2501-20170723-BIGGEST_TERM:2017-07-23 23:42:57
 //    09-05 05:29:32.568 23750-24062/com.itworks.simulatelottery E/end: end: lost---urlIndex:7-TODAY_AMOUNT:-1961-ALI_LESS_AMOUNT:-5282-LOST_MOST_TODAY:-5282-AMOUNT_CURRENT:10194-BIGGEST_AMOUNT:0-20170724-BIGGEST_TERM:2017-07-23 23:42:57
 
+    /*
+    * 1-60
+    * 4
+    * danger10
+    * */
 
 }
