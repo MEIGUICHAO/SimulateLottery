@@ -1111,7 +1111,7 @@ public class MainActivity extends Activity {
 
 
         CAN_BUY = true;
-        if (TODAY_AMOUNT > 2000||TODAY_AMOUNT<-8000) {
+        if (TODAY_AMOUNT > 2000||TODAY_AMOUNT<-3000) {
             CAN_BUY = false;
             CANT_BUY = true;
         }
