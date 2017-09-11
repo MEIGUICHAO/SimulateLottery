@@ -619,6 +619,7 @@ public class MainActivity extends Activity {
         }
 
         BUY_AMOUNT = 0;
+        CUSTOM_AMOUNT = false;
         for (int i = allLists.size() / 2; i >= 0; i--) {
 
             if (!CANT_BUY) {
@@ -1073,7 +1074,7 @@ public class MainActivity extends Activity {
                 CUSTOM_AMOUNT = true;
             }
         }
-        if (CAN_CONTINU && TODAY_AMOUNT > 0) {
+        if (CUSTOM_AMOUNT && TODAY_AMOUNT > 0) {
             CUSTOM_AMOUNT = false;
         }
 
@@ -1110,7 +1111,7 @@ public class MainActivity extends Activity {
 
 
         CAN_BUY = true;
-        if (TODAY_AMOUNT > 1000) {
+        if (TODAY_AMOUNT > 1000||TODAY_AMOUNT<-8000) {
             CAN_BUY = false;
             CANT_BUY = true;
         }
@@ -1141,7 +1142,7 @@ public class MainActivity extends Activity {
                     int buyAmount = 10 * fiboArr[fibIndex];
                     if (CUSTOM_AMOUNT) {
                         if (custom_amount == 0) {
-                            custom_amount = (Math.abs(TODAY_AMOUNT)) / 80;
+                            custom_amount = (Math.abs(BUY_AMOUNT)) / 80;
                         }
                         buyAmount = custom_amount *10;
                         if (buyAmount < 10) {
