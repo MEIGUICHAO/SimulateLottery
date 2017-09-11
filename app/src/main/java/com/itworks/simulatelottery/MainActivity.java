@@ -156,7 +156,7 @@ public class MainActivity extends Activity {
     private int[] fiboArr;
     private int fibIndex = 0;
     private String biggerStr;
-    private int fibLength = 7;
+    private int fibLength = 5;
     private int dangerIndex;
     private int urlIndex = -1;
     private boolean CANT_BUY;
@@ -407,7 +407,7 @@ public class MainActivity extends Activity {
 
         fiboArr[0] = fiboArr[1] = 1;
 
-        for (int i = 2; i < 7; i++) {
+        for (int i = 2; i < fibLength; i++) {
             fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
         }
 //        fiboArr[7] = 15;
@@ -1111,7 +1111,7 @@ public class MainActivity extends Activity {
 
 
         CAN_BUY = true;
-        if (TODAY_AMOUNT > 1000||TODAY_AMOUNT<-8000) {
+        if (TODAY_AMOUNT > 2000||TODAY_AMOUNT<-8000) {
             CAN_BUY = false;
             CANT_BUY = true;
         }
