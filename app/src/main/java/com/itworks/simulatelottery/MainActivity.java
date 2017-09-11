@@ -156,7 +156,7 @@ public class MainActivity extends Activity {
     private int[] fiboArr;
     private int fibIndex = 0;
     private String biggerStr;
-    private int fibLength = 11;
+    private int fibLength = 7;
     private int dangerIndex;
     private int urlIndex = -1;
     private boolean CANT_BUY;
@@ -179,6 +179,8 @@ public class MainActivity extends Activity {
     private int BEGIN_COUNT = 5;
     private int beginSize;
     private boolean CAN_CONTINU;
+    private boolean CUSTOM_AMOUNT;
+    private int custom_amount;
     //    private int record4050;
 
 
@@ -297,7 +299,7 @@ public class MainActivity extends Activity {
         if (null == blankMap) {
             blankMap = new HashMap<Integer, String>();
         }
-        for (int i = BEGIN_INT; i <= MAX_2; i++) {
+        for (int i = 0; i <= 200; i++) {
             blankMap.put(i, "");
 
         }
@@ -389,111 +391,28 @@ public class MainActivity extends Activity {
 
     private void initFibArr() {
         fiboArr = new int[fibLength];
-//            fiboArr[0] = fiboArr[1] = fiboArr[2] = fiboArr[3] = fiboArr[4] = fiboArr[5]= fiboArr[6] = fiboArr[7]= fiboArr[8] = fiboArr[9] = 1;
-//            fiboArr[10] = fiboArr[11]= fiboArr[12] = fiboArr[13]= fiboArr[14] = fiboArr[0] + fiboArr[9];
-//            fiboArr[15] = fiboArr[16]= fiboArr[17] = fiboArr[18]= fiboArr[19] = fiboArr[9] + fiboArr[10];
-//            fiboArr[20] = fiboArr[21]= fiboArr[22] = fiboArr[23]= fiboArr[24] = fiboArr[10] + fiboArr[15];
-//            fiboArr[25] = fiboArr[26]= fiboArr[27] = fiboArr[28]= fiboArr[29] = fiboArr[15] + fiboArr[20];
-//            fiboArr[30] = fiboArr[31]= fiboArr[32] = fiboArr[33]= fiboArr[34] = fiboArr[20] + fiboArr[25];
+//        fiboArr[0] = fiboArr[1]= fiboArr[2] = 1;
+//        fiboArr[3] = 2;
+//        fiboArr[4] = 3;
+//        fiboArr[5] = 5;
+//        fiboArr[6] = 7;
+//        fiboArr[7] = 9;
+//        fiboArr[8] = 12;
+//        fiboArr[9] = 15;
+//        fiboArr[10] = 19;
+//        fiboArr[11] = 23;
+//        fiboArr[12] = 28;
 
-
-//        for (int i = 0; i < fibLength; i++) {
-//
-//            if (i >= 0 && i < 6) {
-//                fiboArr[i] = 1;
-//            }
-//            if (i >= 6 && i < 9) {
-//                fiboArr[i] = 2;
-//            }
-//            if (i >= 9 && i < 12) {
-//                fiboArr[i] = 3;
-//            }
-//            if (i >= 12 && i < 15) {
-//                fiboArr[i] = 5;
-//            }
-//            if (i >= 15 && i < 18) {
-//                fiboArr[i] = 8;
-//            }
-//            if (i >= 18 && i < 21) {
-//                fiboArr[i] = 13;
-//            }
-//            if (i >= 21 && i < 24) {
-//                fiboArr[i] = 21;
-//            }
-//            if (i >= 24 && i < 27) {
-//                fiboArr[i] = 34;
-//            }
-//            if (i >= 27 && i < 30) {
-//                fiboArr[i] = 55;
-//            }
-//            if (i >= 30 && i < 33) {
-//                fiboArr[i] = 89;
-//            }
-//        }
-
-//            fiboArr[0] = fiboArr[1] = fiboArr[2] = fiboArr[3] = fiboArr[4] = fiboArr[5] = 1;
-//            fiboArr[6] = fiboArr[7]= fiboArr[8] = fiboArr[4] + fiboArr[5];
-//            fiboArr[9] = fiboArr[10] = fiboArr[11] = fiboArr[5] + fiboArr[6];
-//            fiboArr[12] = fiboArr[13] = fiboArr[14] = fiboArr[6] + fiboArr[9];
-//            fiboArr[15] = fiboArr[16] = fiboArr[17] = fiboArr[9] + fiboArr[12];
-//            fiboArr[18] =fiboArr[19] = fiboArr[20] = fiboArr[12] + fiboArr[15];
-//            fiboArr[21] = fiboArr[22] = fiboArr[23] = fiboArr[15] + fiboArr[18];
 
 
         fiboArr[0] = fiboArr[1] = 1;
+
         for (int i = 2; i < 7; i++) {
-//            fiboArr[i] = 1;
             fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
         }
-        fiboArr[7] = 15;
-        fiboArr[8] = 20;
-        fiboArr[9] = 30;
-        fiboArr[10] = 30;
-//        fiboArr[10] = 15;
-//        fiboArr[7] = fiboArr[8] = 1;
-//        for (int i = 9; i < 14; i++) {
-//
-//            fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
-//        }
-//        fiboArr[14] = fiboArr[15] = 1;
-//        for (int i = 16; i < 21; i++) {
-//            fiboArr[i] = fiboArr[i - 1] + fiboArr[i - 2];
-//        }
-//        if (fiboArr == null) {
-//        }
-//        for (int i = 0; i < fibLength; i++) {
-//
-//            if (i >= 0 && i < 2) {
-//                fiboArr[i] = 3;
-//            }
-//            if (i >= 2 && i < 5) {
-//                fiboArr[i] = 8;
-//            }
-//            if (i >= 5 && i < 8) {
-//                fiboArr[i] = 5;
-//            }
-//            if (i >= 8 && i < 10) {
-//                fiboArr[i] = 3;
-//            }
-//            if (i >= 10 && i < 12) {
-//                fiboArr[i] = 10;
-//            }
-//            if (i >= 12 && i < 21) {
-//                fiboArr[i] = 13;
-//            }
-//            if (i >= 21 && i < 24) {
-//                fiboArr[i] = 21;
-//            }
-//            if (i >= 24 && i < 27) {
-//                fiboArr[i] = 34;
-//            }
-//            if (i >= 27 && i < 30) {
-//                fiboArr[i] = 55;
-//            }
-//            if (i >= 30 && i < 33) {
-//                fiboArr[i] = 89;
-//            }
-//        }
+//        fiboArr[7] = 15;
+//        fiboArr[8] = 20;
+//        fiboArr[9] = 30;
     }
 
     @Override
@@ -576,7 +495,7 @@ public class MainActivity extends Activity {
             ALI_LESS_AMOUNT = 0;
             BIGGEST_AMOUNT = 0;
             ALL_AMOUNT = 0;
-            BUY_AMOUNT = 0;
+            BUY_AMOUNT = -2000;
             TODAY_AMOUNT = 0;
             AMOUNT_CURRENT = 0;
             LESS_AMOUNT = 0;
@@ -688,7 +607,7 @@ public class MainActivity extends Activity {
         ALI_LESS_AMOUNT = 0;
         LOST_MOST_TODAY = 0;
         BIGGEST_AMOUNT = 0;
-        BUY_AMOUNT = 0;
+        fibIndex = 0;
         TODAY_AMOUNT = 0;
         CANT_BUY = false;
         DIF35BEGIN = false;
@@ -699,27 +618,30 @@ public class MainActivity extends Activity {
             }
         }
 
+        BUY_AMOUNT = 0;
         for (int i = allLists.size() / 2; i >= 0; i--) {
 
-            record2Map.clear();
-            if (i <= (allLists.size() - BEGIN_INT)) {
-                resetBuyMap();
-                CAN_BUY = true;
-                for (int j = 1; j < END_BLANK; j++) {
-                    getNumBlankData(i, j);
-                }
+            if (!CANT_BUY) {
+                record2Map.clear();
+                if (i <= (allLists.size() - BEGIN_INT)) {
+                    resetBuyMap();
+                    CAN_BUY = true;
+                    for (int j = 1; j < END_BLANK; j++) {
+                        getNumBlankData(i, j);
+                    }
 //                    get2PostionBuyMap(i);
-                LAST_TREM = i;
+                    LAST_TREM = i;
 //                    setLastMap(i);
-            }
-            difLastBuyEarnStr = "";
-            getDifPositionBuyMap(i);
-            try {
-            } catch (Exception e) {
+                }
+                difLastBuyEarnStr = "";
+                try {
+                    getDifPositionBuyMap(i);
+                } catch (Exception e) {
 
+                }
+                lastdifCount = difbuyCount;
+                getProgress(i);
             }
-            lastdifCount = difbuyCount;
-            getProgress(i);
         }
 
 //        if (ALI_LESS_AMOUNT > LESS_AMOUNT) {
@@ -846,6 +768,12 @@ public class MainActivity extends Activity {
                                 && -1 == record2Map.get(i * 10 + j) && lastPositionMap.get(i * 10 + j) <= MAX_2 && LAST_CAN_BUY) {
 
                             int buyAmount = fiboArr[fibIndex];
+                            if (CUSTOM_AMOUNT) {
+                                buyAmount = custom_amount;
+                                if (buyAmount < 1) {
+                                    buyAmount = 1;
+                                }
+                            }
 //                            int buyAmount = fiboArr[beginCountMap.get(i * 10 + j) - DANGER];
 //                            int buyAmount = fiboArr[lastPositionMap.get(i * 10 + j) - (BEGIN_INT + 10)];
                             BUY_AMOUNT = BUY_AMOUNT + 99 * buyAmount;
@@ -947,6 +875,10 @@ public class MainActivity extends Activity {
         if (RECORD_AMOUNT < 0 && BUY_AMOUNT > 0) {
             beginSize = -1;
         }
+        if (RECORD_AMOUNT <BUY_AMOUNT ) {
+            fibIndex = -1;
+            CUSTOM_AMOUNT = false;
+        }
         difbuyCount = 0;
         sameStr = "";
         sameCount = 0;
@@ -972,90 +904,63 @@ public class MainActivity extends Activity {
         }
         beginMap = new HashMap<Integer, Integer>();
         recordMap.clear();
+        final ArrayList<Integer> list110 = new ArrayList<Integer>();
         for (int i = BEGIN_INT; i <= MAX_2; i++) {
-            final String[] split = blankMap.get(i).split("---");
-            if (split.length == 1) {
-                if (!TextUtils.isEmpty(blankMap.get(i))) {
-                    if (!blankMap.get(i).contains("---") ) {
-                        beginMap.put(Integer.parseInt(blankMap.get(i)), i);
-//                        if (i <= (MAX_2)) {
-                            int index = Integer.parseInt(blankMap.get(i));
+            if (list110.size() < BiggerInt && !TextUtils.isEmpty(blankMap.get(i))) {
 
-                            if (!TextUtils.isEmpty(beginStr) && beginStr.contains(index + "--")) {
-                                if (null == beginCountMap.get(index)) {
-                                    beginCountMap.put(index, 0);
-                                } else {
-                                    Integer count = beginCountMap.get(index);
-                                    Integer integer = count + 1;
-                                    beginCountMap.put(index, integer);
-                                }
-                            } else {
-                                beginCountMap.put(index, 0);
+                final String[] split = blankMap.get(i).split("---");
+                if (DANGER == 1 && split.length == 1) {
+                    int index = Integer.parseInt(blankMap.get(i));
+
+                    if (!TextUtils.isEmpty(blankMap.get(i))) {
+                        if (!blankMap.get(i).contains("---")) {
+                            if (i >= BEGIN_INT) {
+                                list110.add(i);
+                                trueMap.put(index, i);
+                                recordMap.put(index, i);
                             }
-
-                            trueMap.put(index, i);
-                            recordMap.put(index, i);
-//                            if (beginCountMap.get(Integer.parseInt(blankMap.get(i))) > DANGER && beginCountMap.get(Integer.parseInt(blankMap.get(i))) < (DANGER + 10)) {
-//
-//                            }
-//                        }
-//                        else {
-//                            if (null != beginCountMap.get(Integer.parseInt(blankMap.get(i)))) {
-//                                beginCountMap.remove(Integer.parseInt(blankMap.get(i)));
-//                            }
-//                        }
+                        }
                     }
                 }
-            } else if (split.length > 1) {
-                if (!TextUtils.isEmpty(blankMap.get(i))) {
-                    if (split.length >= 1) {
+                //TODO
+                else {
+                    if (split.length == DANGER) {
+                        if (!TextUtils.isEmpty(blankMap.get(i))) {
+                            if (split.length >= 1) {
 
 
-                        for (String str : split) {
-
-                            int index = Integer.parseInt(str);
-                            beginMap.put(index, i);
-
-                            if (!TextUtils.isEmpty(beginStr) && beginStr.contains(index + "--")) {
-                                if (null == beginCountMap.get(index)) {
-                                    beginCountMap.put(index, 0);
-                                } else {
-                                    Integer count = beginCountMap.get(index);
-                                    Integer integer = count + 1;
-                                    beginCountMap.put(index, integer);
+                                for (String str : split) {
+                                    int index = Integer.parseInt(str);
+                                    if (i >= BEGIN_INT) {
+                                        if (list110.size() < BiggerInt) {
+                                            list110.add(i);
+                                            trueMap.put(index, i);
+                                            recordMap.put(index, i);
+                                        }
+                                    }
                                 }
-                            } else {
-                                beginCountMap.put(index, 0);
+
                             }
-
-                            trueMap.put(index, i);
-                            recordMap.put(index, i);
-//                            if (beginCountMap.get(index) > DANGER && beginCountMap.get(index) < (DANGER + 10)) {
-//
-//                            }
-
                         }
-
-//                        trueMap.put(Integer.parseInt(str), i);
-//                        recordMap.put(Integer.parseInt(str), i);
                     }
                 }
             }
         }
-        if (null == beginCountRecordMap) {
-            beginCountRecordMap = new HashMap<Integer, Integer>();
-            resetBeginCountMap();
-        } else {
 
-            Iterator<Map.Entry<Integer, Integer>> iterator = beginCountRecordMap.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<Integer, Integer> next = iterator.next();
-                if (next.getValue() == beginCountMap.get(next.getKey()) && beginCountMap.get(next.getKey()) < DANGER) {
-                    beginCountMap.remove(next.getKey());
-                }
-            }
-            beginCountRecordMap.clear();
-            resetBeginCountMap();
+        if (list110.size() < (BiggerInt)) {
+            trueMap.clear();
+            recordMap.clear();
+        }
+        int addAmount = 0;
+        for (int i = 0; i < list110.size(); i++) {
+            addAmount = addAmount + list110.get(i);
+        }
+        if (addAmount < DANGER) {
+            trueMap.clear();
+            recordMap.clear();
+        }
+        if (list110.size() > BiggerInt) {
+            Log.e("", "getDifPositionBuyMap: ");
         }
 
 
@@ -1158,170 +1063,59 @@ public class MainActivity extends Activity {
     private void setDifLastMap(final int term) {
 
 
-//        if (recordMap.size() >= DANGER) {
-//
-//            CAN_BUY = true;
-//        } else {
-//            CAN_BUY = false;
-//        }
-
-        if (recordMap.size() >= DANGER) {
+        LAST_CAN_BUY = CAN_BUY = true;
+        if (trueMap.size() > 0) {
+            fibIndex++;
         }
-        DIF35BEGIN = true;
-        CAN_BUY = DIF35BEGIN;
-//        if (LOST_MOST_TODAY < -2000) {
-//            CANT_BUY = true;
-//        }
-//        if (TODAY_AMOUNT > 2000) {
-//            CANT_BUY = true;
-//        }
-
-//        if (fibIndex == 32) {
-//            CANT_BUY = true;
-//        }
-
-
-
-
-        if (recordMap.size() > 2 * BiggerInt) {
-            CAN_BUY = true;
-            CAN_CONTINU = true;
-//            if (recordMap.size() < beginSize) {
-//                beginSize = -1;
-//            }
-            if (beginSize == -1) {
-                beginSize = recordMap.size();
-            }
-            if (recordMap.size() >= beginSize) {
-                int smarllerCount = -1;
-                Iterator<Map.Entry<Integer, Integer>> iterator1 = recordMap.entrySet().iterator();
-                while (iterator1.hasNext()) {
-                    Map.Entry<Integer, Integer> next = iterator1.next();
-                    if (smarllerCount == -1) {
-                        smarllerCount = beginCountMap.get(next.getKey());
-                    }
-                    if (smarllerCount > beginCountMap.get(next.getKey())) {
-                        smarllerCount = beginCountMap.get(next.getKey());
-                    }
-                }
-                Iterator<Map.Entry<Integer, Integer>> iterator2 = recordMap.entrySet().iterator();
-                while (iterator2.hasNext()) {
-                    Map.Entry<Integer, Integer> next = iterator2.next();
-                    beginCountMap.put(next.getKey(), smarllerCount);
-                }
-            }
-
-        } else if ( recordMap.size() < BiggerInt) {
-            CAN_BUY = false;
-        }
-
-//        if (TODAY_AMOUNT < -3000) {
-//            CAN_BUY = false;
-//        }
-
-//        if ((CAN_BUY && NEED_ADD) || (fibIndex < 6 && CAN_BUY)) {
-//        if (CAN_BUY) {
-//            fibIndex++;
-//        }
-        if (BUY_AMOUNT < -50) {
+        if (fibIndex > (fibLength-1)) {
             fibIndex = 0;
+            if (TODAY_AMOUNT < 0) {
+                CUSTOM_AMOUNT = true;
+            }
         }
-        if (BUY_AMOUNT < -100) {
-            fibIndex = 1;
-        }
-        if (BUY_AMOUNT < -150) {
-            fibIndex = 2;
-        }
-        if (BUY_AMOUNT < -250) {
-            fibIndex = 3;
-        }
-        if (BUY_AMOUNT < -500) {
-            fibIndex = 4;
-        }
-        if (BUY_AMOUNT < -800) {
-            fibIndex = 5;
-        }
-        if (BUY_AMOUNT < -1500) {
-            fibIndex = 6;
-        }
-        if (BUY_AMOUNT < -3000) {
-            fibIndex = 7;
-        }
-        if (BUY_AMOUNT < -6000) {
-            fibIndex = 8;
-        }
-        if (BUY_AMOUNT < -10000) {
-            fibIndex = 9;
+        if (CAN_CONTINU && TODAY_AMOUNT > 0) {
+            CUSTOM_AMOUNT = false;
         }
 
-//        if (BUY_AMOUNT < -50) {
+//        if (BUY_AMOUNT < -200) {
 //            fibIndex = 0;
 //        }
-//        if (BUY_AMOUNT < -100) {
+//        if (BUY_AMOUNT < -400) {
 //            fibIndex = 1;
 //        }
-//        if (BUY_AMOUNT < -200) {
+//        if (BUY_AMOUNT < -1000) {
 //            fibIndex = 2;
 //        }
-//        if (BUY_AMOUNT < -500) {
+//        if (BUY_AMOUNT < -1600) {
 //            fibIndex = 3;
 //        }
-//        if (BUY_AMOUNT < -1000) {
+//        if (BUY_AMOUNT < -2600) {
 //            fibIndex = 4;
 //        }
-//        if (BUY_AMOUNT < -1500) {
+//        if (BUY_AMOUNT < -4200) {
 //            fibIndex = 5;
 //        }
-//        if (BUY_AMOUNT < -2500) {
+//        if (BUY_AMOUNT < -6800) {
 //            fibIndex = 6;
 //        }
-//        if (BUY_AMOUNT < -3500) {
+//        if (BUY_AMOUNT < -9800) {
 //            fibIndex = 7;
 //        }
-//        if (BUY_AMOUNT < -5000) {
+//        if (BUY_AMOUNT < -12800) {
 //            fibIndex = 8;
 //        }
-//        if (BUY_AMOUNT < -7000) {
+//        if (BUY_AMOUNT < -16800) {
 //            fibIndex = 9;
 //        }
-//        if (BIGGEST_AMOUNT < 150) {
-//            fibIndex = 0;
-//        }
-//        if (BIGGEST_AMOUNT < 500 && TODAY_AMOUNT < -500) {
-//            CANT_BUY = true;
-//        }
-//        if (BIGGEST_AMOUNT < 50 && TODAY_AMOUNT < -300) {
-//            CANT_BUY = true;
-//        }
 
-        if (term < 24 && TODAY_AMOUNT > 0) {
+
+        CAN_BUY = true;
+        if (TODAY_AMOUNT > 1000) {
             CAN_BUY = false;
+            CANT_BUY = true;
         }
 
-        LAST_CAN_BUY = CAN_BUY;
 
-//        if (DIF35BEGIN && recordMap.size() > DANGER + 2) {
-//            CAN_BUY = false;
-////            if (fibIndex > 0) {
-////                fibIndex--;
-////            }
-//        }
-
-//        if (TODAY_AMOUNT < -500) {
-//            CANT_BUY = true;
-//        }
-//        if ((TODAY_AMOUNT - recordMap.size() * 10 * fiboArr[fibIndex]) < -3000) {
-//            CANT_BUY = true;
-//        }
-//        if (TODAY_AMOUNT < -2000 && BIGGEST_AMOUNT < 800) {
-//            CANT_BUY = true;
-//        }
-//        if (TODAY_AMOUNT > 7000) {
-//            CANT_BUY = true;
-//        }
-//        if (BIGGEST_AMOUNT > 3500 && BUY_AMOUNT < -2000) {
-//            CANT_BUY = true;
-//        }
 
         Iterator<Map.Entry<Integer, Integer>> iterator = trueMap.entrySet().iterator();
         difBuyStr = "";
@@ -1331,10 +1125,12 @@ public class MainActivity extends Activity {
         int more40 = 0;
         int more30 = 0;
         //TODO buy
+       custom_amount = 0;
         while (iterator.hasNext()) {
             Map.Entry<Integer, Integer> next = iterator.next();
             if (next.getValue() != -1) {
-                if (!CANT_BUY && CAN_BUY && next.getValue() <= MAX_2 && next.getValue() >= BEGIN_INT && !TextUtils.isEmpty(biggerStr) && DIF35BEGIN && !DIF5060) {
+                if (CAN_BUY && next.getValue() <= MAX_2 && next.getValue() >= BEGIN_INT) {
+
                     if (TextUtils.isEmpty(lastBuyStr)) {
                         lastBuyStr = next.getKey() + "##" + next.getValue();
                     } else {
@@ -1343,6 +1139,15 @@ public class MainActivity extends Activity {
 //                    int buyAmount =  10 * fiboArr[next.getValue() - DANGER];
 //                    int buyAmount = 10 * fiboArr[beginCountMap.get(next.getKey()) - DANGER];
                     int buyAmount = 10 * fiboArr[fibIndex];
+                    if (CUSTOM_AMOUNT) {
+                        if (custom_amount == 0) {
+                            custom_amount = (Math.abs(TODAY_AMOUNT)) / 80;
+                        }
+                        buyAmount = custom_amount *10;
+                        if (buyAmount < 10) {
+                            buyAmount = 10;
+                        }
+                    }
                     lastPositionMap.put(next.getKey(), next.getValue());
                     BUY_AMOUNT = BUY_AMOUNT - buyAmount;
                     AMOUNT_CURRENT = AMOUNT_CURRENT - buyAmount;
