@@ -886,15 +886,96 @@ public class MainActivity extends Activity {
 //        record4050 = 0;
 
         biggerStr = "-";
+
+
+        biggerStr = "-";
+        recordMap.clear();
+        for (int i = 0; i < 10; i++) {
+//            sameCount(i);
+            positionCount = 0;
+            numCount = 0;
+
+            positionStr = "";
+            numStr = "";
+
+            positionBlankStr = "";
+            numBlankStr = "";
+            positionContinue = true;
+            numContinue = true;
+            for (int j = 0; j < 10; j++) {
+
+                if (record2Map.get(i * 10 + j) > MAX_2) {
+                    if (TextUtils.isEmpty(biggerStr)) {
+                        biggerStr = record2Map.get(i * 10 + j) + "";
+                    } else {
+                        biggerStr = biggerStr + "-" + record2Map.get(i * 10 + j);
+                    }
+//                    biggerStr = "";
+                    positionContinue = false;
+                }
+                if (record2Map.get(i * 10 + j) > BEGIN_INT && record2Map.get(i * 10 + j) <= MAX_2) {
+
+                    positionCount++;
+                    if (TextUtils.isEmpty(positionStr)) {
+                        positionStr = (i * 10 + j) + "";
+                        positionBlankStr = record2Map.get(i * 10 + j) + "";
+                    } else {
+                        positionStr = positionStr + "-" + (i * 10 + j);
+                        positionBlankStr = positionBlankStr + "-" + record2Map.get(i * 10 + j);
+                    }
+                }
+                if (record2Map.get(j * 10 + i) > MAX_2) {
+                    numContinue = false;
+                }
+                if (record2Map.get((j * 10 + i)) > BEGIN_INT && record2Map.get((j * 10 + i)) <= MAX_2) {
+
+                    numCount++;
+                    if (TextUtils.isEmpty(numStr)) {
+                        numStr = (j * 10 + i) + "";
+                        numBlankStr = record2Map.get(j * 10 + i) + "";
+                    } else {
+                        numStr = numStr + "-" + (j * 10 + i);
+                        numBlankStr = numBlankStr + "-" + record2Map.get(j * 10 + i);
+                    }
+                }
+            }
+            if (positionContinue && positionCount == DANGER) {
+
+                sameCount++;
+                String[] positionSplite = positionStr.split("-");
+                String[] blankStr = positionBlankStr.split("-");
+                for (int j = 0; j < positionSplite.length; j++) {
+                    if (!TextUtils.isEmpty(positionSplite[j]) && !TextUtils.isEmpty(blankStr[j])) {
+//                        trueMap.put(Integer.parseInt(positionSplite[j]), Integer.parseInt(blankStr[j]));
+                        recordMap.put(Integer.parseInt(positionSplite[j]), Integer.parseInt(blankStr[j]));
+                    }
+                }
+
+            }
+            if (numContinue && numCount ==DANGER) {
+                sameCount++;
+                String[] numSplite = numStr.split("-");
+                String[] blankStr = numBlankStr.split("-");
+                for (int j = 0; j < numSplite.length; j++) {
+                    if (!TextUtils.isEmpty(numSplite[j]) && !TextUtils.isEmpty(blankStr[j])) {
+//                        trueMap.put(Integer.parseInt(numSplite[j]), Integer.parseInt(blankStr[j]));
+                        recordMap.put(Integer.parseInt(numSplite[j]), Integer.parseInt(blankStr[j]));
+                    }
+                }
+            }
+
+        }
+        //TODO
         DIF5060 = false;
+        blankMap.clear();
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
 
-                if (TextUtils.isEmpty(blankMap.get(record2Map.get(i * 10 + j)))) {
-                    blankMap.put(record2Map.get(i * 10 + j), (i * 10 + j) + "");
+                if (TextUtils.isEmpty(blankMap.get(recordMap.get(i * 10 + j)))) {
+                    blankMap.put(recordMap.get(i * 10 + j), (i * 10 + j) + "");
                 } else {
-                    String blankStr = blankMap.get(record2Map.get(i * 10 + j));
-                    blankMap.put(record2Map.get(i * 10 + j), blankStr + "---" + (i * 10 + j));
+                    String blankStr = blankMap.get(recordMap.get(i * 10 + j));
+                    blankMap.put(recordMap.get(i * 10 + j), blankStr + "---" + (i * 10 + j));
                 }
             }
 
@@ -904,13 +985,15 @@ public class MainActivity extends Activity {
             beginCountMap = new HashMap<Integer, Integer>();
         }
         beginMap = new HashMap<Integer, Integer>();
-        recordMap.clear();
+
         final ArrayList<Integer> list110 = new ArrayList<Integer>();
         for (int i = BEGIN_INT; i <= MAX_2; i++) {
-            if (list110.size() < BiggerInt && !TextUtils.isEmpty(blankMap.get(i))) {
+            if (
+                    list110.size() < BiggerInt &&
+                            !TextUtils.isEmpty(blankMap.get(i))) {
 
                 final String[] split = blankMap.get(i).split("---");
-                if (DANGER == 1 && split.length == 1) {
+                if (split.length == 1) {
                     int index = Integer.parseInt(blankMap.get(i));
 
                     if (!TextUtils.isEmpty(blankMap.get(i))) {
@@ -924,42 +1007,42 @@ public class MainActivity extends Activity {
                     }
                 }
                 //TODO
-                else {
-                    if (split.length == DANGER) {
-                        if (!TextUtils.isEmpty(blankMap.get(i))) {
-                            if (split.length >= 1) {
-
-
-                                for (String str : split) {
-                                    int index = Integer.parseInt(str);
-                                    if (i >= BEGIN_INT) {
-                                        if (list110.size() < BiggerInt) {
-                                            list110.add(i);
-                                            trueMap.put(index, i);
-                                            recordMap.put(index, i);
-                                        }
-                                    }
-                                }
-
-                            }
-                        }
-                    }
-                }
+//                else {
+//                    if (split.length == DANGER) {
+//                        if (!TextUtils.isEmpty(blankMap.get(i))) {
+//                            if (split.length >= 1) {
+//
+//
+//                                for (String str : split) {
+//                                    int index = Integer.parseInt(str);
+//                                    if (i >= BEGIN_INT) {
+//                                        if (list110.size() < BiggerInt) {
+//                                            list110.add(i);
+//                                            trueMap.put(index, i);
+//                                            recordMap.put(index, i);
+//                                        }
+//                                    }
+//                                }
+//
+//                            }
+//                        }
+//                    }
+//                }
             }
         }
 
-        if (list110.size() < (BiggerInt)) {
-            trueMap.clear();
-            recordMap.clear();
-        }
+//        if (list110.size() < (BiggerInt)) {
+//            trueMap.clear();
+//            recordMap.clear();
+//        }
         int addAmount = 0;
         for (int i = 0; i < list110.size(); i++) {
             addAmount = addAmount + list110.get(i);
         }
-        if (addAmount < DANGER) {
-            trueMap.clear();
-            recordMap.clear();
-        }
+//        if (addAmount < DANGER) {
+//            trueMap.clear();
+//            recordMap.clear();
+//        }
         if (list110.size() > BiggerInt) {
             Log.e("", "getDifPositionBuyMap: ");
         }
@@ -1070,11 +1153,11 @@ public class MainActivity extends Activity {
         }
         if (fibIndex > (fibLength-1)) {
             fibIndex = 0;
+            CUSTOM_AMOUNT = true;
             if (TODAY_AMOUNT < 0) {
-                CUSTOM_AMOUNT = true;
             }
         }
-        if (CUSTOM_AMOUNT && TODAY_AMOUNT > 0) {
+        if (CUSTOM_AMOUNT && BUY_AMOUNT >= 0) {
             CUSTOM_AMOUNT = false;
         }
 
@@ -1111,7 +1194,7 @@ public class MainActivity extends Activity {
 
 
         CAN_BUY = true;
-        if (TODAY_AMOUNT > 2000||TODAY_AMOUNT<-3000) {
+        if (TODAY_AMOUNT > 2000||TODAY_AMOUNT<-5000) {
             CAN_BUY = false;
             CANT_BUY = true;
         }
@@ -1126,7 +1209,7 @@ public class MainActivity extends Activity {
         int more40 = 0;
         int more30 = 0;
         //TODO buy
-       custom_amount = 0;
+        custom_amount = 0;
         while (iterator.hasNext()) {
             Map.Entry<Integer, Integer> next = iterator.next();
             if (next.getValue() != -1) {
@@ -1142,7 +1225,7 @@ public class MainActivity extends Activity {
                     int buyAmount = 10 * fiboArr[fibIndex];
                     if (CUSTOM_AMOUNT) {
                         if (custom_amount == 0) {
-                            custom_amount = (Math.abs(BUY_AMOUNT)) / 80;
+                            custom_amount = (Math.abs(BUY_AMOUNT) + 200) / 80;
                         }
                         buyAmount = custom_amount *10;
                         if (buyAmount < 10) {
