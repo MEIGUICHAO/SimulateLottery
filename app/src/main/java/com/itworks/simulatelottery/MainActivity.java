@@ -987,10 +987,10 @@ public class MainActivity extends Activity {
         beginMap = new HashMap<Integer, Integer>();
 
         final ArrayList<Integer> list110 = new ArrayList<Integer>();
-        for (int i = BEGIN_INT; i <= MAX_2; i++) {
-            if (
+        for (int i = (BEGIN_INT + 10); i <= MAX_2; i++) {
+            if (BiggerInt == 1 &&
                     list110.size() < BiggerInt &&
-                            !TextUtils.isEmpty(blankMap.get(i))) {
+                    !TextUtils.isEmpty(blankMap.get(i))) {
 
                 final String[] split = blankMap.get(i).split("---");
                 if (split.length == 1) {
@@ -1007,34 +1007,34 @@ public class MainActivity extends Activity {
                     }
                 }
                 //TODO
-//                else {
-//                    if (split.length == DANGER) {
-//                        if (!TextUtils.isEmpty(blankMap.get(i))) {
-//                            if (split.length >= 1) {
-//
-//
-//                                for (String str : split) {
-//                                    int index = Integer.parseInt(str);
-//                                    if (i >= BEGIN_INT) {
-//                                        if (list110.size() < BiggerInt) {
-//                                            list110.add(i);
-//                                            trueMap.put(index, i);
-//                                            recordMap.put(index, i);
-//                                        }
-//                                    }
-//                                }
-//
-//                            }
-//                        }
-//                    }
-//                }
+                else {
+                    if (split.length == BiggerInt) {
+                        if (!TextUtils.isEmpty(blankMap.get(i))) {
+                            if (split.length >= 1) {
+
+
+                                for (String str : split) {
+                                    int index = Integer.parseInt(str);
+                                    if (i >= BEGIN_INT) {
+                                        if (list110.size() < BiggerInt) {
+                                            list110.add(i);
+                                            trueMap.put(index, i);
+                                            recordMap.put(index, i);
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
             }
         }
 
-//        if (list110.size() < (BiggerInt)) {
-//            trueMap.clear();
-//            recordMap.clear();
-//        }
+        if (list110.size() < (BiggerInt)) {
+            trueMap.clear();
+            recordMap.clear();
+        }
         int addAmount = 0;
         for (int i = 0; i < list110.size(); i++) {
             addAmount = addAmount + list110.get(i);
