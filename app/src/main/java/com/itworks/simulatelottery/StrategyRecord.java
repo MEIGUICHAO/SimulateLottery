@@ -190,4 +190,11 @@ public class StrategyRecord {
     * danger10
     * */
 
+    /*
+    * 10-50
+    * beginint 1
+    * danger 6
+    * earn less
+    * */
+
 }
